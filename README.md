@@ -15,13 +15,19 @@ A Unity/HDRP simulator that builds harbour scenes seen from fixed port CCTV came
 - 라벨: 렌더 깊이 기반 GPU 가시 마스크(기본), CPU 광선 마스크(비교용), 객체별 상자·메타데이터, YOLO 형식 파일
 - JSON 시나리오 저장·불러오기, 배치 캡처와 이어하기, 회귀 검사 세트
 
+## 바로 실행하기 (Windows 빌드)
+
+Unity 없이 실행하려면 [Releases](https://github.com/bootaeng/PortCCTVSimulator/releases/latest)에서 `PortCCTVSimulator_win64.7z`(약 870 MB)를 내려받아 [7-Zip](https://www.7-zip.org/)으로 압축을 풀고 `PortCCTVSimulator.exe`를 실행합니다. 압축 안의 `README_RUN.txt`에 명령줄 사용법이 있습니다.
+
+To run without Unity, download `PortCCTVSimulator_win64.7z` from [Releases](https://github.com/bootaeng/PortCCTVSimulator/releases/latest), extract it and start `PortCCTVSimulator.exe`.
+
 ## 요구 사항
 
 - Unity 2023.2.22f1
 - HDRP 16.0.6, glTFast 6.15.1 (패키지는 `Packages/manifest.json`)
 - Windows, Direct3D 11/12
 
-## 실행
+## 소스에서 실행·빌드
 
 1. Unity Hub에서 이 폴더를 프로젝트로 엽니다.
 2. 처음 열 때 초기 구성을 실행합니다.
