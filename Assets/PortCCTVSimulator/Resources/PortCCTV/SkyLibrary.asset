@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8680479eade09ef459e56199edecc839, type: 3}
+  m_Name: SkyLibrary
+  m_EditorClassIdentifier: 
+  entries:
+  - key: kloofendal_28d_misty_puresky
+    cubemap: {fileID: 8900000, guid: 821076831e0c6a042b7d40efb19f4fc5, type: 3}
+    sun_azimuth_cube_deg: 349.16428
+    sun_elevation_deg: 28.411657
+    upper_hemisphere_lux: 4.2080474
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/kloofendal_28d_misty_puresky_4k.hdr
+    source_sha256: 18dd8b719b900b4397d36da13518276e24ce355b8d4c89fa8f27bf4d31c4f221
+  - key: kloofendal_48d_partly_cloudy_puresky
+    cubemap: {fileID: 8900000, guid: 119b35cf4c561aa42a72729b82c44358, type: 3}
+    sun_azimuth_cube_deg: 34.44482
+    sun_elevation_deg: 47.86383
+    upper_hemisphere_lux: 4.7175217
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/kloofendal_48d_partly_cloudy_puresky_4k.hdr
+    source_sha256: 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88
+  - key: kloofendal_overcast_puresky
+    cubemap: {fileID: 8900000, guid: 6fea3e6c42e395e4e8960b6f7c9cde35, type: 3}
+    sun_azimuth_cube_deg: 29.527489
+    sun_elevation_deg: 23.018843
+    upper_hemisphere_lux: 4.033806
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/kloofendal_overcast_puresky_4k.hdr
+    source_sha256: 77ade807bd208195073a51b970dea574fa70cd80cf666aeedf5cd416ab5c8abd
+  - key: kloppenheim_02_puresky
+    cubemap: {fileID: 8900000, guid: bcdc76d33243fc943bbcee9733e60089, type: 3}
+    sun_azimuth_cube_deg: 35.55884
+    sun_elevation_deg: 17.131775
+    upper_hemisphere_lux: 0.97107565
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/kloppenheim_02_puresky_4k.hdr
+    source_sha256: b394c19453ac25d1e55af9320c70bcf0a8bd91e041305f471f6f1dfdbd2507df
+  - key: kloppenheim_07_puresky
+    cubemap: {fileID: 8900000, guid: e5edf11b336967e489712051c1b1965f, type: 3}
+    sun_azimuth_cube_deg: 35.853996
+    sun_elevation_deg: 38.026035
+    upper_hemisphere_lux: 1.0301753
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/kloppenheim_07_puresky_4k.hdr
+    source_sha256: 98a94dc8c290a89de0147642750beb9dae4c791ee33c1689bebbf58126e97f22
+  - key: syferfontein_18d_clear_puresky
+    cubemap: {fileID: 8900000, guid: 0ace9075f2e5c5349aed732b91fd8c19, type: 3}
+    sun_azimuth_cube_deg: 35.853992
+    sun_elevation_deg: 18.3887
+    upper_hemisphere_lux: 2.6458595
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/syferfontein_18d_clear_puresky_4k.hdr
+    source_sha256: f30416cc649eaae319cc9d489764e2d71e01936a44c989c6a1806d1e11d7b5c8
+  - key: syferfontein_1d_clear_puresky
+    cubemap: {fileID: 8900000, guid: 722b127b8fc96fe4f914a2745ec79a95, type: 3}
+    sun_azimuth_cube_deg: 35.853992
+    sun_elevation_deg: 0.9069346
+    upper_hemisphere_lux: 1.2330334
+    source_file: Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/hdri/syferfontein_1d_clear_puresky_4k.hdr
+    source_sha256: 5ef5c1ff65051068b68313cb315ede613f1f4f10deac2102970c9c4cbd276fcf

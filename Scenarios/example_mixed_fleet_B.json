@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "scenario_id": "example_mixed_fleet_B",
+  "harbor_id": "generic_harbor_02",
+  "camera_preset_id": "cam_B_breakwater_head",
+  "camera_override": {
+    "enabled": false,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "euler_deg": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "vertical_fov_deg": 40
+  },
+  "environment": {
+    "preset_id": "day_clear",
+    "water_preset_id": "calm",
+    "water_time_s": 12
+  },
+  "vessels": [
+    {
+      "object_id": "v00",
+      "asset_id": "fishing_boat",
+      "x": 63.3,
+      "z": -190.1,
+      "heading_deg": 40,
+      "immersion_m": 0.4
+    },
+    {
+      "object_id": "v01",
+      "asset_id": "fishing_boat",
+      "x": 62.6,
+      "z": -158.1,
+      "heading_deg": 200,
+      "immersion_m": 0.4
+    },
+    {
+      "object_id": "v02",
+      "asset_id": "cabin_cruiser",
+      "x": 14.8,
+      "z": -152.5,
+      "heading_deg": 120,
+      "immersion_m": 0.3
+    },
+    {
+      "object_id": "v03",
+      "asset_id": "sailing_yacht",
+      "x": 25.2,
+      "z": -98.0,
+      "heading_deg": 80,
+      "immersion_m": 0.3
+    },
+    {
+      "object_id": "v04",
+      "asset_id": "sailing_dinghy",
+      "x": 89.8,
+      "z": -187.4,
+      "heading_deg": 300,
+      "immersion_m": 0.12
+    },
+    {
+      "object_id": "v05",
+      "asset_id": "kayak",
+      "x": 90.0,
+      "z": -209.5,
+      "heading_deg": 10,
+      "immersion_m": 0.1
+    },
+    {
+      "object_id": "v06",
+      "asset_id": "canoe",
+      "x": 77.8,
+      "z": -210.5,
+      "heading_deg": 60,
+      "immersion_m": 0.1
+    },
+    {
+      "object_id": "v07",
+      "asset_id": "tugboat",
+      "x": -40.5,
+      "z": -94.4,
+      "heading_deg": 30,
+      "immersion_m": 1.8
+    },
+    {
+      "object_id": "v08",
+      "asset_id": "barge",
+      "x": -29.1,
+      "z": -45.7,
+      "heading_deg": 300,
+      "immersion_m": 1.6
+    }
+  ],
+  "capture": {
+    "width": 1920,
+    "height": 1080,
+    "warmup_frames": 6,
+    "write_mask": true,
+    "mask_stride": 1,
+    "strict_placement": false
+  },
+  "notes": "Example: more vessel types (copied from preview_vessels_r1/fleet_B_day)"
+}

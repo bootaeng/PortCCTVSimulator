@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "scenario_id": "example_tanker_outer_D",
+  "harbor_id": "generic_harbor_02",
+  "camera_preset_id": "cam_D_tower_overview",
+  "camera_override": {
+    "enabled": false,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "euler_deg": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "vertical_fov_deg": 40
+  },
+  "environment": {
+    "preset_id": "day_clear",
+    "water_preset_id": "calm",
+    "water_time_s": 12
+  },
+  "vessels": [
+    {
+      "object_id": "v00",
+      "asset_id": "tanker",
+      "x": 60,
+      "z": -650,
+      "heading_deg": 95,
+      "immersion_m": 10
+    },
+    {
+      "object_id": "v01",
+      "asset_id": "tugboat",
+      "x": 90,
+      "z": -330,
+      "heading_deg": 10,
+      "immersion_m": 1.8
+    },
+    {
+      "object_id": "v02",
+      "asset_id": "fishing_boat",
+      "x": -40,
+      "z": -150,
+      "heading_deg": 60,
+      "immersion_m": 0.4
+    }
+  ],
+  "capture": {
+    "width": 1920,
+    "height": 1080,
+    "warmup_frames": 6,
+    "write_mask": true,
+    "mask_stride": 1,
+    "strict_placement": false
+  },
+  "notes": "Example: more vessel types (copied from preview_vessels_r1/tanker_D_day)"
+}

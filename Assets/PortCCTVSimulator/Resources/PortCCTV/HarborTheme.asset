@@ -1,0 +1,1086 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ba4e9b825233f4e8ef293fbf0f3a91, type: 3}
+  m_Name: HarborTheme
+  m_EditorClassIdentifier: 
+  materials:
+  - key: fender
+    material: {fileID: 2100000, guid: 39246e88eee16f7449e2a5e331947296, type: 2}
+  - key: crane
+    material: {fileID: 2100000, guid: 0980a5e604249314391e2d1c85106d1f, type: 2}
+  - key: buoy_red
+    material: {fileID: 2100000, guid: 45fd498e201190c469916e763fcadd61, type: 2}
+  - key: buoy_green
+    material: {fileID: 2100000, guid: 8698530a9f7b14b408d6d7a505b664fe, type: 2}
+  - key: weather_rain
+    material: {fileID: 2100000, guid: ed9b5f4c460dbc24eb93f424873df353, type: 2}
+  - key: weather_ripple
+    material: {fileID: 2100000, guid: 1925c9e296521a440ab52b6ea7808120, type: 2}
+  - key: weather_wet_decal
+    material: {fileID: 2100000, guid: fde006ec43eb9224ebd54f967077e31a, type: 2}
+  - key: weather_snow_decal
+    material: {fileID: 2100000, guid: 7cff4a44a42772048a2c802aa68ab937, type: 2}
+  - key: weather_snow
+    material: {fileID: 2100000, guid: dd65d2be21b8dcd42b902c2f7f13cbe9, type: 2}
+  - key: instance_id
+    material: {fileID: 2100000, guid: cd749a24073c08c47b163cea437a0c5f, type: 2}
+  - key: cctv_degrade
+    material: {fileID: 2100000, guid: b6f1ac1d842cb164cb005bad0cd182f2, type: 2}
+  - key: light_bulb
+    material: {fileID: 2100000, guid: 388e3f668069f68408f66e5120cffeee, type: 2}
+  - key: rock
+    material: {fileID: 2100000, guid: 6b86637242c8fe9438faa38f4c47710b, type: 2}
+  - key: paint_yellow
+    material: {fileID: 2100000, guid: 900d459c1c39f124081ed0c90bf5f146, type: 2}
+  - key: paint_white
+    material: {fileID: 2100000, guid: 39823a83e5ec10a4d9c531ab2240295d, type: 2}
+  - key: rubber
+    material: {fileID: 2100000, guid: c9691882dd4c017458e3d8d2624f53ba, type: 2}
+  - key: glass_dark
+    material: {fileID: 2100000, guid: 76151a7c633a8894f87e56613c58128b, type: 2}
+  - key: facade_office
+    material: {fileID: 2100000, guid: 55931512c7489224f93e57e5bd81a25d, type: 2}
+  - key: facade_apartment
+    material: {fileID: 2100000, guid: 95295ac4766e2bd4b86acc1fce6d4958, type: 2}
+  - key: warehouse_roof
+    material: {fileID: 2100000, guid: 89a86bc56eff2ec4fb1e2a2ecc1a9619, type: 2}
+  - key: beacon_red
+    material: {fileID: 2100000, guid: 6136e12e0b94ce448b7bde64e7c6364a, type: 2}
+  - key: beacon_green
+    material: {fileID: 2100000, guid: f77ab426c92a4654e84a82c95335572b, type: 2}
+  - key: beacon_white
+    material: {fileID: 2100000, guid: e3a26bca7dfe5004ea2ae0b108d09902, type: 2}
+  - key: lamp
+    material: {fileID: 2100000, guid: e4888a03698eab349ae381a75ead6a3c, type: 2}
+  - key: truck_red
+    material: {fileID: 2100000, guid: 889235ec258c1a842b5b5ae5fadbb1cb, type: 2}
+  - key: truck_white
+    material: {fileID: 2100000, guid: 418c07ee23eb0664aab9c3e86e9e0528, type: 2}
+  - key: truck_blue
+    material: {fileID: 2100000, guid: ff70c5fdfa5792240ba1c7732db0b787, type: 2}
+  - key: tree_trunk
+    material: {fileID: 2100000, guid: 5232aef5a45b3bd4692982491c8b96e5, type: 2}
+  - key: pontoon
+    material: {fileID: 2100000, guid: b655a15d8b9f8fb46ad61c56106c8d14, type: 2}
+  - key: tank_white
+    material: {fileID: 2100000, guid: de5d06a45ece58b4995c27c915d79fc3, type: 2}
+  - key: chimney
+    material: {fileID: 2100000, guid: cea63ebf1ad0ea649831b131bc965fda, type: 2}
+  - key: beacon_white_band
+    material: {fileID: 2100000, guid: 115e644b359214343a3f065517fd95eb, type: 2}
+  - key: tetrapod_concrete
+    material: {fileID: 2100000, guid: f052fdc810e39624b8e4514f08c0f054, type: 2}
+  - key: roof_blue
+    material: {fileID: 2100000, guid: 328d47478bf2af343a26d8635659a5f7, type: 2}
+  - key: roof_green
+    material: {fileID: 2100000, guid: 6dfd22f34c1a2ab468677a049ac59372, type: 2}
+  - key: roof_red
+    material: {fileID: 2100000, guid: e02b1242dc6da69428e976bbfee60269, type: 2}
+  - key: roof_orange
+    material: {fileID: 2100000, guid: d0596c333bc817a43bb18c02a2fac966, type: 2}
+  - key: roof_grey
+    material: {fileID: 2100000, guid: 9bda7bb5d2933b84eae71c975c6ea185, type: 2}
+  - key: roof_teal
+    material: {fileID: 2100000, guid: c6e65619d8d25e948937b08b48de5a34, type: 2}
+  - key: wall_cream
+    material: {fileID: 2100000, guid: fe5a93a520a282a4e8f19d1b038350d5, type: 2}
+  - key: wall_white
+    material: {fileID: 2100000, guid: 845bed7c86f26e848a535ec885080844, type: 2}
+  - key: wall_pink
+    material: {fileID: 2100000, guid: 056f11b173cd79946a456fa747acb834, type: 2}
+  - key: wall_brick
+    material: {fileID: 2100000, guid: 77f3681d63da3af4892d46014f61db5e, type: 2}
+  - key: wall_grey
+    material: {fileID: 2100000, guid: 345173d7dfa1b8946a52087ecb35f762, type: 2}
+  - key: house_wall_white
+    material: {fileID: 2100000, guid: 3c6e054e667363e498a58cee6108cf91, type: 2}
+  - key: house_wall_cream
+    material: {fileID: 2100000, guid: f3ecf6c6e5242664d81657b6e9c796ee, type: 2}
+  - key: house_wall_grey
+    material: {fileID: 2100000, guid: 17aaf4e2eb7854d4eb73b396c98a58b1, type: 2}
+  - key: house_wall_brick
+    material: {fileID: 2100000, guid: 31ec73f0812b4b0469bbdc4eaf6c6ed3, type: 2}
+  - key: house_roof_orange
+    material: {fileID: 2100000, guid: fbdfdb5b0c373034ca5e1a876a97699d, type: 2}
+  - key: house_roof_blue
+    material: {fileID: 2100000, guid: 8cfbdade08cf288419b426d0e13fd64b, type: 2}
+  - key: house_roof_slate
+    material: {fileID: 2100000, guid: b995f97b1db8b2f4a804517469b3b895, type: 2}
+  - key: house_roof_green
+    material: {fileID: 2100000, guid: 535a6c96b3239244d8b9efc5e213af8a, type: 2}
+  - key: house_roof_steel
+    material: {fileID: 2100000, guid: 1b0e7c7351e59514f9efe919f9b4a45d, type: 2}
+  - key: house_glass
+    material: {fileID: 2100000, guid: 8b72e8d601cc14f40a220200507b93de, type: 2}
+  - key: house_frame
+    material: {fileID: 2100000, guid: 1cfc64ffc0fd2bb41809495600890387, type: 2}
+  - key: house_slab
+    material: {fileID: 2100000, guid: 755a1b54276cfbb449e6c95accdf2a6d, type: 2}
+  - key: house_tank
+    material: {fileID: 2100000, guid: 6dca13249e36cc9408cdb2c9f9fed0de, type: 2}
+  - key: retaining_wall
+    material: {fileID: 2100000, guid: 8faa707226e52a94b956389eb16f1913, type: 2}
+  - key: road_asphalt
+    material: {fileID: 2100000, guid: 2689a80e3da5b714ba45c7ba20fe960c, type: 2}
+  - key: lane_concrete
+    material: {fileID: 2100000, guid: c7008f027144cec44b90fc39e238e3b3, type: 2}
+  - key: field
+    material: {fileID: 2100000, guid: ba94da43253850b49877ca0dffb1e8d7, type: 2}
+  - key: guard_rail
+    material: {fileID: 2100000, guid: 12f1577e6739e89499e01b343eed4949, type: 2}
+  - key: car_paint_white
+    material: {fileID: 2100000, guid: e2e6a1e344a7e5d4da24c1135f9eda73, type: 2}
+  - key: car_paint_black
+    material: {fileID: 2100000, guid: 6a1f1d515359506479be8b58c67406d5, type: 2}
+  - key: car_paint_silver
+    material: {fileID: 2100000, guid: e8f94ae7c9897ca43a47d95fe2dd644d, type: 2}
+  - key: car_paint_grey
+    material: {fileID: 2100000, guid: 008774ce66a3db047bb24e717f1c7cb9, type: 2}
+  - key: car_paint_navy
+    material: {fileID: 2100000, guid: 9fde801ccddb5874ab7c766425b892d2, type: 2}
+  - key: car_paint_red
+    material: {fileID: 2100000, guid: 647ce01625326f448bf2af716e3d8bc8, type: 2}
+  - key: car_paint_blue
+    material: {fileID: 2100000, guid: 48548d65907c49546af35fc679ceeb1d, type: 2}
+  - key: car_paint_green
+    material: {fileID: 2100000, guid: 1d0a026c680ccc943b0e7811104a80f1, type: 2}
+  - key: car_paint
+    material: {fileID: 2100000, guid: 50d1981d90f678d43ad2d09bfc3b6c5d, type: 2}
+  - key: car_glass
+    material: {fileID: 2100000, guid: ae192714a30e92d4192c87053cd35e21, type: 2}
+  - key: car_trim
+    material: {fileID: 2100000, guid: 2d40563152928f444a5652fd2cf18ebf, type: 2}
+  - key: car_hub
+    material: {fileID: 2100000, guid: 9489344b8d009d148b11dbbaf3956c9e, type: 2}
+  - key: car_light_front
+    material: {fileID: 2100000, guid: 6652c3c063071b54aac5e0958360fadc, type: 2}
+  - key: net_green
+    material: {fileID: 2100000, guid: 7571fa94e51dbe246a0916cf0af9f9d1, type: 2}
+  - key: float_orange
+    material: {fileID: 2100000, guid: 1a0db730453e9e0439079fb02c313980, type: 2}
+  - key: bench_wood
+    material: {fileID: 2100000, guid: fae6541b5c26096479b687ec37e9e168, type: 2}
+  - key: greenhouse_film
+    material: {fileID: 2100000, guid: 5f2cf973abd64ef4887e8a9141952fc7, type: 2}
+  - key: car_light_rear
+    material: {fileID: 2100000, guid: 3f1b275b8edbf0f4f8148b96b6580885, type: 2}
+  - key: concrete
+    material: {fileID: 2100000, guid: b246d1096073a564480a30e1e7ef96f0, type: 2}
+  - key: roof_concrete
+    material: {fileID: 2100000, guid: f6d4ca7d33c6ac3418b920ae5708631c, type: 2}
+  - key: quay_wet
+    material: {fileID: 2100000, guid: dd7ec28746cab49478ec9ef9a447ae6a, type: 2}
+  - key: breakwater
+    material: {fileID: 2100000, guid: fbceeee8a1fcfca4299b553d60eec754, type: 2}
+  - key: asphalt
+    material: {fileID: 2100000, guid: 3274dc7263e68ae48b9cafacbaf72999, type: 2}
+  - key: sand
+    material: {fileID: 2100000, guid: 76bc471f25090b847a867fc2bee87722, type: 2}
+  - key: grass
+    material: {fileID: 2100000, guid: 6cb955e444e74f34d9ab5778c4f19ec0, type: 2}
+  - key: forest
+    material: {fileID: 2100000, guid: 48206a8876d0d0c49907d8a04d3f85b7, type: 2}
+  - key: tree_leaves
+    material: {fileID: 2100000, guid: cd06369df101eda4988963e2bef41042, type: 2}
+  - key: bollard
+    material: {fileID: 2100000, guid: e392dfe2f64688b42ab26b8224db2c6a, type: 2}
+  - key: steel_dark
+    material: {fileID: 2100000, guid: 9121b0c5eee6c1b43afda5529e387411, type: 2}
+  - key: steel_galv
+    material: {fileID: 2100000, guid: e3535a9020773804bafe3b4210aea9b6, type: 2}
+  - key: crane_white
+    material: {fileID: 2100000, guid: 905e34af04657d04ab3fbc1574ee27db, type: 2}
+  - key: crane_blue
+    material: {fileID: 2100000, guid: 4eeccdc7b4aa1f74a87c35895fb8e56f, type: 2}
+  - key: crane_yellow
+    material: {fileID: 2100000, guid: 468a5713a7b01f74c9051d948dca2427, type: 2}
+  - key: crane_house
+    material: {fileID: 2100000, guid: 06344d91a855e9d46bc802cdfd7b9f91, type: 2}
+  - key: warehouse_wall
+    material: {fileID: 2100000, guid: c5dc8d57f60247545aa5ac2d06785941, type: 2}
+  - key: container_red
+    material: {fileID: 2100000, guid: 59ab5853ceaff84469df213cde472393, type: 2}
+  - key: container_blue
+    material: {fileID: 2100000, guid: 876a4e293b2991340ab08ec5ef839b11, type: 2}
+  - key: container_green
+    material: {fileID: 2100000, guid: 5c974db6ebf8068479cfcbaf43123679, type: 2}
+  - key: container_grey
+    material: {fileID: 2100000, guid: 0d7847ad157f9924bba40de6edc5bb31, type: 2}
+  - key: container_orange
+    material: {fileID: 2100000, guid: 8da1b93b7496f364c8533f5e72cbfd2c, type: 2}
+  - key: container_white
+    material: {fileID: 2100000, guid: 54c093a188a5be44c9d3f49491fb3927, type: 2}
+  - key: container_teal
+    material: {fileID: 2100000, guid: e3fa16e8bac2fe84b8aa399d332787d1, type: 2}
+  - key: container_brown
+    material: {fileID: 2100000, guid: c720c64c9555e054f96320d877463816, type: 2}
+  - key: container_navy
+    material: {fileID: 2100000, guid: e82ea7724d0c02645913ae8f279e953f, type: 2}
+  - key: container_maroon
+    material: {fileID: 2100000, guid: b24ebd7ef91a16a408ff1fbcab439577, type: 2}
+  prefabs:
+  - key: bld_warehouse
+    prefab: {fileID: 3183478032277546294, guid: a9111f83fb0f40141abafe0787b83487, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/warehouse_building.glb
+      sha256=23ba1da53f437c6f85d47462a65917cc5d9399ce27f900a3594b9280f7543825 scale=1.5078
+      bounds=(4807.49, 1946.58, 6628.61); flattened 0 texture slots; kept textured:
+      11_-_Default, 20_-_Default, WindowsIndustrial-front_Mat, WindowsIndustrial-frontDoorclosed_Mat,
+      WindowsIndustrial-frontDoorOpen_Mat, WindowsIndustrial-frontSolid_Mat, WindowsIndustrial-frontSolid-OpenWindows_Mat'
+  - key: bld_shop_kr
+    prefab: {fileID: 9192616437396741581, guid: f75e4f38c1dd4204683ed624f4881177, type: 3}
+    source: 'Korean-Shop (DomitorifaB, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/korean_shop_DomitorifaB.glb
+      sha256=edb795092b0258d59ba7cd0c4dfea56e912a78ecd1e93531dd90c703ba171d00 scale=1.3259
+      bounds=(5.95, 4.20, 9.42); flattened 0 texture slots; kept textured: Material.001'
+  - key: bld_gas_station
+    prefab: {fileID: 5710133410463566407, guid: f5d1c5b35a32dfa429f2ecae40aae8dc, type: 3}
+    source: 'Gas station (Elbolilloduro, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/gas_station_Elbolilloduro.glb
+      sha256=44e486a55f3f935749b7718b249a6c333b5e469ffe2beae5027a68434482eb83 scale=0.16701
+      dropped=5 bounds=(50.15, 6.50, 23.94); flattened 10 texture slots; kept textured:
+      6twelve.001, 6twelve_Sign, Asphalt, Background, Background_01, Bathrooms, Board,
+      BrickSmallPainted, Bush, Camera, Carpet, Carpet_01, Checker, Coffee_machine,
+      Concrete, Deposit, Door, Door_01, Foods_01, Foods_02, Foods_03, Foods_04, Foods_07,
+      Fridge, Fuel_pump, Fusible, ice_slush_machine, Light, Management, Marble, material,
+      Metal, Metal_01, Metal_03, Others, Pack_lighters, Plaster, Refrigerador, Refrigerador_01,
+      Refrigerador_02, Road, Roof_tiles, Sanitary, Shelving, Sign, spotlight, Sweets_others,
+      Tiles, TilesPlain, Toilets_Sing, Trash, Tree, Tree_01'
+  - key: rock_0
+    prefab: {fileID: 4247688658173440326, guid: 1896b20c5a3520249bcf2dbb20c73d0a, type: 3}
+    source: procedural low-poly rock (seed 1000), texture Poly Haven coast_rocks_05
+      CC0
+  - key: rock_1
+    prefab: {fileID: 8583159625626488256, guid: 0a191ab6fedc23141ad6297a791e94ec, type: 3}
+    source: procedural low-poly rock (seed 1001), texture Poly Haven coast_rocks_05
+      CC0
+  - key: rock_2
+    prefab: {fileID: 8900478276192127844, guid: dbddc98cf6a7e8946a18b48daade4a47, type: 3}
+    source: procedural low-poly rock (seed 1002), texture Poly Haven coast_rocks_05
+      CC0
+  - key: rock_3
+    prefab: {fileID: 7099329038616911890, guid: fccc7b17cb8988e4baf9ef79621fb90c, type: 3}
+    source: procedural low-poly rock (seed 1003), texture Poly Haven coast_rocks_05
+      CC0
+  - key: rock_4
+    prefab: {fileID: 5171186544201243977, guid: a42e77b1989861b4aad66c08fbc75a33, type: 3}
+    source: procedural low-poly rock (seed 1004), texture Poly Haven coast_rocks_05
+      CC0
+  - key: rock_5
+    prefab: {fileID: 2798818751755849658, guid: a21366d2306764a488def84d08c2de2b, type: 3}
+    source: procedural low-poly rock (seed 1005), texture Poly Haven coast_rocks_05
+      CC0
+  - key: tetrapod
+    prefab: {fileID: 4944253863062105963, guid: 47427c4fd1f25ca48be95f3a831e35ad, type: 3}
+    source: procedural tetrapod armour unit (~2.6 m)
+  - key: hill_0
+    prefab: {fileID: 689690847035694858, guid: 41702308fc1ada245bd8cf1933f373b3, type: 3}
+    source: procedural hill mesh (seed 2000), unit footprint, scale in the harbor
+      definition; baked forest/rock texture
+  - key: hill_1
+    prefab: {fileID: 6083892420155037905, guid: 4bbfae4b3bdb02b44bb6aecb261dcb06, type: 3}
+    source: procedural hill mesh (seed 2001), unit footprint, scale in the harbor
+      definition; baked forest/rock texture
+  - key: hill_2
+    prefab: {fileID: 6488671607654424008, guid: a3bf9b3251a900249a9cc30bbe215c4b, type: 3}
+    source: procedural hill mesh (seed 2002), unit footprint, scale in the harbor
+      definition; baked forest/rock texture
+  - key: hill_3
+    prefab: {fileID: 4375618604282643308, guid: deebf72fa93b1cc4a829bc9ac6bb00f7, type: 3}
+    source: procedural hill mesh (seed 2003), unit footprint, scale in the harbor
+      definition; baked forest/rock texture
+  - key: hill_L_0
+    prefab: {fileID: 20100050844935208, guid: d051dfecda9a2b248bd79b07db256ddd, type: 3}
+    source: same hill mesh with the forest/rock bake tiled for instances wider than
+      ~700 m
+  - key: hill_L_1
+    prefab: {fileID: 776005772853580226, guid: 8216f03882b45134c9abb32c3269008e, type: 3}
+    source: same hill mesh with the forest/rock bake tiled for instances wider than
+      ~700 m
+  - key: hill_L_2
+    prefab: {fileID: 905025835578822914, guid: 8b3a95785e75e114db3e103076ad0ed7, type: 3}
+    source: same hill mesh with the forest/rock bake tiled for instances wider than
+      ~700 m
+  - key: hill_L_3
+    prefab: {fileID: 3150267291963304178, guid: de9d099a6fb752844a13c1043434b555, type: 3}
+    source: same hill mesh with the forest/rock bake tiled for instances wider than
+      ~700 m
+  - key: hill_m_0
+    prefab: {fileID: 2438511128080657986, guid: 9d115d74a7cd97045b18dfb17224960f, type: 3}
+    source: procedural hill mesh (seed 2000) with baked meadow/rock texture, for
+      camera hills
+  - key: hill_m_1
+    prefab: {fileID: 3641679994907594279, guid: db91a6b3d7a082147b76dc21d6015c89, type: 3}
+    source: procedural hill mesh (seed 2001) with baked meadow/rock texture, for
+      camera hills
+  - key: hill_m_2
+    prefab: {fileID: 8759972514921272998, guid: 44f68bf38639dde43a1a74d08ee79ae7, type: 3}
+    source: procedural hill mesh (seed 2002) with baked meadow/rock texture, for
+      camera hills
+  - key: hill_m_3
+    prefab: {fileID: 5948389122363840669, guid: cfcf424252f122244977ed1a94f005e0, type: 3}
+    source: procedural hill mesh (seed 2003) with baked meadow/rock texture, for
+      camera hills
+  - key: house_hip_orange
+    prefab: {fileID: 5681715533903546599, guid: f4013056132404442a426be2e46c81b5, type: 3}
+    source: procedural 1-storey hipped tile-roof house (VillageAssets)
+  - key: house_hip_blue
+    prefab: {fileID: 10960090153862691, guid: 5d584b98fbd73354f9c2565bdc82280c, type: 3}
+    source: procedural 1-storey hipped blue-sheet-roof house with annex (VillageAssets)
+  - key: house_flat_2f
+    prefab: {fileID: 4733445954173528675, guid: 80c2ccf599589254bbc83ddebac21ea6, type: 3}
+    source: procedural 2-storey flat-roof house, green waterproofed roof, tank (VillageAssets)
+  - key: house_gable_slate
+    prefab: {fileID: 737883333237146417, guid: 4c8febcf3cded8141bbd3db2b8cf841c, type: 3}
+    source: procedural gable slate-roof house with porch (VillageAssets)
+  - key: house_flat_1f
+    prefab: {fileID: 7698916743903950346, guid: 9b9bddf1e39c8bd40b1f3b6aaf99ec77, type: 3}
+    source: procedural 1-storey flat-roof house (VillageAssets)
+  - key: shed_steel
+    prefab: {fileID: 400848971562276640, guid: be8d08175c190a64987c82ed718535ce, type: 3}
+    source: procedural corrugated steel shed (VillageAssets)
+  - key: car_sedan_white
+    prefab: {fileID: 8810563780844680984, guid: 972b7980c7734934c8a0dfbaf8ef3e78, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, white'
+  - key: car_sedan_black
+    prefab: {fileID: 5986777867512297358, guid: e064d5ceb3d5ed441bb49db23690130f, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, black'
+  - key: car_sedan_silver
+    prefab: {fileID: 7880343984625851952, guid: 6074f716b3fa21e4e9f913c55d1638c5, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, silver'
+  - key: car_sedan_grey
+    prefab: {fileID: 3967181280080716229, guid: fc24e7a619cc3c047bb21e090cc25af1, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, grey'
+  - key: car_sedan_navy
+    prefab: {fileID: 9197818954902491701, guid: 411b82493c2044c47a5ba5c750af7df4, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, navy'
+  - key: car_sedan_red
+    prefab: {fileID: 2346162791715534873, guid: c6adcfc25b25e384cbfdcf00c4daee38, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      sedan 4.75 x 1.84 x 1.45 m, red'
+  - key: car_suv_white
+    prefab: {fileID: 4906434552770689555, guid: f96b997976d751d45841b41d3aded517, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, white'
+  - key: car_suv_black
+    prefab: {fileID: 7753457898537763443, guid: 614781873e78f6c449daef3ce1bfbda3, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, black'
+  - key: car_suv_silver
+    prefab: {fileID: 8476245569627754704, guid: c89a5ff27950d2e4ba5bb2c701191ad1, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, silver'
+  - key: car_suv_grey
+    prefab: {fileID: 1935220772839814896, guid: 87a061dbe44f5eb498d86d65b686bf20, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, grey'
+  - key: car_suv_navy
+    prefab: {fileID: 6069445220459546639, guid: 7a76366a5d6ee78419b4fb568c5ee102, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, navy'
+  - key: car_suv_red
+    prefab: {fileID: 2920489208539166387, guid: 5f44c90ac862a3649aa94c0890081a10, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      SUV 4.70 x 1.90 x 1.77 m, red'
+  - key: car_hatch_white
+    prefab: {fileID: 2505512988709320370, guid: 3275a1603e5ecf14594d0e7c5a8055b9, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, white'
+  - key: car_hatch_black
+    prefab: {fileID: 1241737813791880053, guid: 3e5a545b9f34e2544b5199acb1dfc356, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, black'
+  - key: car_hatch_silver
+    prefab: {fileID: 7569767783774236854, guid: b74a02672fe9498409f1b04bebda498e, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, silver'
+  - key: car_hatch_grey
+    prefab: {fileID: 5592602026739180914, guid: 89594a033397c5d488ee70a7ed390c81, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, grey'
+  - key: car_hatch_navy
+    prefab: {fileID: 3928830515153749948, guid: 6e52a0c27b69f8a46995159524ea932d, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, navy'
+  - key: car_hatch_red
+    prefab: {fileID: 247099427169895730, guid: 437b46b267ec0af48b87cf49c177fa1f, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      hatchback 4.05 x 1.78 x 1.52 m, red'
+  - key: car_van_white
+    prefab: {fileID: 6669494083621002273, guid: 23cdbe0c174a8bf4ba3c3f8da24fdad7, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, white'
+  - key: car_van_black
+    prefab: {fileID: 5343125968463693433, guid: f831c4b0bb189dd42965720fe1e4b616, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, black'
+  - key: car_van_silver
+    prefab: {fileID: 1485282097679344181, guid: e17d59e131385fd44b5fc79c610fcc88, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, silver'
+  - key: car_van_grey
+    prefab: {fileID: 5982890269909896920, guid: 64b6bfa218b60ea408ae370ca425904b, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, grey'
+  - key: car_van_navy
+    prefab: {fileID: 1110486190059856695, guid: 82185047cd10b6249a75e6d1ae0bdeb7, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, navy'
+  - key: car_van_red
+    prefab: {fileID: 2281936936757353811, guid: 6c9903034ce459d40b2f1dac5569ed5f, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      one-box van 5.15 x 1.98 x 2.0 m, red'
+  - key: truck_light_blue
+    prefab: {fileID: 2282598681295145787, guid: 09bb21a63f173af46a85d922cfdf242d, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      1-ton flatbed truck 5.1 x 1.74 x 2.45 m, blue'
+  - key: truck_light_white
+    prefab: {fileID: 1654392624579816377, guid: 7a2ea7ed23f7f394ea2c55a441a6b3cd, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      1-ton flatbed truck 5.1 x 1.74 x 2.45 m, white'
+  - key: truck_tractor_red
+    prefab: {fileID: 7335220984483767367, guid: 2d83b702560d75940b9722bb0f8ddafd, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      container tractor unit 6.9 x 2.5 x 3.85 m, red'
+  - key: truck_tractor_white
+    prefab: {fileID: 8949102376703410622, guid: d064d268869063d4db1bef46091e0a36, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      container tractor unit 6.9 x 2.5 x 3.85 m, white'
+  - key: truck_tractor_blue
+    prefab: {fileID: 3744270389760882245, guid: d5be86c1183a6144695daaf41105f891, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      container tractor unit 6.9 x 2.5 x 3.85 m, blue'
+  - key: truck_tractor_green
+    prefab: {fileID: 1318364671255979010, guid: af696efe88b0235478f831d799a458af, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      container tractor unit 6.9 x 2.5 x 3.85 m, green'
+  - key: trailer_chassis
+    prefab: {fileID: 6683761652868404856, guid: 0a82e5aea0afbd54baf53042e50580b8, type: 3}
+    source: 'procedural road vehicle, background scenery, not labelled (VillageAssets.Vehicles):
+      40 ft skeletal container chassis 12.4 m, deck top 1.44 m'
+  - key: beach_parasol_red
+    prefab: {fileID: 6152729309245679077, guid: 150f7eddd1411fc47a4f596764338c48, type: 3}
+    source: procedural beach parasol with two loungers (VillageAssets.Vehicles),
+      red
+  - key: beach_parasol_blue
+    prefab: {fileID: 82319808703857647, guid: 3bb437aa8a5da4741b86d8114e1be10b, type: 3}
+    source: procedural beach parasol with two loungers (VillageAssets.Vehicles),
+      blue
+  - key: beach_parasol_white
+    prefab: {fileID: 4306382100784210103, guid: e0bebe332453c94449d0801db51baed1, type: 3}
+    source: procedural beach parasol with two loungers (VillageAssets.Vehicles),
+      white
+  - key: beach_parasol_green
+    prefab: {fileID: 5327768500582432082, guid: 2df8c66bc169e0b47ae1c3f85d7e2619, type: 3}
+    source: procedural beach parasol with two loungers (VillageAssets.Vehicles),
+      green
+  - key: beach_parasol_navy
+    prefab: {fileID: 5516005121255804158, guid: a8f8fae08efdd4a4fb63f4e852c6be39, type: 3}
+    source: procedural beach parasol with two loungers (VillageAssets.Vehicles),
+      navy
+  - key: lifeguard_tower
+    prefab: {fileID: 8116897829802297979, guid: 5eb0e9118212ff8458b548efbb231649, type: 3}
+    source: procedural lifeguard tower 4.2 m (VillageAssets.Vehicles)
+  - key: fishbox_stack_blue
+    prefab: {fileID: 186675319891724640, guid: f4d57613464f6cb4f9e6fdccc5a3b963, type: 3}
+    source: procedural pallet of plastic fish boxes, 1.6 m (VillageAssets.Vehicles),
+      blue
+  - key: fishbox_stack_red
+    prefab: {fileID: 583232170984720303, guid: ee18ec61599eadb46944a09103617ca9, type: 3}
+    source: procedural pallet of plastic fish boxes, 1.6 m (VillageAssets.Vehicles),
+      red
+  - key: fishbox_stack_green
+    prefab: {fileID: 4626149462579658229, guid: d150bbd4b1d29cf41b21443dd202062c, type: 3}
+    source: procedural pallet of plastic fish boxes, 1.6 m (VillageAssets.Vehicles),
+      green
+  - key: fishbox_stack_white
+    prefab: {fileID: 7606590101096519856, guid: ea5fe650a52da7d4aa50a96c7af62d14, type: 3}
+    source: procedural pallet of plastic fish boxes, 1.6 m (VillageAssets.Vehicles),
+      white
+  - key: net_pile
+    prefab: {fileID: 185070681224864682, guid: d789ff89f9c20764b868637f6b183190, type: 3}
+    source: procedural fishing-net pile with floats (VillageAssets.Vehicles)
+  - key: empty_handler
+    prefab: {fileID: 6121235922061026442, guid: 461cd824b5261f64eb3b919bdbe740c5, type: 3}
+    source: procedural empty-container handler (top lift), 16 m mast (VillageAssets.Vehicles)
+  - key: stall_tent_red
+    prefab: {fileID: 8078509454651659363, guid: c3fff94e808f8794d844329e500cc44a, type: 3}
+    source: procedural market stall tent 3 x 3 m (VillageAssets.Vehicles), red
+  - key: stall_tent_blue
+    prefab: {fileID: 7992559354433705616, guid: 1891026f18ee0504e8d6e6de51c49f20, type: 3}
+    source: procedural market stall tent 3 x 3 m (VillageAssets.Vehicles), blue
+  - key: stall_tent_white
+    prefab: {fileID: 139714243761580702, guid: 9686cfc70f4420c4f9cafdcd67f44c6f, type: 3}
+    source: procedural market stall tent 3 x 3 m (VillageAssets.Vehicles), white
+  - key: stall_tent_green
+    prefab: {fileID: 4927249351769065093, guid: f871a79e6569b2e4e8128b44cc6f886f, type: 3}
+    source: procedural market stall tent 3 x 3 m (VillageAssets.Vehicles), green
+  - key: covered_boat_blue
+    prefab: {fileID: 1589957314494012714, guid: 1e184cee546fda34cb22c4eec2d35155, type: 3}
+    source: procedural covered boat on a dry-storage cradle, 8.5 m (VillageAssets.Vehicles),
+      blue
+  - key: covered_boat_white
+    prefab: {fileID: 3913640129281725940, guid: 5ae1190e808136c42a844f8f7f668ec4, type: 3}
+    source: procedural covered boat on a dry-storage cradle, 8.5 m (VillageAssets.Vehicles),
+      white
+  - key: covered_boat_navy
+    prefab: {fileID: 5085245563545260301, guid: d5a3a4cd320009f4496aa1a587d94ea4, type: 3}
+    source: procedural covered boat on a dry-storage cradle, 8.5 m (VillageAssets.Vehicles),
+      navy
+  - key: covered_boat_green
+    prefab: {fileID: 6710462388830694745, guid: b4c167a5988b1a34ebd4fb8249f3c6c1, type: 3}
+    source: procedural covered boat on a dry-storage cradle, 8.5 m (VillageAssets.Vehicles),
+      green
+  - key: fuel_pump
+    prefab: {fileID: 596685783384714261, guid: 4321292c5b90d1c42b06db7303fcb407, type: 3}
+    source: procedural marine fuel pump (VillageAssets.Vehicles)
+  - key: armg_crane
+    prefab: {fileID: 7476234775053221687, guid: 33ec9ec6145ca0149a18846b2da4985a, type: 3}
+    source: procedural rail-mounted gantry crane (ARMG), 34 m span, 26 m (VillageAssets.Vehicles)
+  - key: bench
+    prefab: {fileID: 2484939110738930398, guid: 5b2226f85c5ea3c46b229c0e6698ff6e, type: 3}
+    source: procedural park bench 1.8 m (VillageAssets.Vehicles)
+  - key: greenhouse_vinyl
+    prefab: {fileID: 7163380035797341155, guid: cdc939ed9b2d84447a29b34b25dabc24, type: 3}
+    source: procedural vinyl greenhouse tunnel 7 x 3.2 x 40 m (VillageAssets.Vehicles)
+  - key: parking_stripes_10
+    prefab: {fileID: 4337406776236017615, guid: c97effd9430f1c14289229d3108559a6, type: 3}
+    source: procedural parking stall lines, ten 2.5 x 5 m stalls (VillageAssets.Vehicles)
+  - key: tyre
+    prefab: {fileID: 6001045991239109530, guid: 6c6857bd1cf2e0544852180428b15f86, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/old_tyre/old_tyre_1k.gltf
+      sha256=ba7b417eb3dc747c356ac3cd1f125754755684eb664737a9f1fc9e490c0b766e bounds=(0.60,
+      0.60, 0.17); flattened 0 texture slots; kept textured: old_tyre'
+  - key: lifebuoy
+    prefab: {fileID: 7251297756586043150, guid: abdd656e2e0a368438c1d25dd4bee7b4, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/lifebuoy/lifebuoy_1k.gltf
+      sha256=d9c76a8f2471249f314b3efcffe0d3956ba2d3f0b8ba528cc0f2b861561580f3 bounds=(0.78,
+      0.84, 0.16); flattened 0 texture slots; kept textured: lifebuoy'
+  - key: crate_01
+    prefab: {fileID: 7842982362082836496, guid: 04378e8f1f8393b449fbcd2246e54629, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/plastic_crate_01/plastic_crate_01_1k.gltf
+      sha256=42556fc8e39e5834ebf474dff79d4c0524fd3074be6c86c0c6704a10be8b3756 bounds=(0.30,
+      0.26, 0.41); flattened 1 texture slots; kept textured: none'
+  - key: crate_02
+    prefab: {fileID: 1829542350129686120, guid: d123d4705961707448a024860d68c84e, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/plastic_crate_02/plastic_crate_02_1k.gltf
+      sha256=531f7ba7d4b501759b04fb704db1948bcaab34d8342e71e3f5877d9f0340dba7 bounds=(0.51,
+      0.25, 0.41); flattened 0 texture slots; kept textured: plastic_crate_02'
+  - key: barrel
+    prefab: {fileID: 6265801959593628575, guid: d0b62a07f9ed84c489ee6a022c42d855, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/Barrel_01/Barrel_01_1k.gltf
+      sha256=e084945dedd6a3379c6f3e97842cac89df7169797707e123a5e5b42c135d6888 bounds=(0.56,
+      0.88, 0.56); flattened 0 texture slots; kept textured: Barrel_01'
+  - key: street_lamp
+    prefab: {fileID: 6057357280537482290, guid: 1286926b02593db4c84882cab705f5c5, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/street_lamp_01/street_lamp_01_1k.gltf
+      sha256=5d0358ede168b5e04547780b99d8e6d651cbe644e468e67cb505019047cbd5c8 bounds=(0.70,
+      3.87, 0.39); flattened 0 texture slots; kept textured: street_lamp_01, street_lamp_01_bulb,
+      street_lamp_01_glass'
+  - key: security_light
+    prefab: {fileID: 5565869666663953367, guid: acfb8f332c55bbf4c823bc73989e13ea, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/security_light/security_light_1k.gltf
+      sha256=d82d2191df1e30a75c2f2ce07a8abefcd52b0e8eabc819e2ac854da0f16fba18 bounds=(0.32,
+      0.53, 0.42); flattened 0 texture slots; kept textured: security_light, security_light_bulb,
+      security_light_glass'
+  - key: fence
+    prefab: {fileID: 3565658104183644940, guid: 8422af5b5293ea04c92bc6bb7b4e0783, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/modular_chainlink_fence/modular_chainlink_fence_1k.gltf
+      sha256=4204f151f809b4abd41ea0b18b1b6a5d9c23e6bcc0b6a81e44d03690f26604e9 bounds=(8.12,
+      2.52, 2.15); flattened 0 texture slots; kept textured: modular_chainlink_fence_posts,
+      modular_chainlink_fence_wire'
+  - key: power_pole
+    prefab: {fileID: 7682390789427068848, guid: 37e28768d58384a4ebf10a924caa5f2c, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/modular_electricity_poles/modular_electricity_poles_1k.gltf
+      sha256=2032fb781809021258ceeb22f163bd9ddca2a9186173ed99ee61130dbb808c62 bounds=(13.12,
+      7.00, 1.96); flattened 0 texture slots; kept textured: modular_electricity_poles,
+      modular_electricity_poles_pieces'
+  - key: tree_01
+    prefab: {fileID: 4795100306255115164, guid: 498873e23736de34e99aa5dc1c89268b, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/island_tree_01_dec/island_tree_01_1k_dec.gltf
+      sha256=785b9d2a79837a0ac67bf5f56d3f82633ad99c68eb666b78f0e575aaf24c2057 bounds=(4.75,
+      4.97, 4.79); flattened 0 texture slots; kept textured: island_tree_01, island_tree_01_branches,
+      island_tree_01_leaves'
+  - key: tree_02
+    prefab: {fileID: 1455088331993148247, guid: 0c98046ef5f0dc5449a6968ba9fe49aa, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/island_tree_02_dec/island_tree_02_1k_dec.gltf
+      sha256=1b8ab2ebc06d27f709ec7c2d0d87175b29dfa4933f0ffd6e8d761cf6799f3727 bounds=(4.10,
+      3.40, 4.00); flattened 0 texture slots; kept textured: island_tree_02, island_tree_02_branches,
+      island_tree_02_leaves'
+  - key: shore_rock_01
+    prefab: {fileID: 5032524695086238056, guid: 84caf7c6aa058ff4698872b417004fa4, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/coast_rocks_01_dec/coast_rocks_01_1k_dec.gltf
+      sha256=e0bda779ebbbbabcbf7f1830e40cf7e567b7a4d1f2bbab91aa8c9835ae477c5a bounds=(59.43,
+      3.17, 42.35); flattened 0 texture slots; kept textured: coast_rocks_01'
+  - key: shore_rock_02
+    prefab: {fileID: 383032508484773165, guid: 30a25bac434830541a4dbbc3ada1a954, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHavenCC0/models/coast_land_rocks_02_dec/coast_land_rocks_02_1k_dec.gltf
+      sha256=1f2bc5b6c6925588455d3247ee89509ea6e386bc6266974dbce6acdcbfa8784e bounds=(4.87,
+      1.36, 10.43); flattened 0 texture slots; kept textured: coast_land_rocks_02'
+  - key: bld_warehouses
+    prefab: {fileID: 2510181342178932220, guid: 87b6d7c57e0ee8642851214415d1b408, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/warehouses.glb
+      sha256=1bb5a264425418cebfbced2c2db0fab4cf57d23aff8f0d817e37ff6f81d1fd19 scale=0.25616
+      bounds=(63.21, 11.00, 27.56); flattened 0 texture slots; kept textured: Material'
+  - key: bld_ind_warehouse
+    prefab: {fileID: 1794717625451079814, guid: 0663dc571c807114aaa8278e57804b82, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/low_poly_-_industrial_warehouse_2k.glb
+      sha256=93572e827a69820621f8f4fe756f6108a8000a6222ae39c2fd8c9274b491000a scale=99.791
+      bounds=(26.47, 8.50, 9.63); flattened 0 texture slots; kept textured: none'
+  - key: bld_warehouse3
+    prefab: {fileID: 6116121209480049353, guid: ff3bc758e5186ef4fa4603d5d35cd50c, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/pack_-_realistic_-_3_warehouse.glb
+      sha256=bd23192eca3011c9f1bf11ebf67939be54e206ce5fe6f7cdb4ea16f444564f1d scale=2.7541
+      bounds=(155.28, 14.34, 34.11); flattened 1 texture slots; kept textured: SU_DOOR_01,
+      SU_ROOF_01, SU_WALL, SU_WALL_02, SU_WINDOW_01'
+  - key: bld_tower
+    prefab: {fileID: 4954148668931565793, guid: c60710eaa219fef4695c3015e20f7cd9, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/low_poly_-_asian_tower_block_2k.glb
+      sha256=ea8ca0775954227011998f0501196215d834e3e3355f55dd536c3fd4c6d92b85 scale=1.7909
+      bounds=(29.98, 48.00, 25.15); flattened 0 texture slots; kept textured: standardSurface1'
+  - key: bld_shops
+    prefab: {fileID: 8575913601558753320, guid: 9203c6eebeadb5a479a600c06ca7a6b6, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/asian_shop_pack_free_gameready.glb
+      sha256=d112556ddf8b02e7743d910ad1ca282a4bceebb890ca307051ab0fbe97e1f0e5 scale=1.4241
+      bounds=(34.61, 9.00, 9.16); flattened 0 texture slots; kept textured: Material.157,
+      Material.158, Material.159, Material.160, Material.161, shjopwindow1.003, shop.004,
+      shop1.007, shop1.008, shop1.011, shop1.013, shop2.001, shop2emmisive.002, shop2emmisive.003,
+      shop2glass.001, shop3.003, shop3emmisive.003, shop3glass.002, shop3metal.003,
+      shop3wood.003, shop4.015, shop4.016, shop4.017, shop4window.002, shop5.002,
+      shop5.006, shop5.007, shop6.005, shop6glass.005, shopemission.004, shopwindow.004'
+  - key: bld_hospital
+    prefab: {fileID: 9040691681327027359, guid: d2503d26adf182e48a933a00f4e2d2c9, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings/jejungwon_hospital.glb
+      sha256=d2984b2f85d7a06708f55a30786414b804ea93728ebc0238d95cd969c863ab3e scale=0.97785
+      bounds=(30.25, 12.00, 18.06); flattened 0 texture slots; kept textured: JejungwonHospital_Etc,
+      JejungwonHospital_WallRoof'
+  - key: prop_harbor_crane
+    prefab: {fileID: 1531275704227560638, guid: fd92e8249d780364bb5496c7478e1d8d, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/props/harbor_crane_1k.glb
+      sha256=fa35489f44b95b15383570ca8043d77761b0b2053dffb71957028dd3ab70db05 scale=1
+      tint=1 dropped=0 merged=False renderers=9 bounds=(7.24, 39.91, 43.70) pivotNode=Object_5;
+      flattened 0 texture slots; kept textured: Crane_Base_Mat, Crane_Installations_Mat,
+      Crane_Mast_Mat, Crane_Platform_Mat, Crane_Spreader_4K, Crane_Tower_Mat, Crane_Wheels_Set'
+  - key: prop_portal_crane
+    prefab: {fileID: 5800493375854407763, guid: 3b04e50295fd3844abb43600b55bc7d9, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/props/port_crane_sokol_1k.glb
+      sha256=664f41625715fc3ef450e2d618596431201f91228b854dbc79a8334c66d6f2f0 scale=1
+      tint=1 dropped=1 merged=False renderers=35 bounds=(37.56, 40.77, 14.26) pivotNode=Body_Body_0;
+      flattened 0 texture slots; kept textured: Body, Decor, Details'
+  - key: prop_rtg
+    prefab: {fileID: 5807078905631379427, guid: 8479e4229ed677a41b02cf943b1e6d1b, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/props/gantry_crane_rtg_dec15.glb
+      sha256=b1ed9c19fc69b10666297a2c2786a75a8171189d12560d965a6f10faaeb6a5df scale=0.001
+      tint=1 dropped=0 merged=True renderers=92 bounds=(21.53, 24.85, 12.47) pivotNode=-;
+      flattened 0 texture slots; kept textured: none'
+  - key: prop_shore_scan
+    prefab: {fileID: 5965279528013254855, guid: b4bed6758203c5c4ea3998dc731f9361, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/props/breakwater_coast_2k.glb
+      sha256=a7af6cb4f2aca6c3ba288fe8e5abc2a2f6cf9008f67068b2db3966ef37ec9261 scale=1
+      tint=0.72 dropped=0 merged=False renderers=1 bounds=(92.07, 2.61, 17.15) pivotNode=-;
+      flattened 0 texture slots; kept textured: prop_shore_scan_0_tint'
+  - key: car_a_00
+    prefab: {fileID: 6257814394868782365, guid: 747cf2aa826c7d849a3b61fa9812a5ad, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_01
+    prefab: {fileID: 8334891303518968915, guid: 3cdd5b14034725a44a37a23e36d8c6a1, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_02
+    prefab: {fileID: 1950013779140156915, guid: 13499737dbb645c48a299c8648bcbfc3, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_03
+    prefab: {fileID: 6945855393257781698, guid: e81a0e7926929de4a92b249625578d4a, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_04
+    prefab: {fileID: 8487806999682602393, guid: a98d90e838ce1be4492143ae61fefdb6, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_05
+    prefab: {fileID: 8814328873490368161, guid: d1d4126037811bc4b89a886061c79c47, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_06
+    prefab: {fileID: 1032860684454160273, guid: d3c69c9319b74944bb356cb017cf01fc, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_07
+    prefab: {fileID: 4025879790382737473, guid: e3c8af46406685c49822d0b480f88b46, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_08
+    prefab: {fileID: 2640079732624641076, guid: 43796b9bdea6a8a4fa9193e1ef2c4507, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_a_09
+    prefab: {fileID: 663452130801831383, guid: bd23712ce21e2044da66191bdf45b3d4, type: 3}
+    source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
+      sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
+      clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
+      n=7] car_a_02[3.96x1.35x1.74 n=7] car_a_03[4.61x1.76x1.87 n=7] car_a_04[4.61x1.73x2.07
+      n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
+      n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
+  - key: car_b_00
+    prefab: {fileID: 928382322509442007, guid: caf10b535c205ae4cbe4f0c44250ea55, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_01
+    prefab: {fileID: 7580243023569865689, guid: 3b2b2d0e63bc31946872f17657b920ee, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_02
+    prefab: {fileID: 554488392630401201, guid: b3814de5b1a264b4e9e447339b7fffa9, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_03
+    prefab: {fileID: 8280120766984727708, guid: f4b4092bd58920e4a93787f2d535b8e1, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_04
+    prefab: {fileID: 7674690591567381459, guid: 51971fc4a903ea8418104791bcc674e9, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_05
+    prefab: {fileID: 6724093528938555341, guid: 18973a1d728558842b51113b85ad78bf, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_06
+    prefab: {fileID: 6070074051866734028, guid: be55efa68988f2146bc7e34b2e8d56c4, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_07
+    prefab: {fileID: 2867577491396024421, guid: d1b03766569274246881fc8961b65599, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_08
+    prefab: {fileID: 1811429841080045661, guid: 7eff8424ff824d5419502198f3370035, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: car_b_09
+    prefab: {fileID: 2036405201637204411, guid: a467ebf620bcdfd48b6ca5ce6a2f3e19, type: 3}
+    source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
+      sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
+      clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
+      n=17] car_b_02[4.65x1.50x2.01 n=17] car_b_03[4.32x1.50x1.99 n=17] car_b_04[4.00x1.77x2.04
+      n=17] car_b_05[3.51x1.51x1.82 n=22] car_b_06[3.79x1.66x1.97 n=17] car_b_07[3.95x1.45x1.84
+      n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
+      n=17]'
+  - key: van_a_00
+    prefab: {fileID: 458998955811673493, guid: 3314e66a057f58f4da9e72e6fe086d18, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: van_a_01
+    prefab: {fileID: 621082936471894530, guid: bb9b7d932798281458b177c40e1bf5f3, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: van_a_02
+    prefab: {fileID: 1988909769715711155, guid: 5d2555d7a26a6d94ea140c4a6e623ab9, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: van_a_03
+    prefab: {fileID: 136140684284144381, guid: d5626d7b39e95ba46bf4b59c48d4fe41, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: van_a_04
+    prefab: {fileID: 756781939195089022, guid: ec38c3381c88b1d40889c7e3ef3e0105, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: van_a_05
+    prefab: {fileID: 3258733442897539704, guid: 627d460c601d6cf4480fbc8dc9d17924, type: 3}
+    source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
+      sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
+      clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
+      n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
+      n=5] van_a_05[7.48x2.49x2.76 n=5]'
+  - key: truck_semi_a
+    prefab: {fileID: 1502322956888887834, guid: 48c4f88947f04a24e92d3e93e9cc30bf, type: 3}
+    source: 'Semi Truck Baked (3DE_Study, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/semi_truck_baked_3DE_Study.glb
+      sha256=e9ccc5c13661cd936f085d6f06965ada447fb2108677166130417c0e286aba95 scale=0.72
+      tint=1 dropped=0 merged=False renderers=8 bounds=(3.42, 3.80, 7.21) pivotNode=-;
+      flattened 0 texture slots; kept textured: truck_chrome_pieces_baked, truck_main_body_baked,
+      truck_wheels_baked'
+  - key: truck_kei
+    prefab: {fileID: 4252316504422686261, guid: e401a248c582e2942b6a9631f7b1ef25, type: 3}
+    source: 'Simple Kei Truck (spookyghostboo, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/simple_kei_truck_spookyghostboo.glb
+      sha256=28244e1efc6df9739c7673cc46c0c01b00c6007d1c8614f6fa1e07f34c92aff1 scale=1.05
+      tint=1 dropped=0 merged=False renderers=2 bounds=(2.50, 2.46, 5.05) pivotNode=-;
+      flattened 0 texture slots; kept textured: kei_truck, kei_truck_glass'
+  - key: truck_container_a
+    prefab: {fileID: 630218315833269884, guid: 071a344edff2795469a3127f1dadf54b, type: 3}
+    source: 'DAV Container Truck (jairobman, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/dav_container_truck_jairobman.glb
+      sha256=5d11c712c92e88bfe87961ee4e50fffceab4d9c82895bc3da3f3ef15ff61fbb0 scale=0.33
+      tint=1 dropped=0 merged=False renderers=17 bounds=(3.29, 4.20, 16.98) pivotNode=-;
+      flattened 1 texture slots; kept textured: Color1Mtl, Fl1Mtl, Fr1Mtl, Meshpart12Mtl,
+      Meshpart13Mtl, Meshpart14Mtl, Meshpart1Mtl, Meshpart3Mtl, Meshpart4Mtl, Meshpart9Mtl,
+      Part2Mtl, Semitrailer1Mtl'
+  - key: forklift_a
+    prefab: {fileID: 7944876084500721283, guid: 2d286f099017c7544a4a6a7f645cefa5, type: 3}
+    source: 'Forklift low poly (380660711785, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/forklift_low_poly_380660711785.glb
+      sha256=14abaac831f3e76cf48747e2b4068dc46a2983edf0deebc05b0f847067c6f4c4 scale=0.01
+      tint=1 dropped=0 merged=False renderers=1 bounds=(1.18, 2.12, 3.71) pivotNode=-;
+      flattened 0 texture slots; kept textured: Loader_car_Material'
+  - key: bld_apt_complex
+    prefab: {fileID: 3570042611774561634, guid: b6f51142018890647929ed2e32adb201, type: 3}
+    source: 'residential complex modern apartment building (ziguratarchitect, CC
+      BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/residential_complex_ziguratarchitect.glb
+      sha256=e1f02a7b2f59718198bfa2b2325c2d51ec1627469d6d34e78d3c88294f439825 scale=0.99083
+      dropped=6 bounds=(26.01, 42.00, 60.29); flattened 0 texture slots; kept textured:
+      none'
+  - key: bld_officetel
+    prefab: {fileID: 5655999324358114563, guid: 7b063524de2075b4eafe6389e276cdd1, type: 3}
+    source: 'modern tower office apartment (ziguratarchitect, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/modern_tower_office_apartment_ziguratarchitect.glb
+      sha256=1c5a539fb239258c90ced531c2cd5397fd385fb5a3475f33b35dfd884b96d788 scale=1.0015
+      dropped=4 bounds=(33.04, 38.00, 25.84); flattened 0 texture slots; kept textured:
+      none'
+  - key: bld_hirise
+    prefab: {fileID: 5751361982467517463, guid: d8d8617e04cab914c9599e572fc85f7a, type: 3}
+    source: 'Hi rise apartment building (aitortilla01, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/hi_rise_apartment_aitortilla01.glb
+      sha256=8ed9a7088e50a71c864c405f37dc83980c9aedae478add3410060fdc679f970a scale=0.0068174
+      bounds=(38.04, 110.00, 38.04); flattened 0 texture slots; kept textured: hirise2'
+  - key: bld_villa_kr
+    prefab: {fileID: 1770609280081070899, guid: 48cc921c42f89f7429761e327372fa7a, type: 3}
+    source: 'Korean_multi-family housing lowpoly (clon6767, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/korean_multi_family_housing_clon6767.glb
+      sha256=57bbf2935f90b8dd639f32af11e5871e6ebf3480753cdbe868e0d3b620015bd8 scale=0.049956
+      bounds=(21.69, 13.00, 16.52); flattened 0 texture slots; kept textured: set1,
+      set2'
+  - key: bld_bakery_kr
+    prefab: {fileID: 4060475677524329900, guid: 41183388bc4d63f42a5d7cf20990390c, type: 3}
+    source: 'Korean Bakery (stokhuis, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/korean_bakery_stokhuis.glb
+      sha256=b8b5e959c0ea2c3dbcd3c2926ec431e39319b58f949d9c77d04ad0cd97a45d3e scale=1.7178
+      dropped=7 bounds=(6.48, 7.50, 5.27); flattened 0 texture slots; kept textured:
+      material_detail, material_kobakery'
+  - key: bld_warehouse_blue
+    prefab: {fileID: 4117145648046405518, guid: 4ae4cfb579d63484e835d8a44c0f4e31, type: 3}
+    source: 'Industrial Warehouse (prankscare99, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/industrial_warehouse_prankscare99.glb
+      sha256=0c9a39d9589fdd1fe3af11e17cba9bbbbcdf48e3d83cdd876f60e0093e2c65ca scale=4.1662
+      bounds=(11.67, 10.00, 30.35); flattened 0 texture slots; kept textured: Industrial'
+  - key: bld_brick_factory
+    prefab: {fileID: 3420234803929987334, guid: b9a53e235ea28ac49a0cbcf08310331e, type: 3}
+    source: 'industrial building (spicybamer, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/industrial_building_spicybamer.glb
+      sha256=e636098787f9dd618743c25d118c107e3a7a5b10b24469a54f135f91f091c699 scale=4.1257
+      bounds=(13.77, 12.00, 14.23); flattened 0 texture slots; kept textured: Material,
+      Material.001'
+  - key: bld_city_towers
+    prefab: {fileID: 3593708589661312081, guid: a0b9af347def6f44a8746fc9071cc1c0, type: 3}
+    source: 'City pack 7 (Pasha., CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/city_pack_7_Pasha.glb
+      sha256=9eeea1daa1f7e51120b75325ea05610ed7d5512af7d7efc73673a5a3f2ce6c9a scale=0.0099337
+      bounds=(686.43, 105.00, 464.72); flattened 0 texture slots; kept textured:
+      material_1, material_10, material_100, material_102, material_103, material_105,
+      material_106, material_108, material_109, material_110, material_111, material_112,
+      material_113, material_114, material_115, material_116, material_118, material_120,
+      material_121, material_123, material_125, material_128, material_129, material_13,
+      material_130, material_132, material_134, material_14, material_148, material_149,
+      material_15, material_150, material_151, material_152, material_154, material_155,
+      material_156, material_158, material_159, material_16, material_162, material_17,
+      material_18, material_2, material_20, material_21, material_22, material_23,
+      material_24, material_27, material_29, material_3, material_30, material_31,
+      material_32, material_33, material_35, material_36, material_37, material_38,
+      material_39, material_4, material_43, material_44, material_45, material_46,
+      material_5, material_51, material_52, material_53, material_54, material_55,
+      material_57, material_59, material_6, material_60, material_61, material_63,
+      material_66, material_71, material_72, material_73, material_74, material_75,
+      material_80, material_81, material_82, material_83, material_84, material_85,
+      material_86, material_9, material_90, material_91, material_95, material_96,
+      material_97, material_98, material_99'
+  - key: bld_apt_slab
+    prefab: {fileID: 7496374590691070153, guid: 51b52115361938b479d9224616e73a6d, type: 3}
+    source: 'LOW POLY - SOVIET APARTMENT BUILDING 8K (Colin.Greenall, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/buildings2/soviet_apartment_ColinGreenall.glb
+      sha256=1a028be937242489167b4b0eaa0010fb338254addb6f6c73f3ca4b2ecfc31b2e scale=26.125
+      bounds=(17.85, 30.00, 43.40); flattened 0 texture slots; kept textured: lambert1'
+  - key: road_tile_x
+    prefab: {fileID: 4118385300543793844, guid: 5b20b99b1340a32479dc1000e67123fa, type: 3}
+    source: 'Modular Roads Pack (SquadCell, CC BY), X tile: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/modular_roads_pack_SquadCell.glb
+      sha256=4c81a2c19e9e804b33bf6939492a4e53720d90e397e4aefd570c591745e29094 scale=1
+      kept=2 dropped=10 bounds=(37.92, 0.20, 37.92); flattened 0 texture slots; kept
+      textured: City_Intersection_mat, City_Road_mat'
+  - key: road_tile_t
+    prefab: {fileID: 354847054230008429, guid: a7656d2c0a88e0a449d230cfac4aa5af, type: 3}
+    source: 'Modular Roads Pack (SquadCell, CC BY), T tile: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/modular_roads_pack_SquadCell.glb
+      sha256=4c81a2c19e9e804b33bf6939492a4e53720d90e397e4aefd570c591745e29094 scale=1
+      kept=2 dropped=10 bounds=(37.92, 0.20, 37.92); flattened 0 texture slots; kept
+      textured: City_Intersection_mat, City_Road_mat'
+  - key: signal_vehicle
+    prefab: {fileID: 1906069876316411049, guid: 44fc64093bf20f242982d081fb542c35, type: 3}
+    source: 'Traffic Lights [Street Assets Vol. 02] (whisper.alt, CC BY), vehicle
+      signal: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/traffic_lights_whisper_alt.glb
+      sha256=108c17c9a07233a6ca7107c460b7834f18e58af21311a114101856a77b37905b scale=1.5
+      kept=14 dropped=9 bounds=(1.42, 5.25, 5.38); flattened 0 texture slots; kept
+      textured: Traffic_Light'
+  - key: signal_ped
+    prefab: {fileID: 5986152543706339105, guid: 0e26107fa1ca5bd4badb6b2ab8a48d82, type: 3}
+    source: 'Traffic Lights [Street Assets Vol. 02] (whisper.alt, CC BY), pedestrian
+      signal: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/traffic_lights_whisper_alt.glb
+      sha256=108c17c9a07233a6ca7107c460b7834f18e58af21311a114101856a77b37905b scale=1.2
+      kept=9 dropped=14 bounds=(0.60, 3.33, 0.66); flattened 0 texture slots; kept
+      textured: Pedestrian_Traffic_Ligh'
+  - key: bus_shelter
+    prefab: {fileID: 2240687429142148811, guid: 1970883a63531e54bb5856b3993be4c9, type: 3}
+    source: 'Bus stop (Elbolilloduro, CC BY), shelter: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/bus_stop_Elbolilloduro.glb
+      sha256=d929e5cf9d587e88b6af6cc53b95766c5a20806f52344b16dcca8e28d453b548 scale=1
+      kept=3 dropped=186 bounds=(4.97, 3.32, 1.96); flattened 0 texture slots; kept
+      textured: Bus_stop_01'
+  - key: sign_gantry
+    prefab: {fileID: 4935760730419176915, guid: 5ec155c517fd7084f8325db74d80f2de, type: 3}
+    source: 'Road Traffic Sign (jacky15621419, CC BY), gantry: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/road_traffic_sign_jacky15621419.glb
+      sha256=ba85977f1cadea1c3dde807e6159b19241616eb190e4e1a59a5fc01e1c9224a3 scale=0.06
+      kept=6 dropped=1 bounds=(16.44, 10.26, 13.52); flattened 0 texture slots; kept
+      textured: Scene_-_Root'
+  - key: jersey_barrier
+    prefab: {fileID: 2410795455858817320, guid: 7f4587e14e49cba47a73a016d39e980b, type: 3}
+    source: 'Japanese Traffic Assets (erikkinc, CC BY), jersey barrier: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/japanese_traffic_assets_erikkinc.glb
+      sha256=51d9b2704066449f40b6bd865e1a0fc2cd6498eea49a2926fad950b5534487b8 scale=150
+      kept=1 dropped=79 bounds=(1.21, 0.72, 1.76); flattened 0 texture slots; kept
+      textured: JerseyBarrier'
+  - key: vending_machine
+    prefab: {fileID: 6717916083430203824, guid: 563c5ac3932248c4da924e09c2bb9e85, type: 3}
+    source: 'Japanese Traffic Assets (erikkinc, CC BY), vending machine: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/japanese_traffic_assets_erikkinc.glb
+      sha256=51d9b2704066449f40b6bd865e1a0fc2cd6498eea49a2926fad950b5534487b8 scale=150
+      kept=2 dropped=78 bounds=(2.04, 2.98, 2.12); flattened 0 texture slots; kept
+      textured: VendingMachine, VendingMachineInside'
+  - key: citylight_panel
+    prefab: {fileID: 2581174291261637422, guid: 5f32bd659d4324c41b8896f13683c51e, type: 3}
+    source: 'Japanese Traffic Assets (erikkinc, CC BY), city-light panel: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/japanese_traffic_assets_erikkinc.glb
+      sha256=51d9b2704066449f40b6bd865e1a0fc2cd6498eea49a2926fad950b5534487b8 scale=150
+      kept=2 dropped=78 bounds=(2.11, 3.02, 2.37); flattened 0 texture slots; kept
+      textured: Citylight'
+  - key: street_bin
+    prefab: {fileID: 4092045116174054838, guid: 1f8f2799c680bec4b9f174d4a1e94653, type: 3}
+    source: 'Japanese Traffic Assets (erikkinc, CC BY), street bin: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/street/japanese_traffic_assets_erikkinc.glb
+      sha256=51d9b2704066449f40b6bd865e1a0fc2cd6498eea49a2926fad950b5534487b8 scale=150
+      kept=2 dropped=78 bounds=(2.02, 1.34, 1.79); flattened 0 texture slots; kept
+      textured: StreetBinInside, StreetBinOutside'
+  - key: ocean_buoy
+    prefab: {fileID: 3188170040093553409, guid: 85ac03978fe8ab54997b8ed115a084a5, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHaven/ocean_buoy/ocean_buoy_2k.gltf
+      sha256=746e4213c2f86cc8eec4cb3909d8c0cca9062ee0e27c342ab9021c76ae638e98 bounds=(1.07,
+      2.66, 0.95); flattened 0 texture slots; kept textured: buoy'
+  - key: lateral_marker
+    prefab: {fileID: 4126298661190644782, guid: 3ca94a05dab896e4197d0ce2c11c5b5d, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHaven/lateral_sea_marker/lateral_sea_marker_2k.gltf
+      sha256=b4a3ecfc84d2e26b4477f82214e179cbee732c27e5cc33bfd29b2b3c1a8f0c9c bounds=(3.00,
+      6.84, 3.00); flattened 0 texture slots; kept textured: lateral_sea_marker'
+  - key: coastal_cliff
+    prefab: {fileID: 8289012602589230999, guid: 805046bd70bee4442901a8a64baf451a, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/PolyHaven/coastal_cliff_01/coastal_cliff_01_2k.gltf
+      sha256=8e82762ae04616a4c383cf9b91ee42d01852c07445c7b66fcc199fc635024d47 bounds=(91.98,
+      10.33, 10.97); flattened 0 texture slots; kept textured: coastal_cliff_01'
+  - key: godown_warehouse
+    prefab: {fileID: 4871599256173174835, guid: b27c12a4694a6dc4ab41c046eb61f802, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/InnersceneHarbor/innerscene_godown_warehouse.glb
+      sha256=6e5babebe730bafa3e9f0dcc4b36b27102249a353cd8ad4439cec080ed744014 bounds=(30.50,
+      8.40, 22.25); flattened 120 texture slots; kept textured: none'
+  - key: mobile_crane
+    prefab: {fileID: 6310570181561396112, guid: 236416d559b3440449d708b4b5b16a56, type: 3}
+    source: 'Assets/PortCCTVSimulator/ThirdParty/InnersceneHarbor/innerscene_mobile_crane.glb
+      sha256=755dd2a900f43badd6349a312580aa357293f601fe895c507a776846bfe68b55 bounds=(12.11,
+      4.76, 3.74); flattened 342 texture slots; kept textured: none'

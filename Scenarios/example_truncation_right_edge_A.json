@@ -1,0 +1,44 @@
+{
+    "schema_version": 1,
+    "scenario_id": "example_truncation_right_edge_A",
+    "harbor_id": "generic_harbor_01",
+    "camera_preset_id": "cam_A_quay_mast",
+    "camera_override": {
+        "enabled": false,
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "euler_deg": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "vertical_fov_deg": 40.0
+    },
+    "environment": {
+        "preset_id": "day_clear",
+        "water_preset_id": "calm",
+        "water_time_s": 12.0
+    },
+    "vessels": [
+        {
+            "object_id": "v00",
+            "asset_id": "ferry",
+            "x": -77.95497131347656,
+            "z": -8.385746955871582,
+            "heading_deg": 250.0,
+            "immersion_m": 0.4000000059604645
+        }
+    ],
+    "capture": {
+        "width": 1920,
+        "height": 1080,
+        "warmup_frames": 6,
+        "write_mask": true,
+        "mask_stride": 1,
+        "strict_placement": false
+    },
+    "notes": "Example copied from regression_r4/truncation_right_edge_A"
+}
