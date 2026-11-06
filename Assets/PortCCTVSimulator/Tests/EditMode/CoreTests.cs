@@ -92,6 +92,60 @@ namespace PortCCTV.Tests
         }
     }
 
+    public class BatchResumeTests
+    {
+        static void WriteFile(string dir, string name, string text) => File.WriteAllText(Path.Combine(dir, name), text);
+
+        [Test]
+        public void EmptyOrPartialOutputFolders_AreNotTreatedAsDone()
+        {
+            var root = Path.Combine(Path.GetTempPath(), "portcctv_resume_" + System.Guid.NewGuid().ToString("N"));
+            try
+            {
+                // 1) empty folder
+                var empty = Path.Combine(root, "out", "job_empty"); Directory.CreateDirectory(empty);
+                Assert.IsFalse(CaptureService.VerifyExistingOutput(empty, "s_empty", out var r1), "empty folder");
+                StringAssert.Contains("metadata.json", r1);
+
+                // 2) complete-looking folder with correct hashes -> done; then a tampered file -> not done
+                var full = Path.Combine(root, "out", "job_full"); Directory.CreateDirectory(full);
+                var meta = new CaptureMetadata { scenario_id = "s_full", complete = true };
+                foreach (var f in CaptureService.RequiredFiles)
+                {
+                    WriteFile(full, f, "x" + f);
+                    meta.files.Add(f); meta.file_sha256.Add(ScenarioIO.Sha256Hex(File.ReadAllBytes(Path.Combine(full, f))));
+                }
+                WriteFile(full, "metadata.json", JsonUtility.ToJson(meta));
+                Assert.IsTrue(CaptureService.VerifyExistingOutput(full, "s_full", out var r2), r2);
+                Assert.IsFalse(CaptureService.VerifyExistingOutput(full, "other_scenario", out _), "scenario id mismatch");
+                WriteFile(full, "rgb.png", "");
+                Assert.IsFalse(CaptureService.VerifyExistingOutput(full, "s_full", out var r3), "emptied image");
+                StringAssert.Contains("rgb.png", r3);
+
+                // 3) the batch runner reports the empty folder as failed + unexpected, and leaves it in place
+                var batch = new BatchFile { batch_id = "resume_test", output_dir = Path.Combine(root, "out") };
+                batch.jobs.Add(new BatchJob { job_id = "job_empty", use_inline = true, inline_scenario = new ScenarioConfig { scenario_id = "s_empty" } });
+                var jobs = Path.Combine(root, "jobs.json");
+                File.WriteAllText(jobs, JsonUtility.ToJson(batch));
+                BatchSummary sum = null;
+                var it = BatchRunner.Run(null, jobs, _ => { }, x => sum = x);
+                while (it.MoveNext()) { }
+                Assert.IsNotNull(sum);
+                Assert.AreEqual(0, sum.skipped_existing);
+                Assert.AreEqual(1, sum.failed);
+                Assert.AreEqual(1, sum.unexpected);
+                Assert.IsTrue(Directory.Exists(empty), "never deleted");
+
+                // 4) a missing jobs file ends the run (done callback with null) instead of throwing out of the coroutine
+                bool called = false; BatchSummary missing = new BatchSummary();
+                var it2 = BatchRunner.Run(null, Path.Combine(root, "no_such_jobs.json"), _ => { }, x => { called = true; missing = x; });
+                Assert.DoesNotThrow(() => { while (it2.MoveNext()) { } });
+                Assert.IsTrue(called); Assert.IsNull(missing);
+            }
+            finally { if (Directory.Exists(root)) Directory.Delete(root, true); }
+        }
+    }
+
     public class GeometryTests
     {
         [Test]
@@ -373,6 +427,40 @@ namespace PortCCTV.Tests
         }
 
         [Test]
+        public void StoppingAMovingVessel_KeepsItsCurrentPose()
+        {
+            var s = MarinaAuto();
+            s.navigation.sim_time_s = 90f;
+            _w.Apply(s);
+            var mover = _w.Vessels.First(v => _w.Nav.IsMoving(v.placement.object_id) &&
+                Vector2.Distance(new Vector2(v.placement.x, v.placement.z),
+                    new Vector2(s.vessels.First(q => q.object_id == v.placement.object_id).x, s.vessels.First(q => q.object_id == v.placement.object_id).z)) > 20f);
+            string id = mover.placement.object_id;
+            var before = (mover.placement.x, mover.placement.z, mover.placement.heading_deg);
+            foreach (var mode in new[] { "none", "anchor" })
+            {
+                var t = s.Clone();
+                Assert.AreEqual(1, _w.SetMotionKeepingPose(t, new[] { id }, mode));
+                _w.Apply(t);
+                var after = _w.Vessels.First(v => v.placement.object_id == id);
+                if (mode == "none")
+                {
+                    Assert.AreEqual(before.x, after.placement.x, 1e-3f, "stop keeps x");
+                    Assert.AreEqual(before.z, after.placement.z, 1e-3f, "stop keeps z");
+                    Assert.AreEqual(0f, Mathf.DeltaAngle(before.heading_deg, after.placement.heading_deg), 1e-2f, "stop keeps heading");
+                }
+                else
+                {
+                    var sv = t.vessels.First(q => q.object_id == id);
+                    Assert.AreEqual(before.x, sv.x, 1e-3f, "anchor starts from the current pose");
+                    float d = Vector2.Distance(new Vector2(before.x, before.z), new Vector2(after.placement.x, after.placement.z));
+                    Assert.Less(d, 2f * mover.entry.geometry.bounds_max.x + 300f, "anchored vessel swings about the anchor set where it stopped");
+                }
+                _w.Apply(s);
+            }
+        }
+
+        [Test]
         public void MovingVessels_StayInWater_AndClearOfStructures()
         {
             foreach (var hid in new[] { ContainerTerminal01.Id, FishingPort01.Id, Marina01.Id })
@@ -629,6 +717,67 @@ namespace PortCCTV.Tests
             c.baseSpeed = 40f;
             Assert.AreEqual(160f, c.CurrentSpeed(true, false), 1e-3f);
             Assert.AreEqual(10f, c.CurrentSpeed(false, true), 1e-3f);
+        }
+    }
+
+    public class LabelPolicyAndWaveTests
+    {
+        static ObjectLabel Obj(int px, float h, float fog = 1f, float contrast = 0.2f, float drops = 0f) => new ObjectLabel
+        {
+            object_id = "o", visible_mask = new VisibleMaskLabel { computed = true, pixel_count = px, bbox = new PixelBox { valid = true, x_min = 10, y_min = 10, x_max = 30, y_max = 10 + h } },
+            fog_transmittance = fog, visible_luma_contrast = contrast, lens_drop_cover_fraction = drops,
+        };
+
+        [Test]
+        public void VisibilityPolicy_SeparatesTargetsFromIgnoreRegions()
+        {
+            var p = new LabelPolicy { min_fog_transmittance = 0.12f };
+            var ok = Obj(400, 20); LabelComputer.ApplyPolicy(ok, p); Assert.AreEqual("label", ok.detectability);
+            var fog = Obj(400, 20, fog: 0.05f); LabelComputer.ApplyPolicy(fog, p); Assert.AreEqual("ignore", fog.detectability); StringAssert.Contains("fog", fog.detectability_reasons[0]);
+            Assert.AreEqual(0f, new LabelPolicy().min_fog_transmittance, "fog rule off by default: the image contrast decides");
+            var flat = Obj(400, 20, contrast: 0.01f); LabelComputer.ApplyPolicy(flat, p); Assert.AreEqual("ignore", flat.detectability);
+            var wet = Obj(400, 20, drops: 0.9f); LabelComputer.ApplyPolicy(wet, p); Assert.AreEqual("ignore", wet.detectability);
+            var tiny = Obj(10, 2); LabelComputer.ApplyPolicy(tiny, p); Assert.AreEqual("ignore", tiny.detectability); Assert.AreEqual(2, tiny.detectability_reasons.Count);
+            var none = Obj(0, 0); none.visible_mask.bbox = PixelBox.Empty; LabelComputer.ApplyPolicy(none, p); Assert.AreEqual("absent", none.detectability);
+            p.enabled = false; LabelComputer.ApplyPolicy(fog, p); Assert.AreEqual("label", fog.detectability, "policy off keeps every visible object");
+            var back = ScenarioIO.FromJson(ScenarioIO.ToJson(new ScenarioConfig()).Replace("\"label_policy\"", "\"label_policy_old\""));
+            Assert.IsTrue(back.capture.label_policy.enabled, "files without a policy get the default rule");
+        }
+
+        [Test]
+        public void WaveMotion_MovesSmallHullsMoreThanShips_AndOffRestoresTheMeanPlane()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var w = new SimWorld(); w.Initialize();
+            try
+            {
+                var s = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
+                Assert.IsTrue(s.environment.vessel_wave_motion, "new scenes follow the waves");
+                s.environment.water_preset_id = "light_chop";
+                w.Apply(s);
+                var cam = w.CctvCamera;
+                var rt = new RenderTexture(320, 180, 24); cam.targetTexture = rt;
+                for (int i = 0; i < 6; i++) { cam.Render(); UnityEngine.Rendering.AsyncGPUReadback.WaitAllRequests(); }
+                w.ApplyWaveMotion();
+                cam.targetTexture = null; rt.Release(); Object.DestroyImmediate(rt);
+                Assert.IsTrue(w.Vessels.All(v => v.wave_status == "ok"), string.Join(",", w.Vessels.Select(v => v.placement.object_id + ":" + v.wave_status)));
+                foreach (var v in w.Vessels)
+                {
+                    float L = v.entry.geometry.bounds_max.x - v.entry.geometry.bounds_min.x;
+                    float cap = Mathf.Clamp(60f / L, 1f, 8f) + 1e-3f;
+                    Assert.LessOrEqual(Mathf.Abs(v.wave_pitch_deg), cap, v.placement.object_id);
+                    Assert.LessOrEqual(Mathf.Abs(v.wave_roll_deg), cap, v.placement.object_id);
+                    Assert.AreEqual(w.Harbor.water_reference_y - v.placement.immersion_m - v.entry.geometry.hull_reference_min_y + v.wave_heave_m, v.root.transform.position.y, 1e-3f);
+                }
+                Assert.IsTrue(w.Vessels.Any(v => Mathf.Abs(v.wave_heave_m) > 0.01f || Mathf.Abs(v.wave_pitch_deg) > 0.05f), "some vessel actually moves with the waves");
+                s.environment.vessel_wave_motion = false; w.Apply(s); w.ApplyWaveMotion();
+                foreach (var v in w.Vessels)
+                {
+                    Assert.AreEqual("off", v.wave_status);
+                    Assert.AreEqual(-v.placement.immersion_m, v.HullReferenceMinWorldY - w.Harbor.water_reference_y, 1e-3f);
+                }
+            }
+            finally { w.Dispose(); }
         }
     }
 

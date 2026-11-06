@@ -193,6 +193,8 @@ namespace PortCCTV.EditorTools
             EnsureVessels();
             EnsureScene();
             AssetDatabase.SaveAssets();
+            var cr = ColliderRepair.Run(false);   // split triangles PhysX refuses at build time (Logs/collider_repair_report.json)
+            Log($"Collider repair: {cr.repaired} split, {cr.box_fallback} box fallback");
             Log("Bootstrap done. Theme materials=" + theme.materials.Count);
         }
 

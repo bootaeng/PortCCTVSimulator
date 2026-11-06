@@ -87,9 +87,21 @@ def check_capture(d: Path) -> dict:
                 if fb["valid"] and (bb[0] < fb["x_min"] - 1 or bb[1] < fb["y_min"] - 1 or bb[2] > fb["x_max"] + 1 or bb[3] > fb["y_max"] + 1):
                     errs.append(f"{o['object_id']}: visible bbox outside full-mesh box")
     yolo = [l for l in (d / "yolo_visible_bbox_provisional.txt").read_text(encoding="utf-8").splitlines() if l.strip()]
-    n_vis = sum(1 for o in objs if o["visible_mask"]["computed"] and o["visible_mask"]["bbox"]["valid"])
+    vis = [o for o in objs if o["visible_mask"]["computed"] and o["visible_mask"]["bbox"]["valid"]]
+    # captures with a label policy split visible objects into targets ("label") and ignore regions ("ignore")
+    n_vis = sum(1 for o in vis if o.get("detectability", "label") == "label")
     if len(yolo) != n_vis:
-        errs.append(f"yolo lines {len(yolo)} != visible objects {n_vis}")
+        errs.append(f"yolo lines {len(yolo)} != visible target objects {n_vis}")
+    ig_path = d / "yolo_ignore_regions_provisional.txt"
+    if ig_path.exists():
+        ig = [l for l in ig_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+        n_ig = sum(1 for o in vis if o.get("detectability") == "ignore")
+        if len(ig) != n_ig:
+            errs.append(f"ignore lines {len(ig)} != ignored objects {n_ig}")
+        for o in vis:
+            if o.get("detectability") == "ignore" and not o.get("detectability_reasons"):
+                errs.append(f"{o['object_id']}: ignored without a reason")
+        yolo = yolo + ig
     for l in yolo:
         v = [float(x) for x in l.split()[1:]]
         if any(x < 0 or x > 1 for x in v):

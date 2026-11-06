@@ -57,6 +57,10 @@ namespace PortCCTV
         public WeatherConfig weather = new WeatherConfig();
         /// <summary>Harbour lamps and vessel navigation / deck lights: "auto" (night presets and sun below 4 deg), "on", "off".</summary>
         public string lights = "auto";
+        /// <summary>Vessels heave, pitch and roll with the rendered HDRP waves (water height query at five hull points,
+        /// averaged over the hull so large ships move less). false (also for older files) = vessels sit on the mean plane.
+        /// Kinematic surface following, not a seakeeping model.</summary>
+        public bool vessel_wave_motion = false;
     }
 
     [Serializable]
@@ -94,6 +98,34 @@ namespace PortCCTV
         /// <summary>CPU visible-mask ray spacing in output pixels (1 = every pixel centre). Not used by the GPU mask.</summary>
         public int mask_stride = 1;
         public bool strict_placement = false;
+        /// <summary>Which vessels count as detection targets in the provisional YOLO file (see LabelPolicy).</summary>
+        public LabelPolicy label_policy = new LabelPolicy();
+    }
+
+    /// <summary>
+    /// Rule that decides whether a vessel whose geometry is in the visible mask is still a usable detection target in the final
+    /// (degraded) image. The GPU mask ignores fog, rain, snow and lens drops, so a hull can be "visible" in the mask but
+    /// impossible to see. Objects failing any rule become "ignore": they are left out of yolo_visible_bbox_provisional.txt and
+    /// listed in yolo_ignore_regions_provisional.txt (for ignore regions in training/evaluation), never silently dropped.
+    /// The thresholds are engineering defaults, NOT calibrated against human annotators; record and revisit them.
+    /// </summary>
+    [Serializable]
+    public class LabelPolicy
+    {
+        public string version = "visibility_rule_v2_uncalibrated";
+        public bool enabled = true;
+        /// <summary>Minimum visible-mask pixels.</summary>
+        public int min_visible_px = 30;
+        /// <summary>Minimum visible bbox height in output pixels.</summary>
+        public float min_box_height_px = 4f;
+        /// <summary>Minimum exp(-distance / fog mean free path) to the hull centre; 0 = rule off (default). The image contrast below
+        /// already measures what fog leaves; the transmittance is an estimate along one ray and was stricter than the image.</summary>
+        public float min_fog_transmittance = 0f;
+        /// <summary>Minimum mean |luma(pixel) - mean luma of the surrounding background| / 255 over the visible-mask pixels of the
+        /// final rgb.png. A plain mean difference failed for a white-sail / dark-hull dinghy that averages to the background.</summary>
+        public float min_luma_contrast = 0.02f;
+        /// <summary>Maximum share of the visible pixels behind lens water drops.</summary>
+        public float max_lens_drop_cover = 0.6f;
     }
 
     public static class ScenarioIO

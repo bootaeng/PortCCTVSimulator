@@ -64,6 +64,12 @@ namespace PortCCTV
         public Quaternion root_rotation_world;
         public float heading_deg;
         public float immersion_m;
+        /// <summary>Wave motion on top of the mean-plane pose (environment.vessel_wave_motion): status off | ok | partial |
+        /// unavailable, heave (m, + up), pitch (deg, bow up +), roll (deg, port up +).</summary>
+        public string wave_status = "off";
+        /// <summary>Placement notes that do not invalidate the placement (e.g. immersion far from the asset default).</summary>
+        public List<string> placement_notes = new List<string>();
+        public float wave_heave_m, wave_pitch_deg, wave_roll_deg;
         /// <summary>Navigation at this frame: motion mode (none | auto | route), state and speed over ground (kn).</summary>
         /// <summary>exp(-distance / fog mean free path) from the camera to the hull centre (1 = no fog). A vessel can be in the
         /// visible mask yet almost invisible in heavy fog; filter on this if needed.</summary>
@@ -75,6 +81,13 @@ namespace PortCCTV
         public float visible_mean_luma = -1f;
         /// <summary>sensor.lens drops: share of the visible-mask pixels behind a water drop on the lens (0 when none).</summary>
         public float lens_drop_cover_fraction = 0f;
+        /// <summary>Mean over the visible-mask pixels of |luma - mean luma of the background ring around the bbox| / 255 in the final
+        /// rgb.png (after fog, rain and sensor degradation); -1 if no mask pixels.</summary>
+        public float visible_luma_contrast = -1f;
+        /// <summary>label_policy outcome: "label" (detection target), "ignore" (in the mask but fails a visibility rule: use as
+        /// an ignore region) or "absent" (no visible pixels). Reasons list the failed rules.</summary>
+        public string detectability = "label";
+        public List<string> detectability_reasons = new List<string>();
         /// <summary>Navigation lights of this vessel whose bulbs face the camera (masthead, starboard, port, stern, allround, anchor_*);
         /// empty by day or when lights are off.</summary>
         public List<string> nav_lights_facing_camera = new List<string>();
@@ -114,6 +127,8 @@ namespace PortCCTV
         public string box_convention = "pixel-edge xyxy, origin top-left, x right, y down, units = output pixels";
         public List<ObjectLabel> objects = new List<ObjectLabel>();
         public List<NonVesselObject> non_vessel_objects = new List<NonVesselObject>();
+        /// <summary>Visibility rule applied to decide detectability (copied from the scenario).</summary>
+        public LabelPolicy label_policy;
         public List<string> definitions = new List<string>
         {
             "full_mesh_box: projection of ALL vessel render vertices (includes submerged hull and parts hidden by other objects).",
@@ -125,6 +140,22 @@ namespace PortCCTV
 
     public static class LabelComputer
     {
+        /// <summary>Sets <see cref="ObjectLabel.detectability"/> from the visibility measurements and the policy.</summary>
+        public static void ApplyPolicy(ObjectLabel o, LabelPolicy p)
+        {
+            o.detectability_reasons.Clear();
+            var vm = o.visible_mask;
+            if (vm == null || !vm.computed || vm.pixel_count <= 0 || !vm.bbox.valid) { o.detectability = "absent"; return; }
+            if (p == null || !p.enabled) { o.detectability = "label"; return; }
+            var r = o.detectability_reasons;
+            if (vm.pixel_count < p.min_visible_px) r.Add($"visible_px {vm.pixel_count} < {p.min_visible_px}");
+            if (vm.bbox.Height < p.min_box_height_px) r.Add($"box_height {vm.bbox.Height:F1} < {p.min_box_height_px:F1}");
+            if (p.min_fog_transmittance > 0f && o.fog_transmittance < p.min_fog_transmittance) r.Add($"fog_transmittance {o.fog_transmittance:F3} < {p.min_fog_transmittance:F3}");
+            if (o.visible_luma_contrast >= 0f && o.visible_luma_contrast < p.min_luma_contrast) r.Add($"luma_contrast {o.visible_luma_contrast:F3} < {p.min_luma_contrast:F3}");
+            if (o.lens_drop_cover_fraction > p.max_lens_drop_cover) r.Add($"lens_drop_cover {o.lens_drop_cover_fraction:F2} > {p.max_lens_drop_cover:F2}");
+            o.detectability = r.Count == 0 ? "label" : "ignore";
+        }
+
         public struct Projection
         {
             public Matrix4x4 viewProj;

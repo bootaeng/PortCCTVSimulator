@@ -103,6 +103,40 @@ namespace PortCCTV
     {
         public const string AppVersion = "0.1.0-mvp";
 
+        /// <summary>Files every finished capture folder must contain (besides metadata.json).</summary>
+        public static readonly string[] RequiredFiles = { "rgb.png", "labels.json", "scenario.json", "overlay.png" };
+
+        /// <summary>Checks that an existing capture folder is a finished capture: metadata.json parses with complete=true,
+        /// lists the required files, every listed file exists with the recorded SHA-256, and (when given) the scenario id
+        /// matches. A folder that fails is never treated as done and never overwritten.</summary>
+        public static bool VerifyExistingOutput(string dir, string expectedScenarioId, out string reason)
+        {
+            reason = "";
+            try
+            {
+                if (!Directory.Exists(dir)) { reason = "folder missing"; return false; }
+                var metaPath = Path.Combine(dir, "metadata.json");
+                if (!File.Exists(metaPath)) { reason = "metadata.json missing"; return false; }
+                var meta = JsonUtility.FromJson<CaptureMetadata>(File.ReadAllText(metaPath, Encoding.UTF8));
+                if (meta == null || !meta.complete) { reason = "metadata.complete is not true"; return false; }
+                if (meta.files == null || meta.file_sha256 == null || meta.files.Count != meta.file_sha256.Count)
+                { reason = "metadata file list malformed"; return false; }
+                foreach (var req in RequiredFiles)
+                    if (!meta.files.Contains(req)) { reason = req + " not listed in metadata"; return false; }
+                for (int k = 0; k < meta.files.Count; k++)
+                {
+                    var f = Path.Combine(dir, meta.files[k]);
+                    if (!File.Exists(f)) { reason = meta.files[k] + " missing"; return false; }
+                    if (new FileInfo(f).Length == 0) { reason = meta.files[k] + " is empty"; return false; }
+                    if (ScenarioIO.Sha256Hex(File.ReadAllBytes(f)) != meta.file_sha256[k]) { reason = meta.files[k] + " SHA-256 differs from metadata"; return false; }
+                }
+                if (!string.IsNullOrEmpty(expectedScenarioId) && meta.scenario_id != expectedScenarioId)
+                { reason = $"scenario_id '{meta.scenario_id}' != job scenario '{expectedScenarioId}'"; return false; }
+                return true;
+            }
+            catch (Exception ex) { reason = "unreadable: " + ex.Message; return false; }
+        }
+
         /// <summary>
         /// Renders the fixed CCTV camera and writes rgb.png, mask_instances.png, overlay.png, labels.json, metadata.json,
         /// scenario.json, yolo_visible_bbox_provisional.txt into <paramref name="finalDir"/>.
@@ -142,6 +176,8 @@ namespace PortCCTV
                 cam.Render(); // allocate water simulation resources
                 world.FreezeWaterAt(cfg.environment.water_time_s);
                 for (int i = 0; i < Mathf.Max(1, cfg.capture.warmup_frames); i++) { cam.Render(); AsyncGPUReadback.WaitAllRequests(); }
+                // vessels follow the (now frozen) waves; re-render so RGB, mask and labels use the same poses
+                if (world.ApplyWaveMotion()) for (int i = 0; i < 2; i++) { cam.Render(); AsyncGPUReadback.WaitAllRequests(); }
                 world.Environment.water_time_actual_s = world.ReadWaterSimulationTime();
 
                 var prevActive = RenderTexture.active;
@@ -178,7 +214,7 @@ namespace PortCCTV
                 var proj = LabelComputer.MakeProjection(cam, W, H);
                 proj.lens = lens;
                 float waterY = world.Harbor.water_reference_y;
-                var labels = new LabelSet { image_width = W, image_height = H };
+                var labels = new LabelSet { image_width = W, image_height = H, label_policy = cfg.capture.label_policy };
                 var colToInst = new Dictionary<Collider, int>();
                 foreach (var v in world.Vessels)
                     foreach (var c in v.colliders) colToInst[c] = v.instance_index;
@@ -219,9 +255,10 @@ namespace PortCCTV
                         instance_index = v.instance_index,
                         root_position_world = v.root.transform.position, root_rotation_world = v.root.transform.rotation,
                         heading_deg = v.placement.heading_deg, immersion_m = v.placement.immersion_m,
+                        wave_status = v.wave_status, wave_heave_m = v.wave_heave_m, wave_pitch_deg = v.wave_pitch_deg, wave_roll_deg = v.wave_roll_deg,
                         hull_reference_min_y_world = v.HullReferenceMinWorldY, render_min_y_world = v.RenderMinWorldY,
                         hull_reference_node = g.hull_reference_node, hull_reference_found = g.hull_reference_found,
-                        water_region = v.report.water_region, placement_warnings = new List<string>(v.report.warnings),
+                        water_region = v.report.water_region, placement_warnings = new List<string>(v.report.warnings), placement_notes = new List<string>(v.report.notes),
                         full_mesh_box = full, above_water_box = above,
                         visible_mask = mask != null
                             ? LabelComputer.SummariseMask(mask, W, H, v.instance_index, gpu ? 1 : cfg.capture.mask_stride, maskStatus)
@@ -259,7 +296,36 @@ namespace PortCCTV
                         }
                         ol.visible_mean_luma = ln > 0 ? (float)(lsum / ln) : -1f;
                         ol.lens_drop_cover_fraction = ln > 0 ? (float)under / ln : 0f;
+                        var vb = ol.visible_mask.bbox;
+                        if (ln > 0 && vb.valid)
+                        {
+                            // background ring: pixels within a margin around the bbox that belong to no vessel
+                            float mx = Mathf.Max(3f, 0.25f * vb.Width), my = Mathf.Max(3f, 0.25f * vb.Height);
+                            int bx0 = Mathf.Max(0, (int)(vb.x_min - mx)), bx1 = Mathf.Min(W, (int)Mathf.Ceil(vb.x_max + mx));
+                            int by0 = Mathf.Max(0, (int)(vb.y_min - my)), by1 = Mathf.Min(H, (int)Mathf.Ceil(vb.y_max + my));
+                            double bsum = 0; int bn = 0;
+                            for (int yy = by0; yy < by1; yy++)
+                                for (int xx = bx0; xx < bx1; xx++)
+                                {
+                                    if (xx >= vb.x_min && xx < vb.x_max && yy >= vb.y_min && yy < vb.y_max) continue;
+                                    if (mask[yy * W + xx] != 0) continue;
+                                    var c = rgbPixels[(H - 1 - yy) * W + xx];
+                                    bsum += 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b; bn++;
+                                }
+                            if (bn > 0)
+                            {
+                                double bg = bsum / bn, dev = 0;
+                                for (int i = 0; i < mask.Length; i++)
+                                {
+                                    if (mask[i] != v.instance_index) continue;
+                                    var c = rgbPixels[(H - 1 - i / W) * W + i % W];
+                                    dev += Math.Abs(0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b - bg);
+                                }
+                                ol.visible_luma_contrast = (float)(dev / ln / 255.0);
+                            }
+                        }
                     }
+                    LabelComputer.ApplyPolicy(ol, cfg.capture.label_policy);
                     if (world.Lights != null && world.Lights.On) ol.nav_lights_facing_camera = world.Lights.VisibleNavLights(v);
                     ol.paint = v.paint;
                     var nr = world.Nav?.Record().vessels.FirstOrDefault(r => r.object_id == v.placement.object_id);
@@ -313,15 +379,20 @@ namespace PortCCTV
                 Util.SafeDestroy(tex);
 
                 // YOLO-style provisional file from the visible-mask bbox (class 0 = vessel). Diagnostic only.
+                // Objects that fail the visibility rule go to a separate ignore-region file, never into the target file.
                 var yolo = new StringBuilder();
+                var ignore = new StringBuilder();
                 foreach (var o in labels.objects)
                 {
                     var bb = o.visible_mask.bbox;
                     if (!o.visible_mask.computed || !bb.valid) continue;
-                    yolo.AppendLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "0 {0:F7} {1:F7} {2:F7} {3:F7}",
-                        (bb.x_min + bb.x_max) / 2 / W, (bb.y_min + bb.y_max) / 2 / H, bb.Width / W, bb.Height / H));
+                    var line = string.Format(System.Globalization.CultureInfo.InvariantCulture, "0 {0:F7} {1:F7} {2:F7} {3:F7}",
+                        (bb.x_min + bb.x_max) / 2 / W, (bb.y_min + bb.y_max) / 2 / H, bb.Width / W, bb.Height / H);
+                    if (o.detectability == "label") yolo.AppendLine(line);
+                    else if (o.detectability == "ignore") ignore.AppendLine(line);
                 }
                 WriteFile(partial, "yolo_visible_bbox_provisional.txt", Encoding.UTF8.GetBytes(yolo.ToString()));
+                WriteFile(partial, "yolo_ignore_regions_provisional.txt", Encoding.UTF8.GetBytes(ignore.ToString()));
 
                 string scenarioJson = ScenarioIO.ToJson(cfg);
                 WriteFile(partial, "scenario.json", new UTF8Encoding(false).GetBytes(scenarioJson));
@@ -455,7 +526,8 @@ namespace PortCCTV
             {
                 Rect(o, W, H, ob.full_mesh_box.clipped, new Color32(255, 220, 0, 255), t);
                 Rect(o, W, H, ob.above_water_box.clipped, new Color32(0, 255, 255, 255), t);
-                Rect(o, W, H, ob.visible_mask.bbox, InstanceColor(ob.instance_index), t + 1);
+                // ignore regions (fail the visibility rule) in grey so they are not mistaken for targets
+                Rect(o, W, H, ob.visible_mask.bbox, ob.detectability == "ignore" ? new Color32(128, 128, 128, 255) : InstanceColor(ob.instance_index), t + 1);
             }
             foreach (var nv in labels.non_vessel_objects)
                 Rect(o, W, H, nv.full_box_clipped, new Color32(255, 255, 255, 255), t);

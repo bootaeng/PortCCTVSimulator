@@ -77,10 +77,21 @@ namespace PortCCTV
 
         public static IEnumerator Run(SimWorld world, string jobsPath, Action<string> log, Action<BatchSummary> done)
         {
-            jobsPath = Path.GetFullPath(jobsPath);
-            var batch = LoadBatch(jobsPath);
-            var outDir = AppPaths.ResolveUnderRoot(batch.output_dir);
-            Directory.CreateDirectory(outDir);
+            BatchFile batch; string outDir;
+            try
+            {
+                jobsPath = Path.GetFullPath(jobsPath);
+                batch = LoadBatch(jobsPath);
+                outDir = AppPaths.ResolveUnderRoot(batch.output_dir);
+                Directory.CreateDirectory(outDir);
+            }
+            catch (Exception ex)
+            {
+                // a missing / invalid jobs file must end the run with a failure, not stop the coroutine silently
+                log?.Invoke("ERROR batch file " + jobsPath + ": " + ex.Message);
+                done?.Invoke(null);
+                yield break;
+            }
             var summary = new BatchSummary
             {
                 batch_id = batch.batch_id, jobs_file = jobsPath,
@@ -97,7 +108,24 @@ namespace PortCCTV
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 if (Directory.Exists(final))
                 {
-                    entry.status = "skipped_existing"; entry.output = final; summary.skipped_existing++;
+                    // Resume: only a verified, finished capture of the same scenario counts as done. An empty or partial
+                    // folder (copied, interrupted, hand-made) is reported as failed and left untouched for inspection.
+                    string expectedId = null;
+                    try
+                    {
+                        var jc = job.use_inline ? job.inline_scenario
+                            : ScenarioIO.Load(Path.Combine(Path.GetDirectoryName(jobsPath), job.scenario_path));
+                        expectedId = jc?.scenario_id;
+                    }
+                    catch { /* the scenario check below is skipped; the file check still applies */ }
+                    entry.output = final;
+                    if (CaptureService.VerifyExistingOutput(final, expectedId, out var why))
+                    { entry.status = "skipped_existing"; summary.skipped_existing++; }
+                    else
+                    {
+                        entry.status = "failed"; summary.failed++;
+                        entry.message = "existing output folder is not a finished capture (left untouched; move it away to re-render): " + why;
+                    }
                 }
                 else
                 {
@@ -154,7 +182,7 @@ namespace PortCCTV
                 }
                 entry.ms = sw.Elapsed.TotalMilliseconds;
                 entry.expected_status = string.IsNullOrEmpty(job.expected_status) ? "done" : job.expected_status;
-                entry.as_expected = entry.status == entry.expected_status || entry.status == "skipped_existing";
+                entry.as_expected = entry.status == entry.expected_status || (entry.status == "skipped_existing" && entry.expected_status == "done");
                 if (!entry.as_expected) summary.unexpected++;
                 summary.entries.Add(entry);
                 File.AppendAllText(logPath, JsonUtility.ToJson(entry) + "\n", new UTF8Encoding(false));

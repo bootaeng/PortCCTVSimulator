@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using Unity.Mathematics;
 
 namespace PortCCTV
 {
@@ -15,6 +16,8 @@ namespace PortCCTV
         public string water_region;         // region containing the hull centre, or null
         public List<string> warnings = new List<string>();
         public bool ok => warnings.Count == 0;
+        /// <summary>Informational notes that do not make the placement invalid (e.g. immersion far from the asset default).</summary>
+        public List<string> notes = new List<string>();
     }
 
     public class PlacedVessel
@@ -27,6 +30,10 @@ namespace PortCCTV
         public PlacementReport report;
         public int instance_index; // 1..N, value written in the instance mask
         public PaintRecord paint = new PaintRecord();
+        /// <summary>Wave motion applied on top of the mean-plane pose: "off" | "ok" | "partial" (some hull points had no water
+        /// height) | "unavailable" (water query not ready; vessel left on the mean plane).</summary>
+        public string wave_status = "off";
+        public float wave_heave_m, wave_pitch_deg, wave_roll_deg;
 
         public float HullReferenceMinWorldY => root.transform.position.y + entry.geometry.hull_reference_min_y;
         public float RenderMinWorldY => root.transform.position.y + entry.geometry.render_min_y;
@@ -59,6 +66,7 @@ namespace PortCCTV
         public float water_time_requested_s;
         public float water_time_actual_s = float.NaN;
         public bool water_time_frozen;
+        public bool vessel_wave_motion;
         public ResolvedWeather weather = new ResolvedWeather();
         public ResolvedLights lights = new ResolvedLights();
     }
@@ -177,6 +185,7 @@ namespace PortCCTV
             Water.absorptionDistance = 8f;
             Water.ambientScattering = 0.25f;
             Water.heightScattering = 0.25f;
+            Water.scriptInteractions = true;   // height queries for vessel wave motion
 
             // Fixed CCTV camera.
             var camGo = new GameObject("CCTVCamera");
@@ -510,6 +519,28 @@ namespace PortCCTV
             }
         }
 
+        /// <summary>Changes motion.mode on the given scenario vessels. A vessel that stops moving (mode "none" or "anchor") keeps the
+        /// pose it has at the current simulated time: that pose becomes its new start pose. Without this the vessel would be
+        /// recomputed from t = 0 and jump back to where it started. Returns how many vessels changed mode.</summary>
+        public int SetMotionKeepingPose(ScenarioConfig cfg, IEnumerable<string> objectIds, string mode)
+        {
+            var ids = new HashSet<string>(objectIds);
+            bool stops = mode == "none" || mode == "anchor";
+            int n = 0;
+            foreach (var p in cfg.vessels)
+            {
+                if (!ids.Contains(p.object_id)) continue;
+                p.motion ??= new VesselMotion();
+                if (p.motion.mode == mode) continue;
+                if (stops && Nav != null && Nav.Time > 0f && (p.motion.Moving || p.motion.Anchored) &&
+                    Nav.TryGetPose(p.object_id, out var xz, out var hd))
+                { p.x = xz.x; p.z = xz.y; p.heading_deg = Mathf.Repeat(hd, 360f); }
+                p.motion.mode = mode;
+                n++;
+            }
+            return n;
+        }
+
         /// <summary>Sets motion.mode = "auto" on every vessel of <paramref name="cfg"/> that is not lying alongside (uses the vessels
         /// currently placed from that scenario). Returns how many were switched.</summary>
         public int SetAutoNavigationForUnmoored(ScenarioConfig cfg, string mode = "auto")
@@ -573,7 +604,76 @@ namespace PortCCTV
                 if (Geometry2D.ConvexOverlap(v.footprint_xz, o.footprint_xz)) r.warnings.Add("footprint_overlaps_vessel:" + o.placement.object_id);
             }
             if (v.placement.immersion_m < 0f) r.warnings.Add("negative_immersion_hull_reference_above_water");
+            float d0 = v.entry.default_immersion_m;
+            if (Mathf.Abs(v.placement.immersion_m - d0) > Mathf.Max(0.5f, 0.5f * Mathf.Abs(d0)))
+                r.notes.Add($"immersion_far_from_asset_default:{v.placement.immersion_m:F2}_vs_{d0:F2}");
             if (!v.entry.geometry.hull_reference_found) r.warnings.Add("hull_reference_node_missing_used_render_min");
+        }
+
+        // ---------------- Wave motion ----------------
+        /// <summary>Water surface height at world (x, z) from the HDRP script-interaction query; false if not available yet.</summary>
+        public bool WaterHeightAt(Vector2 xz, out float y)
+        {
+            float wy = Harbor.water_reference_y;
+            y = wy;
+            if (Water == null) return false;
+            var p = new WaterSearchParameters
+            {
+                startPositionWS = new float3(xz.x, wy, xz.y), targetPositionWS = new float3(xz.x, wy, xz.y),
+                error = 0.01f, maxIterations = 8, includeDeformation = true, excludeSimulation = false,
+            };
+            if (!Water.ProjectPointOnWaterSurface(p, out var r) || !(r.error < 0.25f)) return false;
+            y = r.projectedPositionWS.y;
+            return !float.IsNaN(y) && Mathf.Abs(y - wy) < 10f;
+        }
+
+        /// <summary>Moves every vessel off its mean-plane pose by the local wave: heave = mean water height of five hull points
+        /// (bow, stern, both sides at 40 % of length / beam, centre), pitch and roll from the bow-stern and port-starboard height
+        /// differences. Sampling over the hull acts as a low-pass filter, so long ships barely move; tilt is capped at
+        /// clamp(60 / length, 1, 8) degrees. With environment.vessel_wave_motion off it restores the mean-plane pose.
+        /// Returns true when any vessel moved.</summary>
+        public bool ApplyWaveMotion()
+        {
+            bool on = Scenario?.environment != null && Scenario.environment.vessel_wave_motion;
+            Environment.vessel_wave_motion = on;
+            bool any = false;
+            foreach (var v in Vessels)
+            {
+                var g = v.entry.geometry;
+                float baseY = Harbor.water_reference_y - v.placement.immersion_m - g.hull_reference_min_y;
+                var yaw = Quaternion.Euler(0f, v.placement.heading_deg, 0f);
+                var pos = v.root.transform.position;
+                float heave = 0f, pitch = 0f, roll = 0f; string status = "off";
+                if (on)
+                {
+                    float L = g.bounds_max.x - g.bounds_min.x, B = g.bounds_max.z - g.bounds_min.z;
+                    float cx = 0.5f * (g.bounds_min.x + g.bounds_max.x), cz = 0.5f * (g.bounds_min.z + g.bounds_max.z);
+                    var local = new[] { new Vector3(cx + 0.4f * L, 0, cz), new Vector3(cx - 0.4f * L, 0, cz), new Vector3(cx, 0, cz + 0.4f * B), new Vector3(cx, 0, cz - 0.4f * B), new Vector3(cx, 0, cz) };
+                    var h = new float[5]; int okN = 0;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var w = pos + yaw * local[i];
+                        if (WaterHeightAt(new Vector2(w.x, w.z), out var y)) { h[i] = y - Harbor.water_reference_y; okN++; }
+                    }
+                    if (okN == 0) status = "unavailable";
+                    else
+                    {
+                        status = okN == 5 ? "ok" : "partial";
+                        heave = Mathf.Clamp(h.Sum() / okN, -2f, 2f);
+                        float maxTilt = Mathf.Clamp(60f / Mathf.Max(L, 1f), 1f, 8f);
+                        pitch = Mathf.Clamp(Mathf.Atan2(h[0] - h[1], 0.8f * L) * Mathf.Rad2Deg, -maxTilt, maxTilt);
+                        roll = Mathf.Clamp(Mathf.Atan2(h[2] - h[3], 0.8f * B) * Mathf.Rad2Deg, -maxTilt, maxTilt);
+                    }
+                }
+                // local +x = bow, +z = port: bow up = +rotation about z; port up = -rotation about x
+                var rot = yaw * Quaternion.Euler(-roll, 0f, pitch);
+                var np = new Vector3(pos.x, baseY + heave, pos.z);
+                if (np != pos || rot != v.root.transform.rotation) any = true;
+                v.root.transform.SetPositionAndRotation(np, rot);
+                v.wave_status = status; v.wave_heave_m = heave; v.wave_pitch_deg = pitch; v.wave_roll_deg = roll;
+            }
+            if (any) Physics.SyncTransforms();
+            return any;
         }
 
         // ---------------- Water time control ----------------

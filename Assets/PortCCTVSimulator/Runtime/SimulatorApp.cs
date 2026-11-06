@@ -89,13 +89,18 @@ namespace PortCCTV
         }
 
         /// <summary>Plausible starting scene for each map.</summary>
-        public static ScenarioConfig DefaultScenarioFor(string harborId) => harborId switch
+        public static ScenarioConfig DefaultScenarioFor(string harborId)
         {
-            ContainerTerminal01.Id => ContainerTerminal01.DefaultScenario(),
-            FishingPort01.Id => FishingPort01.DefaultScenario(),
-            Marina01.Id => Marina01.DefaultScenario(),
-            _ => DefaultScenario(),
-        };
+            var s = harborId switch
+            {
+                ContainerTerminal01.Id => ContainerTerminal01.DefaultScenario(),
+                FishingPort01.Id => FishingPort01.DefaultScenario(),
+                Marina01.Id => Marina01.DefaultScenario(),
+                _ => DefaultScenario(),
+            };
+            s.environment.vessel_wave_motion = true;   // new scenes follow the waves; files without the field keep the mean plane
+            return s;
+        }
 
         /// <summary>Legacy mixed-harbor scene (generic_harbor_02) used by the tests.</summary>
         public static ScenarioConfig DefaultScenario()
@@ -399,6 +404,7 @@ namespace PortCCTV
                 _cfg.navigation.sim_time_s = _world.Nav.Time;
                 if (_playT > 7200f) _playing = false;
             }
+            if (_world != null && !_busy && _world.Scenario != null && _world.Scenario.environment.vessel_wave_motion) _world.ApplyWaveMotion();
             if (_world != null && !_busy && _world.Weather != null && _world.Weather.Active)
                 _world.Weather.Tick(_devView ? _world.DevCamera : _world.CctvCamera, Time.unscaledDeltaTime);
             if (_world == null || !_devView) return;
@@ -680,6 +686,8 @@ namespace PortCCTV
                 int wi = Array.FindIndex(waters, w => w.id == _cfg.environment.water_preset_id);
                 int nw = GUILayout.Toolbar(wi, waters.Select(w => UiText.Water(w)).ToArray(), GUILayout.Width(ContentWidth));
                 if (nw != wi && nw >= 0) { _cfg.environment.water_preset_id = waters[nw].id; Log("UI: water -> " + waters[nw].id); ApplyScenario(); }
+                bool wm = GUILayout.Toggle(_cfg.environment.vessel_wave_motion, " 선박이 파도에 따라 흔들림");
+                if (wm != _cfg.environment.vessel_wave_motion) { _cfg.environment.vessel_wave_motion = wm; Log("UI: vessel wave motion -> " + wm); ApplyScenario(); }
                 _cfg.environment.water_time_s = NumberField("water_t", "수면 시각(s)", _cfg.environment.water_time_s, 0f, 600f, 0.5f, applyOnChange: false);
                 var r = _world.Environment;
                 GUILayout.Label($"안개 {r.fog_mean_free_path_m:F0} m · 노출 EV {r.exposure_ev100:F1}" + (wx.Precipitating ? $" · 입자 {r.weather.max_particles}개" : "") + " (엔진 값)", _small);
@@ -742,7 +750,7 @@ namespace PortCCTV
             var modes = UiText.MotionModes;
             int mi = Math.Max(0, Array.IndexOf(modes, v.motion.mode));
             int mp = GUILayout.Toolbar(v.motion.mode == "route" ? -1 : mi, modes.Select(UiText.Motion).ToArray(), GUILayout.Width(ContentWidth - 12));
-            if (mp >= 0 && modes[mp] != v.motion.mode) { StopPlayback(); v.motion.mode = modes[mp]; Log($"UI: {v.object_id} motion -> {v.motion.mode}"); _pendingApply = true; }
+            if (mp >= 0 && modes[mp] != v.motion.mode) { StopPlayback(); _world.SetMotionKeepingPose(_cfg, new[] { v.object_id }, modes[mp]); Log($"UI: {v.object_id} motion -> {v.motion.mode} at ({v.x:F1}, {v.z:F1})"); _pendingApply = true; }
             v.heading_deg = NumberField("vh" + v.object_id, "방위(°)", v.heading_deg, 0f, 360f, 5f);
             if (v.motion.Moving) v.motion.speed_kn = NumberField("vs" + v.object_id, "속력(kn)", v.motion.speed_kn, 0f, 40f, 1f);
             var rec = _world.Nav?.Record().vessels.FirstOrDefault(r => r.object_id == v.object_id);
@@ -827,7 +835,7 @@ namespace PortCCTV
             if (GUILayout.Button("모두 멈춤"))
             {
                 StopPlayback();
-                foreach (var v in _cfg.vessels) if (v.motion != null && v.motion.Moving) v.motion.mode = "none";
+                _world.SetMotionKeepingPose(_cfg, _cfg.vessels.Where(v => v.motion != null && v.motion.Moving).Select(v => v.object_id).ToList(), "none");
                 Log("UI: all moving vessels stopped");
                 ApplyScenario();
             }
@@ -902,14 +910,7 @@ namespace PortCCTV
         {
             if (_navigationSelection.Count == 0) { _status = "운항할 선박을 먼저 선택하세요."; return; }
             StopPlayback();
-            int count = 0;
-            foreach (var v in _cfg.vessels)
-            {
-                if (!_navigationSelection.Contains(v.object_id)) continue;
-                v.motion ??= new VesselMotion();
-                v.motion.mode = mode;
-                count++;
-            }
+            int count = _world.SetMotionKeepingPose(_cfg, _navigationSelection, mode);
             ApplyScenario();
             if (play) { _playT = _cfg.navigation.sim_time_s; _playing = true; }
             Log($"UI: {count} selected vessel(s) -> {mode}" + (play ? " + play" : ""));
