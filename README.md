@@ -48,3 +48,7 @@ PortCCTVSimulator.exe -batch Scenarios/<set>/jobs.json -quit
 ## 제3자 자산
 
 선박·건물·소품·하늘 자산은 CC0(Poly Haven, Innerscene)와 CC BY 4.0(Sketchfab) 모델입니다. 출처와 저작자 표기는 `Assets/PortCCTVSimulator/ThirdParty/` 아래 각 `SOURCE*.md`에 있습니다. CC BY 자산을 재사용할 때는 해당 표기를 유지해야 합니다. Unity Asset Store 자산은 쓰지 않았습니다.
+
+## 라이선스
+
+이 저장소의 코드(스크립트, 셰이더, 도구, 설정)는 [MIT License](LICENSE)를 따릅니다. `Assets/PortCCTVSimulator/ThirdParty/`의 제3자 자산은 MIT 대상이 아니며 각자의 라이선스(CC0 1.0 또는 CC BY 4.0)를 따릅니다.
