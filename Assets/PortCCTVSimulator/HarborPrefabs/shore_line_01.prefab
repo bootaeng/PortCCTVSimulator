@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3222095554467695305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8518607071248098274}
+  m_Layer: 0
+  m_Name: shore_line_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8518607071248098274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222095554467695305}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5077073785430909837}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &6851767109362960541
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8518607071248098274}
+    m_Modifications:
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.1668873
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.1675766
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.7186413
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -998934676978530375, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      propertyPath: m_Name
+      value: coast_line_01_1k_dec
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -998934676978530375, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6812225673864529522}
+  m_SourcePrefab: {fileID: -4161369568681901532, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+--- !u!1 &3257597686243184420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -998934676978530375, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+  m_PrefabInstance: {fileID: 6851767109362960541}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &6812225673864529522
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3257597686243184420}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6360135341456839332, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+--- !u!4 &5077073785430909837 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7393997618046145776, guid: 71df9a2cd3214844583a265a988850f7, type: 3}
+  m_PrefabInstance: {fileID: 6851767109362960541}
+  m_PrefabAsset: {fileID: 0}

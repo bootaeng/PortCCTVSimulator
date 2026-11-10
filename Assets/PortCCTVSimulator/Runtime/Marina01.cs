@@ -45,16 +45,18 @@ namespace PortCCTV
             HillIdx(2, -420f, 520f, -4f, 620f, 120f, 480f); TreesOnHill(2, -420f, 520f, -4f, 620f, 120f, 480f, 30);
             HillIdx(0, 760f, 560f, -4f, 560f, 100f, 420f); TreesOnHill(0, 760f, 560f, -4f, 560f, 100f, 420f, 25);
             for (int i = 0; i < 20; i++) Tree(R(-240, 90), R(112, 160), Deck, R(6, 10));
-            ParkingLot(100f, 170f, 114f, 150f, 0.3f, "marina_car_park");          // marina users' car park behind the boat shed
+            ParkingLot(100f, 170f, 125f, 162f, 0.55f, "marina_car_park");          // marina users' car park behind the beach road (was on the road and sidewalk)
             // dry storage next to the travel lift (Suyeong Bay yachting centre has ~155 dry berths): covered boats on cradles,
             // flagged as vessel-like non-vessel objects (on land, not labelled as vessels), and a boat forklift
-            Box("pad", 174f, 252f, Deck, Deck + 0.02f, 113f, 152f, "lane_concrete");
+            // the storage pad starts behind the beach road's sidewalk (z 122); before 2026-11-09 it began on the road at z 113 and the
+            // first boat row stood on the carriageway (surface audit)
+            Box("pad", 174f, 252f, Deck, Deck + 0.02f, 122.5f, 152f, "lane_concrete");
             string[] tarps = { "blue", "white", "navy", "green", "blue" };
             int db = 0;
-            foreach (var z in new[] { 123f, 141f })
+            foreach (var z in new[] { 128f, 145f })
                 for (float x = 178f; x < 250f; x += 4.2f)
                     if (Rng.NextDouble() < 0.85) Prefab("dry_storage", "covered_boat_" + tarps[Rng.Next(tarps.Length)], new Vector3(x, Deck, z), 90f + R(-2f, 2f), Vector3.one * R(0.85f, 1.1f), id: $"dry_boat_{db++:00}", nonVessel: true);
-            Prefab("crane", "empty_handler", new Vector3(240f, Deck, 132f), 180f, Vector3.one * 0.8f, id: "boat_forklift");
+            Prefab("crane", "empty_handler", new Vector3(240f, Deck, 136.5f), 180f, Vector3.one * 0.8f, id: "boat_forklift");   // in the aisle between the rows
             Box("land", -1500, -265, Bottom, Deck, -200, 110, "grass", id: "land_west");
             StreetLamps(-240f, 240f, 66f, 24f, 1.8f);
             PromenadeFurniture(-250f, 250f, 72f, -1f);
@@ -63,11 +65,17 @@ namespace PortCCTV
             foreach (var (bx, key, sc) in new[] { (-250f, "bld_apt_complex", 0.9f), (-150f, "bld_hirise", 1f), (-80f, "bld_apt_slab", 1f), (-10f, "bld_hirise", 0.9f), (60f, "bld_officetel", 0.6f) })
                 Prefab("building", key, new Vector3(bx, Deck, 205f), 0f, Vector3.one * sc);
             Boulevard(-265f, 260f, 112f, true, 4, true, 0f);                                                  // 해변로 (beach road) between the marina and the city
-            foreach (var x in new[] { -130f, 130f }) SignalledCrossing(new Vector2(x, 112f), true, 14f, 8f, false);
+            foreach (var x in new[] { -130f, 90f }) PedCrossing(new Vector2(x, 112f), true, 14f);              // beach access crossings (no side street here)
             BusStop(0f, 112f + 8.5f, 1f);
-            ShopRow(-120f, 130f, 128f, 180f);
-            Prefab("building", "bld_warehouse3", new Vector3(190f, Deck, 92f), 0f, Vector3.one, id: "boat_shed");
+            ShopRow(-120f, 90f, 128f, 180f);                                                                  // ends before the marina car park
+            // boat shed (footprint ~154 x 33 m): at z 92 its front stood 3.7 m into the beach road; z 85 ends it before the sidewalk
+            Prefab("building", "bld_warehouse3", new Vector3(190f, Deck, 85f), 0f, Vector3.one, id: "boat_shed");
+            int nTree0 = E.Count;
             for (float x = -250; x <= 250; x += 25) Tree(x, 100, Deck, R(6, 9));
+            // no trees inside the boat shed (x 113..267, z 68..102); removed after the loop so the random sequence (and every
+            // later random choice of the map) stays as it was
+            E.RemoveRange(nTree0, 0);
+            E.RemoveAll(t => (t.kind == "tree") && t.center.x > 110f && t.center.x < 270f && t.center.z > 66f && t.center.z < 104f);
             Lifebuoys(-220f, 160f, 1.0f, 43.8f, 40f);
 
             // --- breakwaters: west arm and south arm; entrance at the south-east
@@ -76,8 +84,10 @@ namespace PortCCTV
             // Scanned coastal rock assets break up the otherwise uniform concrete seaward edge.
             foreach (float x in new[] { -205f, -105f, -5f, 85f })
                 Prefab("shore", "shore_rock_01", new Vector3(x, -1.2f, -223f), R(0f, 360f), Vector3.one * 1.4f);
-            Lighthouse("lh_red_s", 114f, -207.5f, Crest, "beacon_red", 11f);
-            Lighthouse("lh_white_e", 262f, -150f, 0.8f, "beacon_white_band", 9f);
+            Lighthouse("lh_red_s", 114f, -207.5f, Crest, "beacon_red", 11f, -90f);     // door along the arm towards the root (-x)
+            // east light on a groyne from the west end of the beach promenade (it stood alone in the water before, 2026-11-09)
+            BreakwaterZ("bw_beach", -158, 60, 255, 269, seaIsMinusX: false);
+            Lighthouse("lh_white_e", 262f, -150f, Crest, "beacon_white_band", 9f, 0f);  // door up the groyne (+z)
 
             // --- floating pontoon docks: two main walkways with finger pontoons, gangways to the promenade
             Pontoon(-235, 175, 40, 43.5f);
@@ -137,8 +147,17 @@ namespace PortCCTV
             CameraHill(Cameras[1], 240f, 240f, 3, new Vector2(972f, -237f));
             // Detailed imported towers along the coastal road; no random box towers intersecting the city blocks.
             Boulevard(260f, 900f, 112f, true, 4, true);
+            // The towers stand in the 29 m band between the boulevard's north sidewalk (z 122) and the city street's south
+            // sidewalk (z 151). 2026-11-10 surface audit: at z 142 and scale 0.95-1.35 (36-51 m deep) they reached 9-19 m into
+            // that street. Now centred in the band with the 38 m footprint scaled to 24-27 m (69-78 m tall), and the beach scrub
+            // under each footprint removed (Tree calls kept so the random layout after this point does not shift).
             foreach (var (tx, scale) in new[] { (320f, 0.95f), (450f, 1.2f), (580f, 1.05f), (710f, 1.35f), (840f, 1.15f) })
-                Prefab("building", "bld_hirise", new Vector3(tx, Deck, 142f), 0f, Vector3.one * scale);
+            {
+                float s = Mathf.Min(scale * 0.66f, 0.71f);
+                Prefab("building", "bld_hirise", new Vector3(tx, Deck, 136.5f), 0f, Vector3.one * s);
+                float hw = 38f * s / 2f + 1.5f;
+                E.RemoveAll(t => t.kind == "tree" && Mathf.Abs(t.center.x - tx) < hw && Mathf.Abs(t.center.z - 136.5f) < hw);
+            }
 
             // --- west city shore: coastal road (joined by the bridge ramp at x = -330), beach car parks, shops, towers, a park
             CoastalRoad(-1500f, -268f, -185f, -1f, -345f, -315f);
@@ -146,18 +165,19 @@ namespace PortCCTV
             Boulevard(-181.5f, 115f, -330f, false, 4, true);                                                  // bridge approach boulevard into the city
             SignalledCrossing(new Vector2(-330f, 0f), false, 14f, 8f, true);
             Prefab("street", "sign_gantry", new Vector3(-330f, Deck, -150f), 0f, Vector3.one);
-            ParkingLot(-580f, -440f, -172f, -124f, 0.25f, "beach_car_park_w");
+            ParkingLot(-580f, -440f, -172f, -124f, 0.5f, "beach_car_park_w");
             GreenBuffer(-940f, -700f, -172f, -112f);
             ShopRow(-1250f, -960f, -160f, 180f);
-            CityBlocks(-1340f, -372f, -88f, 100f, 100f);
+            CityBlocks(-1340f, -372f, -88f, 100f, 100f, 12f, "highrise");                             // promenade tower strip
             for (int i = 0; i < 45; i++) Tree(R(-1495f, -1350f), R(-170f, 100f), Deck, R(6f, 11f));          // park at the west end
             CityBlocks(-1500f, -720f, 100f, 450f, 112f);                                                      // city west of the hill
-            CityBlocks(290f, 910f, 158f, 360f, 103f);                                                         // city behind the beach
-            CityBlocks(-100f, 470f, 232f, 560f, 110f);                                                        // central city between the hills
+            CityBlocks(290f, 910f, 158f, 360f, 103f, 12f, "highrise");                                                         // city behind the beach
+            CityBlocks(-100f, 290f, 232f, 560f, 110f, 12f, "residential");                                                        // central city between the hills
+            CityBlocks(290f, 470f, 360f, 560f, 100f, 12f, "residential");                                                         // (was one grid overlapping the beach city's plots)
             CityBlocks(1050f, 1500f, 120f, 560f, 110f);                                                       // east city
             CityBlocks(1050f, 1500f, 560f, 900f, 110f);
             CityBlocks(-1500f, -760f, 450f, 900f, 112f);
-            CityBlocks(-700f, -290f, 105f, 270f, 105f);                                                       // between the west city and the promenade towers
+            CityBlocks(-700f, -290f, 105f, 270f, 105f, 12f, "residential");                                                       // between the west city and the promenade towers
 
             // --- bay bridge: cable-stayed main span on piers; approach viaducts land on the west headland and, after a quarter
             // turn, on the city shore road at x = -330 (the deck used to end in open water at both ends)
@@ -196,6 +216,9 @@ namespace PortCCTV
             }
             for (float zz = bz + turnR + 20f; zz <= -200f + 0.01f; zz += 20f)
                 eastRamp.Add(new Vector3(-330f, Mathf.Lerp(31f, Deck + 0.08f, (arc + zz - (bz + turnR)) / total), zz));
+            // the 20 m steps stopped 11 m short of the junction (z -211 at 3.0 m over the water, a 0.46 m step down to the road;
+            // surface audit 2026-11-09): the ramp now lands exactly on the junction box edge at road level
+            if (eastRamp[eastRamp.Count - 1].z < -200.01f) eastRamp.Add(new Vector3(-330f, Deck + 0.02f, -200f));
             Viaduct(eastRamp, 20f);
 
             foreach (var tx in new[] { -1750f, -1150f })
@@ -212,6 +235,7 @@ namespace PortCCTV
             for (int i = 0; i < 8; i++) Hill(R(-2600, 2600), R(1500, 2800), -5, R(900, 1600), R(300, 600), R(700, 1200), R(0, 360));
             Hill(-200, 1100, Deck - 3, 900, 280, 600, 10);
             Hill(1200, -700, -6, 800, 160, 600, -20);
+            Prefab("landmark_lighthouse", "lighthouse_tall", new Vector3(1200f, 0f, -700f), 0f, Vector3.one, id: "landmark_lighthouse");
             Hill(-600, -1500, -8, 600, 120, 420, 40);
             Prefab("buoy", "ocean_buoy", new Vector3(180, -0.6f, -300), 0, Vector3.one * 1.6f, id: "buoy_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(160, -1.0f, -235), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
@@ -219,12 +243,21 @@ namespace PortCCTV
             CameraMasts(Cameras, MastBases);
 
             h.water_regions.Add(Region("marina_basin", -250, 58, 250, 58, 250, -200, -250, -200));
-            h.water_regions.Add(Region("bay", -2440, -215, 120, -215, 120, -200, 250, -200, 260, -200, 260, -22, 900, -22, 900, -400, 3000, -400, 3000, -4000, -2440, -4000));
-            h.water_regions.Add(Region("beach_shallows", 250, 58, 260, 58, 260, -200, 250, -200));
+            h.water_regions.Add(Region("bay", -2440, -215, 120, -215, 120, -200, 250, -200, 278, -200, 278, -22, 900, -22, 900, -400, 3000, -400, 3000, -4000, -2440, -4000));
+            h.water_regions.Add(Region("beach_shallows", 250, 58, 254, 58, 254, -200, 250, -200));   // narrowed by the groyne (x 255..269 + tetrapods to 277)
 
             foreach (var a in new[] { "sailing_yacht", "sailing_dinghy", "kayak", "canoe", "cabin_cruiser", "motorboat", "rib", "speedboat", "motor_yacht", "police_boat", "sar_boat", "patrol_boat" })
                 h.vessel_rules.Add(Rule(a, "leisure craft"));
-            End();
+            // the beach boulevard continues to the east city grid (2026-11-09 surface audit: the east city was a road island 140 m
+            // from the nearest street). Laid last so the earlier random layout is unchanged.
+            Boulevard(900f, 1046f, 112f, true, 4, true);
+            // the 14 m boulevard (z 105..119) meets the 8 m grid street (z 116..124) and the north street (x 1046..1054) with a
+            // lateral offset: a junction apron carries all its lanes into the corner instead of ending its south lanes at a kerb
+            Box("road", 1046f, 1062f, Deck, Deck + 0.06f, 105f, 124f, "road_asphalt", id: "east_city_junction");
+            // the residential blocks' bottom street (z 101..109) runs on 5 m north of the west grid street (z 96..104): an apron
+            // at the corner (x -376) joins both and the grid's last north-south street (its north lane ended at a kerb)
+            Box("road", -376f, -345f, Deck, Deck + 0.06f, 96f, 110f, "road_asphalt", id: "west_city_junction");
+            End(h);
             return h;
         }
 

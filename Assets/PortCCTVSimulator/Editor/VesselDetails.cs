@@ -230,6 +230,27 @@ namespace PortCCTV.EditorTools
             c.Box(new Vector3(22f, 3.5f, 0), new Vector3(1.6f, 0.4f, 3.0f), Grey);
             c.Cyl(new Vector3(23.5f, 5.3f, 0), 0.12f, 4.0f, Grey);                                     // light pole
             c.Sphere(new Vector3(23.5f, 7.4f, 0), 0.3f, White);
+            // ~20 t crawler excavator working the pile from the bow end (R01). 2026-11-09: the box excavator is replaced by the
+            // imported model (Excavator (CAT), sarvesh777, CC BY 4.0; logos removed) as a separate deck-equipment child: tracks on
+            // the deck plate (top y 3.30), boom over the pile towards -x. The hull reference node is the hull mesh alone, so the
+            // equipment cannot change the immersion reference (checked in EveryCatalogHull_IsPlacedAtRequestedImmersion).
+            var exPf = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(ReplacementAssets.ExcavatorPrefabPath);
+            if (exPf != null)
+            {
+                var ex = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(exPf);
+                ex.name = "deck_equipment_excavator";
+                ex.transform.SetParent(t, false);
+                ex.transform.localPosition = new Vector3(16.6f, 3.30f, 0.2f);
+                ex.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
+                foreach (var col in ex.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(col);
+            }
+            else
+            {
+                var yel = ProceduralVessels.Mat("detail_excavator_yellow", new Color(0.86f, 0.62f, 0.10f), 0.45f, 0.1f);
+                foreach (var s in new[] { 1f, -1f }) c.Box(new Vector3(16.5f, 3.75f, s * 1.25f), new Vector3(4.4f, 0.9f, 0.6f), Black);
+                c.Box(new Vector3(17.2f, 5.25f, 0f), new Vector3(3.6f, 1.1f, 2.5f), yel);
+                Debug.LogWarning("[Bootstrap] equip_excavator prefab missing: barge keeps a box excavator");
+            }
             c.Flush(t, "barge");
         }
     }

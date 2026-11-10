@@ -62,8 +62,8 @@ namespace PortCCTV
             BreakwaterX("bw_east_arm", 40, 185, -75, -60, seaIsMinusZ: true);
             foreach (float x in new[] { -145f, -90f, 80f, 145f })
                 Prefab("shore", "shore_rock_01", new Vector3(x, -1.3f, x < 0 ? -143f : -83f), R(0f, 360f), Vector3.one * 1.3f);
-            Lighthouse("lh_red_w", -36f, -127.5f, Crest, "beacon_red", 12f);
-            Lighthouse("lh_white_e", 46f, -67.5f, Crest, "beacon_white_band", 12f);
+            Lighthouse("lh_red_w", -36f, -127.5f, Crest, "beacon_red", 12f, -90f);      // door along the arm towards the root (-x)
+            Lighthouse("lh_white_e", 46f, -67.5f, Crest, "beacon_white_band", 12f, 90f); // door along the arm towards the root (+x)
 
             // --- fish market (open-sided shed), ice plant, cold store, fuel tank, gear piles
             Box("market", -70, 10, Deck + 8f, Deck + 8.6f, 64, 96, "warehouse_roof", id: "market_roof");
@@ -91,13 +91,13 @@ namespace PortCCTV
             }
             BusStop(-60f, 118f + 5.5f, 1f);
             // light trucks and cars parked along the market road; market car park on the west end of the backland strip
-            for (float x = -60f; x < 0f; x += 12f)
-                if (Rng.NextDouble() < 0.35) ParkedVehicle("truck_kei", new Vector3(x, Deck, 104f), 0f);
-            ParkingLot(-330f, -240f, 124f, 167f, 0.25f, "fp_market_car_park", 0.08f, false);
+            ServiceRow(-62f, 0f, 107f, -1f, 0.4f, "small_truck", "fp_market_truck_bays");                // 1-ton trucks at the market front
+            ParkingLot(-330f, -240f, 126f, 167f, 0.45f, "fp_market_car_park", 0.08f, false);
             // real buildings (Sketchfab CC BY): shop row along the backland road, port office, cold store, towers on the east
             ShopRow(40f, 190f, 142f, 180f);                                                                    // 회센터 / shops facing the boundary road
             ShopRow(-180f, -20f, 142f, 180f);
             Prefab("building", "bld_villa_kr", new Vector3(240f, Deck, 150f), 180f, Vector3.one * 0.9f, id: "port_office");
+            FishingTown(256f, 532f, 125f, 170f);                                                              // low-rise fishery shops, houses and alleys (R01)
             GreenBuffer(-700f, -330f, 126f, 160f);                                                             // buffer west of the shops
             Prefab("building", "bld_warehouse3", new Vector3(95f, Deck, 92f), 0f, Vector3.one * 0.6f, id: "cold_store");
             Prefab("building", "bld_ind_warehouse", new Vector3(140f, Deck, 100f), 0f, Vector3.one, id: "ice_plant");
@@ -116,11 +116,12 @@ namespace PortCCTV
 
             // --- hillside behind the port: backland strip, then forested hills (camera B on the central one)
             Box("terrace", -700, 700, Bottom, Deck, 120, 170, "asphalt", id: "backland");
-            // port boundary road behind the backland strip, with signals at the two access streets, then the village beyond
+            // port boundary road behind the backland strip, then the village beyond. (The two 97 m access streets north of it
+            // ended in the hill-foot grass with nothing to serve; removed 2026-11-09.)
             Boulevard(-700f, 700f, 118f, true, 2, true, 0f);
-            foreach (var x in new[] { -200f, 210f }) { Boulevard(118f, 215f, x, false, 2, false); SignalledCrossing(new Vector2(x, 118f), true, 8f, 8f, false); }
             Box("terrace", -700, 700, Bottom, Deck - 0.05f, 170, 700, "grass", id: "hill_base");
             CoastalVillage(-680f, -360f, 174f, -1f, 2, false);
+            RoadZ(124f, 177.5f, -356.5f, 7f);                                    // village street down to the port road
             Farmland(540f, 700f, 172f, 215f);                                                                 // fields on the hill foot strip
             CameraHill(Cameras[1], 240f, 240f, 0, new Vector2(-293f, -13f));
             HillIdx(1, -250f, 330f, -4f, 520f, 100f, 420f); TreesOnHill(1, -250f, 330f, -4f, 520f, 100f, 420f, 30);   // backdrop hill behind the port
@@ -139,6 +140,7 @@ namespace PortCCTV
             for (float x = -1400; x < -190; x += 3.4f) Rock(x, -42 - R(0, 3), R(-1.4f, 0.2f), R(2.4f, 4.2f));
             // coastal road + village on the west shore, in front of the hillside camera (between the hill foot and the rocky shore)
             CoastalVillage(-980f, -430f, -28f, -1f, 2, true);
+            RoadZ(-31.5f, 114f, -426.5f, 7f);                                    // the village street joins the port road (was isolated)
             Scrub(-1000f, -420f, -38f, -34f, 30); Scrub(-1400f, -980f, -30f, 60f, 40, 4f, 8f);
             for (float x = 566; x < 1400; x += 3.4f) Rock(x, -22 - R(0, 3), R(-1.4f, 0.2f), R(2.4f, 4.2f));
             // scanned rubble + sand shore strips (Sketchfab CC BY "Breakwater coast", 92 m each): rock band against the land, sand seaward
@@ -148,7 +150,7 @@ namespace PortCCTV
             Prefab("building", "bld_ind_warehouse", new Vector3(475f, Deck, 105f), 180f, Vector3.one, id: "east_service_shed");
             Tank(545f, 105f, 12f, 8f);
             // east shore land: coast road, anglers' car park, seafood processing plant with a truck yard, greenhouses and fields
-            CoastalRoad(190f, 1450f, -11f, -1f);
+            CoastalRoad(186.5f, 1450f, -11f, -1f);                                                            // flush with the west edge of the access road
             RoadZ(-7.5f, 120f, 190f, 7f);
             Prefab("building", "bld_warehouse_blue", new Vector3(265f, Deck, 43f), 180f, Vector3.one * 0.8f, id: "east_net_store");
             Box("loading_pad", 600f, 760f, Deck, Deck + 0.03f, 0f, 36f, "lane_concrete", id: "fp_plant_loading_pad");
@@ -156,7 +158,7 @@ namespace PortCCTV
             Prefab("building", "bld_warehouse3", new Vector3(680f, Deck, 60f), 0f, Vector3.one, id: "seafood_plant");
             Prefab("building", "bld_warehouse_blue", new Vector3(630f, Deck, 100f), 0f, Vector3.one, id: "plant_cold_store_1");
             Prefab("building", "bld_brick_factory", new Vector3(705f, Deck, 102f), 0f, Vector3.one, id: "plant_cold_store_2");
-            for (int i = 0; i < 2; i++) ParkedVehicle("truck_kei", new Vector3(640f + i * 9f, Deck, 76f), 90f);
+            ServiceRow(632f, 660f, 72f, 1f, 0.5f, "small_truck", "fp_plant_truck_bays");
             Greenhouses(790f, 6f, 12, 50f);
             Greenhouses(790f, 66f, 12, 50f);
             Greenhouses(910f, 6f, 9, 70f);
@@ -180,6 +182,7 @@ namespace PortCCTV
             for (int i = 0; i < 6; i++) Hill(R(-2500, 2500), R(1700, 2900), -5, R(900, 1600), R(260, 500), R(700, 1200), R(0, 360));
             Hill(-900, -350, -6, 700, 140, 500, 50);
             Hill(1000, -300, -6, 700, 130, 500, -40);
+            Prefab("landmark_lighthouse", "lighthouse_tall", new Vector3(1000f, 0f, -300f), 0f, Vector3.one, id: "landmark_lighthouse");
             Hill(260, -1600, -8, 520, 52, 360, 15);                // offshore island
             Prefab("islet", "rock_3", new Vector3(-150, -3, -650), 25, new Vector3(28, 9, 22));
             Prefab("buoy", "lateral_marker", new Vector3(-10, -1.0f, -190), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
@@ -200,7 +203,7 @@ namespace PortCCTV
             h.vessel_rules.Add(Rule("rib", "patrol / rescue"));
             h.vessel_rules.Add(Rule("ferry", "island ferry"));
             h.vessel_rules.Add(Rule("barge", "construction / dredging"));
-            End();
+            End(h);
             return h;
         }
 

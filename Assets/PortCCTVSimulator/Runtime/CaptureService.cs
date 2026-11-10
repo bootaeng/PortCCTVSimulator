@@ -45,6 +45,9 @@ namespace PortCCTV
         public float render_min_y_local;
         public int label_vertex_count;
         public string material_note;
+        /// <summary>SHA-256 over the vessel prefab and all its dependencies (materials, textures, meshes) in the build manifest;
+        /// empty in Editor runs without a manifest.</summary>
+        public string prefab_dependency_sha256 = "";
     }
 
     [Serializable]
@@ -71,6 +74,8 @@ namespace PortCCTV
         /// <summary>CCTV degradation actually applied to rgb.png (enabled=false: rgb.png is the clean render).</summary>
         public SensorRecord sensor;
         public List<AssetRecord> assets = new List<AssetRecord>();
+        /// <summary>Build content fingerprint (BuildManifest): identifies the exact prefabs/materials/textures/settings used.</summary>
+        public BuildRecord build = new BuildRecord();
         public List<string> files = new List<string>();
         public List<string> file_sha256 = new List<string>();
         public int warmup_frames;
@@ -408,6 +413,7 @@ namespace PortCCTV
                     graphics_api = SystemInfo.graphicsDeviceType.ToString(),
                     capture_utc = DateTime.UtcNow.ToString("o"),
                     run_mode = runMode,
+                    build = BuildManifestInfo.Record(),
                     scenario_id = cfg.scenario_id,
                     scenario_sha256 = ScenarioIO.Sha256Hex(scenarioJson),
                     harbor_id = world.Harbor.harbor_id,
@@ -429,6 +435,7 @@ namespace PortCCTV
                         hull_reference_found = e.geometry.hull_reference_found,
                         hull_reference_min_y_local = e.geometry.hull_reference_min_y, render_min_y_local = e.geometry.render_min_y,
                         label_vertex_count = e.geometry.vertices_root_space.Length, material_note = e.material_note,
+                        prefab_dependency_sha256 = BuildManifestInfo.VesselDigest(e.asset_id),
                     });
                 foreach (var f in Directory.GetFiles(partial).OrderBy(f => f, StringComparer.Ordinal))
                 {

@@ -67,6 +67,11 @@ namespace PortCCTV
         public float water_time_actual_s = float.NaN;
         public bool water_time_frozen;
         public bool vessel_wave_motion;
+        /// <summary>Ground wear decals (oil, tyre marks, patches, grime) on paved surfaces; deterministic per harbor.</summary>
+        public int ground_wear_decals;
+        /// <summary>Cross-billboard trees on the forest hills and coastline scan pieces (background, deterministic per harbor).</summary>
+        public int forest_billboard_trees, forest_harbor_extra_trees, forest_camera_zone_trees, town_billboard_trees, flat_land_trees, near_3d_trees, coastline_pieces, lighthouse_paths, lighthouse_landings;
+        public float lighthouse_path_max_grade, lighthouse_path_length_m;
         public ResolvedWeather weather = new ResolvedWeather();
         public ResolvedLights lights = new ResolvedLights();
     }
@@ -83,6 +88,9 @@ namespace PortCCTV
         public Light Sun { get; private set; }
         public HDAdditionalLightData SunHD { get; private set; }
         public WaterSurface Water { get; private set; }
+        /// <summary>Number of ground wear decals placed on the current harbor (background only).</summary>
+        public int GroundWearDecals { get; private set; }
+        public Vegetation.Result VegetationResult { get; private set; }
         public Volume Volume { get; private set; }
         public VesselCatalog Catalog { get; private set; }
         public HarborTheme Theme { get; private set; }
@@ -215,7 +223,12 @@ namespace PortCCTV
             foreach (var m in _paintCache.Values) if (m != null) Util.SafeDestroy(m);
             _paintCache.Clear();
             if (_root != null) Util.SafeDestroy(_root);
-            if (HarborRoot != null) Util.SafeDestroy(HarborRoot);
+            if (HarborRoot != null)
+            {
+                foreach (var mf in HarborRoot.GetComponentsInChildren<MeshFilter>(true))     // runtime-merged meshes are owned by the harbor
+                    if (mf.sharedMesh != null && mf.sharedMesh.name.StartsWith("merged_")) Util.SafeDestroy(mf.sharedMesh);
+                Util.SafeDestroy(HarborRoot);
+            }
         }
 
         void EnsureHarbor(string harborId)
@@ -229,6 +242,9 @@ namespace PortCCTV
             }
             Harbor = HarborLibrary.Get(harborId);
             HarborRoot = HarborBuilder.Build(Harbor, Theme, out var cols, out var objs);
+            GroundWearDecals = GroundWear.Scatter(Harbor, Theme, HarborRoot.transform);
+            Physics.SyncTransforms();
+            VegetationResult = Vegetation.Scatter(Harbor, Theme, HarborRoot.transform, objs, cols);
             HarborColliders = cols;
             HarborObjects = objs;
             Water.transform.position = new Vector3(0, Harbor.water_reference_y, 0);
@@ -392,7 +408,8 @@ namespace PortCCTV
                 sky_hdri_sha256 = sky != null ? sky.source_sha256 : "", sky_lux = sky != null ? skyLux : 0f,
                 sun_illuminance_lux = sunLux, exposure_ev100 = ev,
                 fog_enabled = mfp > 0f, fog_mean_free_path_m = mfp > 0f ? mfp : 0f, cloud_opacity = wx.Overcast ? 0.95f : e.cloud_opacity,
-                water_reference_y = Harbor.water_reference_y,
+                water_reference_y = Harbor.water_reference_y, ground_wear_decals = GroundWearDecals,
+                forest_billboard_trees = VegetationResult.trees, forest_harbor_extra_trees = VegetationResult.harbor_trees, forest_camera_zone_trees = VegetationResult.camera_zone_trees, town_billboard_trees = VegetationResult.town_trees, flat_land_trees = VegetationResult.flat_trees, near_3d_trees = VegetationResult.near_3d_trees, coastline_pieces = VegetationResult.coast_pieces, lighthouse_paths = VegetationResult.lighthouse_paths, lighthouse_landings = VegetationResult.lighthouse_landings, lighthouse_path_max_grade = VegetationResult.lighthouse_path_max_grade, lighthouse_path_length_m = VegetationResult.lighthouse_path_length_m,
                 water_large_wind_speed_kmh = w.large_wind_speed_kmh, water_ripples_wind_speed_kmh = w.ripples_wind_speed_kmh,
                 water_repetition_size_m = w.repetition_size_m, water_large_band0_multiplier = w.large_band0_multiplier,
                 water_large_band1_multiplier = w.large_band1_multiplier, water_time_requested_s = cfg.environment.water_time_s,

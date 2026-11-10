@@ -38,13 +38,33 @@ namespace PortCCTV
         /// <summary>Unit hill height at (u,w) in [0,1]^2 for hill prefab index i (seed 2000+i). Irregular outline (warped radius),
         /// broad lumps + sharp ridges, fine gullies; slightly concave slopes (pow 1.15). Shared by the Editor mesh/texture bake and
         /// the runtime camera-hill placement.</summary>
-        public static float HillHeight(int hillIndex, float u, float w) => HillShape(hillIndex, u, w, out _);
+        public static float HillHeight(int hillIndex, float u, float w, bool ridged = false) => HillShape(hillIndex, u, w, out _, ridged);
 
-        public static float HillShape(int hillIndex, float u, float w, out float warpedRadius)
+        /// <summary>
+        /// ridged = true (background / headland hills, prefabs hill_N and hill_L_N; 2026-11-09 detail review, reference R07): the
+        /// radial dome becomes a ridge — distance is measured to a gently curved ridge line along a per-index axis, the two
+        /// flanks have different steepness, and the crest rises and falls along the ridge (saddles), so neighbouring hills read
+        /// as a connected range with valleys rather than repeated cones. Camera hills (hill_m_N) keep the radial form
+        /// (ridged = false) because their camera stands on a known flank.
+        /// </summary>
+        public static float HillShape(int hillIndex, float u, float w, out float warpedRadius, bool ridged = false)
         {
             int seed = 2000 + hillIndex; float ridge = hillIndex % 2 == 0 ? 0.45f : 0.65f;
             float dx = u - 0.5f, dz = w - 0.5f;
             float r = Mathf.Sqrt(dx * dx + dz * dz) * 2f;
+            float crest = 1f;
+            if (ridged)
+            {
+                float th = (37f + 71f * hillIndex) * Mathf.Deg2Rad, half = 0.20f + 0.05f * (hillIndex % 3);
+                float along = dx * Mathf.Cos(th) + dz * Mathf.Sin(th), across = -dx * Mathf.Sin(th) + dz * Mathf.Cos(th);
+                across -= 0.10f * (VNoise(along + 0.5f, 0.37f * hillIndex, 3, seed + 3) - 0.5f);   // the ridge line meanders
+                float ea = Mathf.Max(Mathf.Abs(along) - half, 0f) / (0.5f - half);
+                float steep = across > 0f ? 1.0f : 1.45f;                                          // asymmetric flanks
+                float ec = across * steep / 0.5f;
+                // ridge distance inside; near the mesh rim the radial distance takes over so the hill still reaches 0 at the edge
+                r = Mathf.Max(Mathf.Sqrt(ea * ea + ec * ec), (r - 0.8f) / 0.2f);
+                crest = 0.62f + 0.38f * Fbm(along + 0.5f, 0.21f * hillIndex + 0.5f, 3, 3, seed + 5);  // summits and saddles along the crest
+            }
             float warp = (Fbm(u, w, 2, 3, seed + 19) - 0.5f) * 0.5f;       // bays and headlands
             float rw = r * (1f + warp);
             warpedRadius = rw;
@@ -55,7 +75,7 @@ namespace PortCCTV
             float fine = 1f - Mathf.Abs(Fbm(u, w, 9, 3, seed + 13) * 2f - 1f);   // small ridges/gullies
             float mix = (1f - ridge) * n + ridge * rid;
             float amp = 0.15f + 0.85f * Mathf.Pow(mix, 1.3f);                   // separate peaks/spurs instead of one dome
-            float h = fall * amp * (0.88f + 0.12f * fine);
+            float h = fall * amp * (0.88f + 0.12f * fine) * crest;
             return Mathf.Pow(Mathf.Max(h, 0f), 1.15f);
         }
 

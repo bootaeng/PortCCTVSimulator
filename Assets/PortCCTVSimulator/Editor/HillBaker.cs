@@ -17,7 +17,7 @@ namespace PortCCTV.EditorTools
         const string Root = "Assets/PortCCTVSimulator";
         const string Dir = Root + "/Textures/Hills";
         const string MatDir = Root + "/Materials";
-        const string Ver = "v6";
+        const string Ver = "v10";   // v8: mask map so the canopy detail (crown relief) only lies on the forest layer
         const int N = 1024;
         const float AspectK = 0.3f;           // assumed sy/sx of hill instances for the baked macro normal
         public enum Variant { Forest, ForestLarge, Meadow }
@@ -25,7 +25,7 @@ namespace PortCCTV.EditorTools
         static float CanopyTiles(Variant v) => v == Variant.ForestLarge ? 6f : 2.5f;
         static float MeadowTiles(Variant v) => v == Variant.ForestLarge ? 10f : 4f;
         static float RockTiles(Variant v) => v == Variant.ForestLarge ? 14f : 6f;
-        static Vector3 _canopyMean;
+        static Vector3 _canopyMean, _meadowMean;
 
         static Color[] _canopy, _meadow, _rock, _canopyN, _meadowN; static int _cs, _ms, _rs, _cns, _mns;
 
@@ -47,6 +47,9 @@ namespace PortCCTV.EditorTools
             var acc = Vector3.zero; int n = 0;
             for (int k = 0; k < _canopy.Length; k += 97) { var c = _canopy[k]; acc += new Vector3(Mathf.GammaToLinearSpace(c.r), Mathf.GammaToLinearSpace(c.g), Mathf.GammaToLinearSpace(c.b)); n++; }
             _canopyMean = acc / n;
+            acc = Vector3.zero; n = 0;
+            for (int k = 0; k < _meadow.Length; k += 97) { var c = _meadow[k]; acc += new Vector3(Mathf.GammaToLinearSpace(c.r), Mathf.GammaToLinearSpace(c.g), Mathf.GammaToLinearSpace(c.b)); n++; }
+            _meadowMean = acc / n;
         }
 
         /// <summary>Bilinear, wrapping sample; returns linear-light RGB from an sRGB-encoded source.</summary>
@@ -110,10 +113,10 @@ namespace PortCCTV.EditorTools
             string key = $"hill_{(meadow ? "m_" : variant == Variant.ForestLarge ? "L_" : "")}{i}";
             // camera hills bake their village (roads / pads / terraces) from the registered HillSpec: the texture name carries its hash
             string texKey = meadow && HillFeatures.Specs.TryGetValue(i, out var spec0) ? key + "_" + spec0.Hash : key;
-            string albPath = $"{Dir}/T_{texKey}_albedo_{Ver}.png", nrmPath = $"{Dir}/T_{texKey}_normal_{Ver}.png";
-            if (!File.Exists(albPath) || !File.Exists(nrmPath)) Bake(i, variant, albPath, nrmPath);
+            string albPath = $"{Dir}/T_{texKey}_albedo_{Ver}.png", nrmPath = $"{Dir}/T_{texKey}_normal_{Ver}.png", mskPath = $"{Dir}/T_{texKey}_mask_{Ver}.png";
+            if (!File.Exists(albPath) || !File.Exists(nrmPath) || !File.Exists(mskPath)) Bake(i, variant, albPath, nrmPath, mskPath);
             LoadSources();
-            var alb = Import(albPath, false, true); var nrm = Import(nrmPath, true, false);
+            var alb = Import(albPath, false, true); var nrm = Import(nrmPath, true, false); var msk = Import(mskPath, false, false);
             var det = DetailMap("canopy", _canopy, _cs, _canopyN, _cns);   // camera hills are forest with village clearings too
             var lit = Shader.Find("HDRP/Lit");
             var path = $"{MatDir}/M_{key}.mat";
@@ -122,6 +125,11 @@ namespace PortCCTV.EditorTools
             m.shader = lit;
             m.SetColor("_BaseColor", Color.white);
             m.SetFloat("_Smoothness", meadow ? 0.15f : 0.10f);
+            // mask map: R metallic 0, G AO 1, B detail mask = forest layer weight, A smoothness 1 (remapped to the value above).
+            // Without it the canopy detail map (crown relief) also covered the shore rock / scrub band and read as rows of domes.
+            m.SetTexture("_MaskMap", msk);
+            m.SetFloat("_SmoothnessRemapMin", meadow ? 0.15f : 0.10f); m.SetFloat("_SmoothnessRemapMax", meadow ? 0.15f : 0.10f);
+            m.SetFloat("_AORemapMin", 0f); m.SetFloat("_AORemapMax", 1f); m.SetFloat("_MetallicRemapMin", 0f); m.SetFloat("_MetallicRemapMax", 0f);
             m.SetFloat("_Metallic", 0f);
             m.SetFloat("_UVBase", 0f);
             m.SetTexture("_BaseColorMap", alb);
@@ -132,8 +140,8 @@ namespace PortCCTV.EditorTools
             m.SetTextureScale("_DetailMap", new Vector2(tiles, tiles));
             m.SetFloat("_UVDetail", 0f);
             m.SetFloat("_LinkDetailsWithBase", 0f);
-            m.SetFloat("_DetailAlbedoScale", 0.5f);
-            m.SetFloat("_DetailNormalScale", meadow ? 0.6f : 1.0f);
+            m.SetFloat("_DetailAlbedoScale", 0.3f);
+            m.SetFloat("_DetailNormalScale", meadow ? 0.35f : 0.35f);   // crown relief at full strength read as domes wherever no tree stood on it
             m.SetFloat("_DetailSmoothnessScale", 0f);
             HDMaterial.ValidateMaterial(m);
             EditorUtility.SetDirty(m);
@@ -244,7 +252,7 @@ namespace PortCCTV.EditorTools
             return ov;
         }
 
-        static void Bake(int i, Variant variant, string albPath, string nrmPath)
+        static void Bake(int i, Variant variant, string albPath, string nrmPath, string mskPath)
         {
             bool meadow = variant == Variant.Meadow;
             float ct = CanopyTiles(variant), mt = MeadowTiles(variant), rt = RockTiles(variant);
@@ -254,7 +262,7 @@ namespace PortCCTV.EditorTools
             var h = new float[N * N];
             for (int y = 0; y < N; y++)
                 for (int x = 0; x < N; x++)
-                    h[y * N + x] = ProcNoise.HillHeight(i, (x + 0.5f) / N, (y + 0.5f) / N);
+                    h[y * N + x] = ProcNoise.HillHeight(i, (x + 0.5f) / N, (y + 0.5f) / N, !meadow);
             // box blur (radius 6) for the cavity term
             var tmp = new float[N * N]; var blur = new float[N * N]; const int R = 6;
             for (int y = 0; y < N; y++)
@@ -275,7 +283,7 @@ namespace PortCCTV.EditorTools
                     s += tmp[Mathf.Clamp(y + R + 1, 0, N - 1) * N + x] - tmp[Mathf.Clamp(y - R, 0, N - 1) * N + x];
                 }
             }
-            var albedo = new Color32[N * N]; var normal = new Color32[N * N];
+            var albedo = new Color32[N * N]; var normal = new Color32[N * N]; var mask = new Color32[N * N];
             float du = 1f / N;
             for (int y = 0; y < N; y++)
                 for (int x = 0; x < N; x++)
@@ -287,19 +295,29 @@ namespace PortCCTV.EditorTools
                     float gy = (h[Mathf.Min(y + 1, N - 1) * N + x] - h[Mathf.Max(y - 1, 0) * N + x]) / (2 * du);
                     float g = Mathf.Sqrt(gx * gx + gy * gy);
                     // --- layer weights
-                    float shoreRock = Smooth(0.05f, 0.02f, hc);
+                    float shoreRock = Smooth(0.065f, 0.035f, hc);
+                    float shoreScrub = Smooth(0.13f, 0.07f, hc) * (1f - shoreRock);              // coastal scrub / grass above the rocks
                     float slopeRock = Smooth(4.5f, 7.5f, g);
                     float outcrop = Mathf.Clamp01((ProcNoise.Fbm(u, w, 6, 3, seed + 31) - 0.74f) * 8f);
                     float rock = Mathf.Clamp01(Mathf.Max(shoreRock, Mathf.Max(slopeRock, outcrop)));
                     float clearing = 0.7f * Mathf.Clamp01((ProcNoise.Fbm(u, w, 3, 3, seed + 23) - 0.66f) * 6f) * Smooth(2.0f, 0.8f, g) * Smooth(0.10f, 0.16f, hc);
                     if (meadow) clearing = Mathf.Max(clearing, Smooth(30f, 10f, ov.laneDist[idx]) * (0.75f + 0.25f * ProcNoise.Fbm(u, w, 12, 2, seed + 27)));
-                    float mead = (1f - rock) * clearing;
+                    float mead = (1f - rock) * Mathf.Max(clearing, shoreScrub * (0.65f + 0.35f * ProcNoise.Fbm(u, w, 10, 2, seed + 29)));
                     float forest = 1f - rock - mead;
                     // Korean coast: dark grey-brown rock, mid-dark green forest, green (not straw) meadow
                     // canopy contrast is reduced (blend towards its mean): seen from afar a forest is a fairly even dark green
                     var can = Vector3.Lerp(_canopyMean, Sample(_canopy, _cs, u * ct, w * ct), 0.55f);
+                    var meadCol = Vector3.Scale(Sample(_meadow, _ms, u * mt, w * mt), new Vector3(0.80f, 0.95f, 0.70f));
+                    // the shore band is low coastal scrub (darker olive green), not a mown meadow: it read straw-yellow from above
+                    // and its grass-clump pattern is flattened (the clumps tiled into rows of domes along the shore)
+                    if (shoreScrub > clearing)
+                    {
+                        var flatM = Vector3.Lerp(_meadowMean, Sample(_meadow, _ms, u * mt, w * mt), 0.3f);
+                        var scrub = Vector3.Lerp(Vector3.Scale(flatM, new Vector3(0.80f, 0.95f, 0.70f)), Vector3.Scale(_canopyMean, new Vector3(1.25f, 1.30f, 1.0f)), 0.6f);
+                        meadCol = Vector3.Lerp(meadCol, scrub, Mathf.Clamp01(shoreScrub * 1.5f));
+                    }
                     var col = Vector3.Scale(Sample(_rock, _rs, u * rt, w * rt), new Vector3(0.34f, 0.32f, 0.30f)) * rock
-                            + Vector3.Scale(Sample(_meadow, _ms, u * mt, w * mt), new Vector3(0.80f, 0.95f, 0.70f)) * mead
+                            + meadCol * mead
                             + Vector3.Scale(can, new Vector3(1.10f, 1.25f, 1.00f)) * forest;
                     // cavity: gullies darker than ridges; slight altitude brightening
                     float cav = Mathf.Clamp01(0.5f + (hc - blur[idx]) * 6f);
@@ -326,12 +344,15 @@ namespace PortCCTV.EditorTools
                             break;
                     }
                     albedo[idx] = new Color(Mathf.LinearToGammaSpace(Mathf.Clamp01(col.x)), Mathf.LinearToGammaSpace(Mathf.Clamp01(col.y)), Mathf.LinearToGammaSpace(Mathf.Clamp01(col.z)), 1f);
+                    float det = flat ? 0f : Mathf.Clamp01(forest * (1f - (ov.terrace[idx] > 0f ? ov.terrace[idx] : 0f)));
+                    mask[idx] = new Color32(0, 255, (byte)Mathf.RoundToInt(det * 255f), 255);
                     var n = flat ? Vector3.forward : new Vector3(-gx * AspectK, -gy * AspectK, 1f).normalized;
                     normal[idx] = new Color(n.x * 0.5f + 0.5f, n.y * 0.5f + 0.5f, n.z * 0.5f + 0.5f, 1f);
                 }
             Directory.CreateDirectory(Dir);
             var ta = new Texture2D(N, N, TextureFormat.RGBA32, false, false); ta.SetPixels32(albedo); File.WriteAllBytes(albPath, ta.EncodeToPNG()); Object.DestroyImmediate(ta);
             var tn = new Texture2D(N, N, TextureFormat.RGBA32, false, true); tn.SetPixels32(normal); File.WriteAllBytes(nrmPath, tn.EncodeToPNG()); Object.DestroyImmediate(tn);
+            var tm = new Texture2D(N, N, TextureFormat.RGBA32, false, true); tm.SetPixels32(mask); File.WriteAllBytes(mskPath, tm.EncodeToPNG()); Object.DestroyImmediate(tm);
             Debug.Log($"[PortCCTV] baked hill texture {albPath}");
         }
     }

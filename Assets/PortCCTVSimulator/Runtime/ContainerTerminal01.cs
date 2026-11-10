@@ -46,7 +46,7 @@ namespace PortCCTV
             // --- land and quays
             Box("quay", -420, 420, Bottom, Deck, 60, 130, "concrete", id: "quay_apron");
             Box("land", -600, 600, Bottom, Deck, 130, 430, "asphalt", id: "yard");
-            Box("land", -1600, -420, Bottom, Deck, -250, 430, "asphalt", id: "land_west_industry");
+            Box("land", -1600, -420, Bottom, Deck - 0.03f, -250, 430, "asphalt", id: "land_west_industry");   // 3 cm below the yard it overlaps (no z-fight)
             Box("land", 420, 1600, Bottom, Deck, -150, 430, "grass", id: "land_east");
             Box("land", -1600, 1600, Bottom, Deck - 0.05f, 430, 1600, "grass", id: "land_north");
             QuayFaceZ(-420, 420, 60, -1, 14f, 20f);
@@ -62,8 +62,15 @@ namespace PortCCTV
             BreakwaterX("bw_south", -450, 250, -470, -455, seaIsMinusZ: true);
             BreakwaterZ("bw_west", -455, -250, -450, -435, seaIsMinusX: true);
             BreakwaterZ("bw_east", -400, -150, 420, 435, seaIsMinusX: false);
-            Lighthouse("lh_red_w", 244f, -461f, Crest, "beacon_red");
-            Lighthouse("lh_white_e", 427f, -394f, Crest, "beacon_white_band");
+            Lighthouse("lh_red_w", 244f, -461f, Crest, "beacon_red", 13f, 0f);              // door to the harbour side (boat landing)
+            Lighthouse("lh_white_e", 427f, -394f, Crest, "beacon_white_band", 13f, 0f);     // door up the breakwater road (+z)
+            // the east breakwater's root meets the camera-D headland. Until 2026-11-09 a ramp and a quay-side walk ran from the root
+            // to the yard, but the headland hill covers that strip from z -156 to -40 (up to 10 m of ground over the walk; found by
+            // the surface audit). Now the walk keeps only its open part (z -36 .. 130) and a footpath with stairs and handrails is
+            // routed over the headland from the breakwater root (marker: Vegetation.LighthouseAccess, A* over the real ground).
+            Box("breakwater", 420f, 432.6f, 1.6f, Deck + 0.04f, -36f, 130f, "concrete", id: "bw_east_walk");
+            QuayRailing(420.35f, -34f, 128f, Deck + 0.04f, false);              // pedestrian railing along the walk's water edge (not barriers)
+            E.Add(new HarborElement { id = "foot_access_bw_east", kind = "foot_access", shape = "marker", center = new Vector3(427.5f, Crest, -151.5f), size = Vector3.one });
             MultipurposeBerth(-420f, -235f, 40f, 1f);     // west quay: multipurpose berth (portal + mobile harbour cranes)
 
             // --- cranes, yard, buildings
@@ -93,8 +100,8 @@ namespace PortCCTV
             Prefab("building", "bld_officetel", new Vector3(-40f, Deck, 330f), 180f, Vector3.one * 0.5f, id: "admin_building");   // terminal operations building
             Prefab("building", "bld_warehouse3", new Vector3(-250f, Deck, 410f), 0f, Vector3.one, id: "shed_row_3");   // CFS behind the yard
             Prefab("building", "bld_ind_warehouse", new Vector3(80f, Deck, 405f), 90f, Vector3.one, id: "shed_4");
-            for (float x = 140f; x < 560f; x += 30f) Prefab("building", Rng.NextDouble() < 0.5 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(x, Deck, 410f), 0f, Vector3.one);   // maintenance / reefer sheds
-            foreach (var (fx, fz, fy) in new[] { (-640f, 452f, 0f), (-612f, 540f, 180f), (-250f, 455f, 90f) }) Vehicle("crane", "forklift_a", new Vector3(fx, Deck, fz), fy);
+            for (float x = 140f; x < 560f; x += 30f) Prefab("building", Rng.NextDouble() < 0.3 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(x, Deck, 410f), 0f, Vector3.one);   // maintenance / reefer sheds
+            foreach (var (fx, fz, fy) in new[] { (-605f, 470f, 0f), (-612f, 540f, 180f), (-250f, 455f, 90f) }) Vehicle("crane", "forklift_truck", new Vector3(fx, Deck, fz), fy);   // detailed forklift (louis-muir, CC BY), 2026-11-09
             // Real harbor assets in the cross-basin CCTV view: working sheds and a parked service crane.
             Prefab("building", "godown_warehouse", new Vector3(-150f, Deck, 130f), 180f, Vector3.one, id: "quay_godown");
             Prefab("building", "godown_warehouse", new Vector3(10f, Deck, 130f), 180f, Vector3.one, id: "quay_service_shed");
@@ -106,11 +113,12 @@ namespace PortCCTV
             for (float z = 150f; z < 560f; z += 3.9f) Prefab("fence", "fence", new Vector3(652f, Deck, z), 90f, Vector3.one);
             for (float z = 150f; z < 560f; z += R(7f, 11f)) Tree(658f + R(0f, 28f), z, Deck, R(7f, 12f));
             Scrub(656f, 690f, 150f, 560f, 70, 2f, 4f);
-            Boulevard(100f, 980f, 700f, false, 4, true, 0f);                                                  // 항만 배후도로 (port boundary road)
+            Boulevard(-131f, 980f, 700f, false, 4, true, 0f);                                                 // 항만 배후도로 (port boundary road), down to the village street (it ended in grass at z 100)
             foreach (var z in new[] { 300f, 540f }) SignalledCrossing(new Vector2(700f, z), false, 14f, 8f, true);
-            CityBlocks(715f, 1050f, 300f, 540f, 110f);                                                        // residential blocks
-            CityBlocks(715f, 1050f, 130f, 300f, 110f);
-            CityBlocks(715f, 1050f, 540f, 760f, 110f);
+            // container-port hinterland next to the terminal: logistics (warehouses, truck parks, depots, workshops); housing
+            // only further back (detail review 2026-11-09 §5: residential blocks right behind the yard were out of place)
+            IndustrialBlocks(715f, 1050f, 130f, 540f, 110f);
+            CityBlocks(715f, 1050f, 540f, 760f, 110f, 12f, "residential");
             BusStop(700f + 8.2f, 420f, 0f);
             for (int i = 0; i < 6; i++)                                                                      // spaced tractors in marked apron lanes
             {
@@ -127,12 +135,13 @@ namespace PortCCTV
             SignalledCrossing(new Vector2(0f, 600f), true, 14f, 14f, true);
             Prefab("street", "sign_gantry", new Vector3(0f, Deck, 450f), 0f, Vector3.one);                   // gate approach gantry
             for (float z = 470f; z < 590f; z += 2.1f) foreach (var s in new[] { -1f, 1f }) Prefab("street", "jersey_barrier", new Vector3(s * 7.5f, Deck, z), 90f, Vector3.one);   // median barriers
-            TruckLot(40f, 190f, 440f, 520f, 0.22f, 0.6f, "ct_truck_staging");
+            foreach (var s in new[] { -1f, 1f }) MedianStarts.Add((new Vector3(s * 7.5f, Deck, 466.5f), 180f));   // keep-right sign facing the gate traffic
+            TruckLot(40f, 190f, 440f, 520f, 0.45f, 0.6f, "ct_truck_staging");
             ContainerBlock(205f, 455f, 7, 7, 3, false);
             foreach (var bx in new[] { -340f, -250f }) foreach (var bz in new[] { 448f, 478f, 508f, 538f }) ContainerBlock(bx, bz, 6, 6, 5, false);
             foreach (var (hx, hz, hy) in new[] { (-262f, 470f, 90f), (-262f, 528f, 270f), (-162f, 500f, 0f) })      // empty handlers in the depot
                 Prefab("crane", "empty_handler", new Vector3(hx, Deck, hz), hy, Vector3.one);
-            ParkingLot(-150f, -65f, 440f, 480f, 0.2f, "ct_staff_car_park", 0.01f);
+            ParkingLot(-150f, -65f, 440f, 480f, 0.7f, "ct_staff_car_park", 0.05f);
             ContainerBlock(-140f, 545f, 6, 6, 2, false);                                                       // empty-box overflow beside the depot
             Prefab("building", "bld_warehouse3", new Vector3(-320f, Deck, 650f), 0f, Vector3.one, id: "logistics_1");
             Prefab("building", "bld_warehouse3", new Vector3(320f, Deck, 650f), 0f, Vector3.one, id: "logistics_2");
@@ -152,9 +161,9 @@ namespace PortCCTV
             // bund wall around the tank farm, road-tanker loading lot, then port-industrial blocks over the rest of the west land
             foreach (var (bx0, bx1, bz0, bz1) in new[] { (-815f, -605f, -200f, -197f), (-815f, -605f, -43f, -40f), (-815f, -812f, -200f, -40f), (-608f, -605f, -200f, -40f) })
                 Box("bund", bx0, bx1, Deck, Deck + 1.4f, bz0, bz1, "concrete");
-            TruckLot(-590f, -475f, -232f, -40f, 0.4f, 0.3f, "ct_tanker_lot");
+            TruckLot(-590f, -475f, -232f, -40f, 0.5f, 0.3f, "ct_tanker_lot");
             IndustrialBlocks(-1580f, -870f, -235f, 415f, 118f);
-            IndustrialBlocks(-850f, -470f, -20f, 415f, 110f);
+            IndustrialBlocks(-850f, -612f, -20f, 415f, 110f);                 // ends before the terminal yard (x -600); it overlapped the ARMG blocks
             foreach (var (cx, cz) in new[] { (-1099f, -97.5f), (-1217.5f, 162.5f) }) Cyl("factory", cx, cz, Deck, Deck + R(45f, 80f), R(3.5f, 5f), "chimney");   // stacks of the plants
 
             // --- east town with apartment towers (camera D stands on the first one); coastal road + village on the east shore below it
@@ -162,7 +171,7 @@ namespace PortCCTV
             CoastalVillage(760f, 1200f, -128f, -1f, 3, true);                                                // village starts 60 m past the buffer
             for (float z = -140f; z < 140f; z += 3.9f) Prefab("fence", "fence", new Vector3(652f, Deck, z), 90f, Vector3.one);
             for (float z = -140f; z < 140f; z += R(6f, 9f)) Tree(660f + R(0f, 60f), z, Deck, R(7f, 12f));
-            Scrub(656f, 740f, -140f, 140f, 80, 2f, 4f);
+            Scrub(656f, 688f, -140f, 140f, 40, 2f, 4f); Scrub(712f, 740f, -120f, 140f, 40, 2f, 4f);           // either side of the boundary road
             Scrub(760f, 1200f, -148f, -136f, 30); Scrub(1200f, 1500f, -140f, 100f, 40, 4f, 8f);
             for (float x = 436f; x < 1400f; x += 3.4f) Rock(x, -152f - R(0f, 3f), R(-1.4f, 0.2f), R(2.4f, 4.2f));   // rocky east shore
             HillIdx(1, 1320f, 560f, -4f, 560f, 130f, 460f); TreesOnHill(1, 1320f, 560f, -4f, 560f, 130f, 460f, 25);   // moved east so the port town is not inside it
@@ -174,6 +183,8 @@ namespace PortCCTV
             for (int i = 0; i < 9; i++) Hill(R(-2800, 2800), R(1700, 3000), -5, R(900, 1600), R(105, 210), R(700, 1200), R(0, 360));
             for (int i = 0; i < 5; i++) Hill(R(-1200, 1300), R(950, 1350), Deck - 3, R(350, 600), R(45, 85), R(300, 500), R(0, 360));
             Hill(-1300, -900, -6, 1200, 100, 800, 40);
+            // tall coastal lighthouse on that headland, moved at build time onto its harbour-facing slope (Vegetation.Scatter)
+            Prefab("landmark_lighthouse", "lighthouse_tall", new Vector3(-1300f, 0f, -900f), 0f, Vector3.one, id: "landmark_lighthouse");
             Hill(1500, -800, -6, 1300, 110, 800, -30);
             Hill(300, -2600, -8, 500, 110, 380, 20);
             Hill(-900, -3000, -8, 700, 150, 500, 70);
@@ -197,7 +208,7 @@ namespace PortCCTV
             h.vessel_rules.Add(Rule("rib", "patrol / pilot transfer"));
             h.vessel_rules.Add(Rule("motorboat", "pilot launch / work boat"));
             h.vessel_rules.Add(Rule("tanker", "tankers use the anchorage outside, not the container basin", "outer_sea"));
-            End();
+            End(h);
             return h;
         }
 
@@ -233,7 +244,9 @@ namespace PortCCTV
         public static ScenarioConfig DefaultScenario()
         {
             var s = new ScenarioConfig { scenario_id = "container_terminal_default", harbor_id = Id, camera_preset_id = "ct_E_basin_breakwater" };
-            s.vessels.Add(new VesselPlacement { object_id = "v00", asset_id = "container_ship", x = -270, z = 60 - 1.6f - 13.6f, heading_deg = 180, immersion_m = 4.2f });
+            // berthed under the STS cranes: the CC BY 95 m feeder (beam 15.6 m) replaced the blocky procedural 172 m ship in the default
+            // scene after a same-view comparison (detail review 2026-11-09 §8); the procedural one stays available as "(구형)"
+            s.vessels.Add(new VesselPlacement { object_id = "v00", asset_id = "feeder_ship", x = -270, z = 60 - 1.6f - 7.8f, heading_deg = 180, immersion_m = 4.0f });
             s.vessels.Add(new VesselPlacement { object_id = "v01", asset_id = "general_cargo", x = 40, z = -230, heading_deg = 110, immersion_m = 5.0f });
             s.vessels.Add(new VesselPlacement { object_id = "v02", asset_id = "tug_harbor", x = 150, z = -200, heading_deg = 120, immersion_m = 6.0f });
             s.vessels.Add(new VesselPlacement { object_id = "v03", asset_id = "tug_harbor", x = -80, z = -150, heading_deg = 170, immersion_m = 6.0f });
@@ -243,8 +256,9 @@ namespace PortCCTV
             s.vessels.Add(new VesselPlacement { object_id = "v07", asset_id = "pilot_boat", x = -100, z = -90, heading_deg = 75, immersion_m = 1.1f });
             s.vessels.Add(new VesselPlacement { object_id = "v08", asset_id = "police_boat", x = 45, z = -130, heading_deg = 255, immersion_m = 0.6f });
             s.vessels.Add(new VesselPlacement { object_id = "v09", asset_id = "barge", x = 100, z = -950, heading_deg = 65, immersion_m = 0.15f, motion = new VesselMotion { mode = "anchor" } });
-            s.vessels.Add(new VesselPlacement { object_id = "v11", asset_id = "container_ship", x = 150, z = 60 - 1.6f - 13.6f, heading_deg = 180, immersion_m = 4.2f });   // second berth under the east STS group
-            s.vessels.Add(new VesselPlacement { object_id = "v10", asset_id = "feeder_ship", x = 950, z = -1050, heading_deg = 245, immersion_m = 4.0f });
+            s.vessels.Add(new VesselPlacement { object_id = "v11", asset_id = "feeder_ship", x = 150, z = 60 - 1.6f - 7.8f, heading_deg = 180, immersion_m = 4.0f });   // second berth under the east STS group
+            // (moved from (950, -1050) when the headland hill_L_0 became a ridge and its slope reached the hull, 2026-11-09)
+            s.vessels.Add(new VesselPlacement { object_id = "v10", asset_id = "feeder_ship", x = 880, z = -1150, heading_deg = 245, immersion_m = 4.0f });
             s.vessels.Add(new VesselPlacement { object_id = "v12", asset_id = "bulk_carrier", x = -350, z = -1350, heading_deg = 60, immersion_m = 7f, motion = new VesselMotion { mode = "anchor" } });
             return s;
         }

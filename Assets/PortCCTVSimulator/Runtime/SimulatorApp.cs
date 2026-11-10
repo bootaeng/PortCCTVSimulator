@@ -242,9 +242,38 @@ namespace PortCCTV
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit(code);
+            StartCoroutine(QuitAfterCleanup(code));
 #endif
         }
+
+        /// <summary>Tears the world down (harbour, vessels, runtime meshes and their colliders) and lets physics and the asset
+        /// system release it before Application.Quit: with very large maps the engine occasionally crashed during its own
+        /// teardown (exit 139 after a finished batch, 2026-11-09).</summary>
+        System.Collections.IEnumerator QuitAfterCleanup(int code)
+        {
+            try { _world?.Dispose(); _world = null; } catch (Exception ex) { Debug.LogWarning("[PortCCTV] dispose before quit: " + ex.Message); }
+            yield return null;
+            yield return new WaitForFixedUpdate();
+            yield return Resources.UnloadUnusedAssets();
+            System.GC.Collect();
+            yield return null;
+#if UNITY_STANDALONE_WIN
+            // Batch runs (-batch/-capture with -quit): every output file is written and verified by now, so end the process
+            // directly. Unity's own teardown of very large maps still crashed intermittently (exit 139 in ~1 of 3 runs even
+            // after the cleanup above), which turned finished batches into failures for calling scripts.
+            if (HasArg("-batch") || HasArg("-capture"))
+            {
+                Debug.Log($"[PortCCTV] terminating process with code {code}");
+                TerminateProcess(GetCurrentProcess(), (uint)code);
+            }
+#endif
+            Application.Quit(code);
+        }
+
+#if UNITY_STANDALONE_WIN
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")] static extern IntPtr GetCurrentProcess();
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")] static extern bool TerminateProcess(IntPtr hProcess, uint exitCode);
+#endif
 
         // ---------------- scenario handling ----------------
         void ApplyScenario()

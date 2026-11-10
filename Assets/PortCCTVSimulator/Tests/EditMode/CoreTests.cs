@@ -1203,3 +1203,63 @@ namespace PortCCTV.Tests
         }
     }
 }
+
+namespace PortCCTV.Tests
+{
+    /// <summary>Car parks / truck parks built by Parking.cs (2026-11-09 detail review): access, geometry and exact occupancy.</summary>
+    public class ParkingTests
+    {
+        [Test]
+        public void EveryMap_ParkingPassesAccessAndGeometryCheck()
+        {
+            foreach (var id in new[] { ContainerTerminal01.Id, FishingPort01.Id, Marina01.Id })
+            {
+                var h = HarborLibrary.Get(id);
+                Assert.Greater(h.parking_lots.Count(l => l.kind == "car_park"), 0, id);
+                var problems = HarborParts.Check(h);
+                Assert.IsEmpty(problems, id + ": " + string.Join(" | ", problems.Take(10)));
+                // every car / truck park reaches a road or the paved yard it stands on through at least one driveway >= 4 m
+                foreach (var lot in h.parking_lots.Where(l => l.needs_driveway)) Assert.IsNotEmpty(lot.driveways, $"{id} {lot.id}");
+            }
+        }
+
+        static ParkingLotInfo Build(float x0, float x1, float z0, float z1, float occ, out HarborDefinition h)
+        {
+            var e = HarborGeneric02.Begin(4242);
+            h = new HarborDefinition { harbor_id = "test", elements = e };
+            HarborGeneric02.Box("road", x0 - 30f, x1 + 30f, 2.5f, 2.56f, z0 - 12f, z0 - 4f, "road_asphalt", id: "test_road");
+            var info = HarborParts.ParkingLot(x0, x1, z0, z1, occ, "test_lot", 0f, false);
+            HarborGeneric02.End(h);
+            return info;
+        }
+
+        [Test]
+        public void Occupancy_IsExact_AndBaysOpenOntoAnAisle()
+        {
+            foreach (var occ in new[] { 0f, 0.5f, 1f })
+            {
+                var info = Build(0f, 90f, 0f, 41f, occ, out var h);
+                Assert.IsNotNull(info);
+                var bays = h.parking_bays.Where(b => b.lot_id == "test_lot").ToList();
+                int cars = h.elements.Count(el => el.kind == "car");
+                Assert.AreEqual(Mathf.RoundToInt(occ * bays.Count), bays.Count(b => !string.IsNullOrEmpty(b.vehicle)), $"occ {occ}");
+                Assert.AreEqual(bays.Count(b => !string.IsNullOrEmpty(b.vehicle)), cars, $"vehicles placed for occ {occ}");
+                // every bay gets its two side lines and a back line, occupied or not (3 line boxes per bay)
+                Assert.AreEqual(3 * bays.Count, h.elements.Count(el => el.kind == "parking_lines"), $"lines for occ {occ}");
+                Assert.IsEmpty(HarborParts.Check(h), string.Join(" | ", HarborParts.Check(h)));
+                Assert.IsNotEmpty(h.parking_lots[0].driveways);
+            }
+        }
+
+        [Test]
+        public void SmallSite_GetsSingleRowOrNoCarPark()
+        {
+            Assert.IsNull(Build(0f, 20f, 0f, 30f, 0.5f, out _), "too short for 3 bays and two end aisles");
+            Assert.IsNull(Build(0f, 60f, 0f, 10f, 0.5f, out _), "too shallow for a bay and an aisle");
+            var single = Build(0f, 60f, 0f, 14f, 0.5f, out var h);
+            Assert.IsNotNull(single);
+            Assert.IsTrue(h.parking_bays.All(b => b.open_edge == "+z"), "single row opens onto its aisle");
+            Assert.IsEmpty(HarborParts.Check(h), string.Join(" | ", HarborParts.Check(h)));
+        }
+    }
+}

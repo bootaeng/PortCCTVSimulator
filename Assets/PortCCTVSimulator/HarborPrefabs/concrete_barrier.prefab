@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6669115856563612738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7254166718519070612}
+  m_Layer: 0
+  m_Name: concrete_barrier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7254166718519070612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6669115856563612738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4912574918210290189}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7376517545372588454
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7254166718519070612}
+    m_Modifications:
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.0065276623
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0027944446
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.032977983
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3397078342155501009, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      propertyPath: m_Name
+      value: concrete_road_barrier_02_2k
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3397078342155501009, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2881851986746784278}
+  m_SourcePrefab: {fileID: -4161369568681901532, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+--- !u!4 &4912574918210290189 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6741220705113367637, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+  m_PrefabInstance: {fileID: 7376517545372588454}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5294684366264820855 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3397078342155501009, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}
+  m_PrefabInstance: {fileID: 7376517545372588454}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &2881851986746784278
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5294684366264820855}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3499508575016237340, guid: fb7b980c79e1de94fb625e35ee172c15, type: 3}

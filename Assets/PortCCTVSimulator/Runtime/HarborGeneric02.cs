@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PortCCTV
@@ -33,7 +34,9 @@ namespace PortCCTV
             {
                 id = id ?? Uid(kind), kind = kind, shape = "box",
                 center = new Vector3((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
-                size = new Vector3(x1 - x0, y1 - y0, z1 - z0), material = mat, yaw_deg = yaw
+                // |extent|: callers pass the two edges in either order (a boulevard's -side sidewalk came out with a negative
+                // width, which every rectangle overlap test then missed: footways could not be cut at junctions, 2026-11-09)
+                size = new Vector3(Mathf.Abs(x1 - x0), Mathf.Abs(y1 - y0), Mathf.Abs(z1 - z0)), material = mat, yaw_deg = yaw
             });
 
         internal static void BoxC(string kind, Vector3 c, Vector3 size, string mat, float yaw = 0, Vector3 euler = default)
@@ -67,12 +70,51 @@ namespace PortCCTV
             E = new List<HarborElement>();
             Rng = new System.Random(seed);
             _n = 0; _treeCount = 0;
+            HarborParts.LaidBoulevards.Clear(); HarborParts.LaidCrossings.Clear(); HarborParts.ResetParking(); HarborParts.ResetRoads();
             return E;
+        }
+
+        /// <summary>Ends a map build; with the definition, first joins dead-end roads / lanes / paths to the network.</summary>
+        internal static void PromoteNearTrees(HarborDefinition h)
+        {
+            var cams = CameraPresetLibrary.ForHarbor(h.harbor_id);
+            if (cams == null || cams.Length == 0) return;
+            float D(HarborElement e) { float best = float.MaxValue; foreach (var c in cams) best = Mathf.Min(best, (new Vector2(e.center.x - c.position.x, e.center.z - c.position.z)).sqrMagnitude); return best; }
+            var bb = E.Where(e => e.shape == "billboard_tree").OrderBy(D).Take(MaxTrees).ToList();
+            foreach (var e in bb)
+            {
+                uint hv = 2166136261u; foreach (var ch in e.id) hv = (hv ^ ch) * 16777619u;
+                int k = (int)(hv % 2u) + 1;
+                float sc = e.size.y / (k == 1 ? 5.03f : 3.41f);           // Poly Haven island_tree_01/02 native heights
+                e.shape = "prefab"; e.prefab = "tree_0" + k; e.size = new Vector3(sc, sc, sc);
+            }
+        }
+
+        internal static void End(HarborDefinition h)
+        {
+            if (h != null)
+            {
+                PromoteNearTrees(h);
+                HarborParts.FinalizeAccess(h);                       // driveways from every car park / yard to the street
+                h.parking_lots = new List<ParkingLotInfo>(HarborParts.Lots);
+                h.parking_bays = new List<ParkingBay>(HarborParts.Bays);
+                HarborParts.FinalizeRoads(h);                        // junction boxes, rule-based signs
+                var pp = HarborParts.Check(h);
+                Debug.Log($"[Parking] {h.harbor_id}: {h.parking_lots.Count} lots/yards, {h.parking_bays.Count} bays, {h.parking_bays.Count(b => !string.IsNullOrEmpty(b.vehicle))} vehicles, {pp.Count} problems" + (pp.Count > 0 ? ": " + string.Join(" | ", pp.Take(12)) : ""));
+                RoadNetwork.BreakwaterRamps(h);
+                RoadNetwork.TrimUnderHills(h);
+                RoadNetwork.ClearCarriageways(h);
+                RoadNetwork.OpenJunctionMouths(h);
+                RoadNetwork.ConnectDeadEnds(h);
+                RoadNetwork.TerminateStubs(h);
+                HarborParts.DetailNearContainers(h);
+            }
+            End();
         }
 
         internal static void End()
         {
-            if (_treeCount > MaxTrees) Debug.Log($"[Harbor] {_treeCount} trees requested, {MaxTrees} placed (cap); later Tree() calls were dropped");
+            if (_treeCount > MaxTrees) Debug.Log($"[Harbor] {_treeCount} trees requested, {MaxTrees} scanned prefabs, {_treeCount - MaxTrees} billboard impostors");
             E = null;
         }
 
@@ -216,15 +258,15 @@ namespace PortCCTV
             for (int i = 0; i < 6; i++) { Rock(R(40f, 43f), R(-255f, -240f), R(-0.8f, 0.8f), R(2.4f, 3.2f)); Rock(R(92f, 95f), R(-255f, -240f), R(-0.8f, 0.8f), R(2.4f, 3.2f)); }
 
             // Entrance beacons (IALA-A, entering northbound: red to port = west head, green to starboard = east head).
-            void Beacon(string id, float x, float z, string colour)
+            // (2026-11-09) the scanned breakwater-light prefabs replace the stacked cylinders; ids `{id}_base` / `{id}_tower` kept
+            void Beacon(string id, float x, float z, string colour, float doorYaw)
             {
-                Cyl("beacon", x, z, Crest, Crest + 3.5f, 2.2f, "beacon_white", id + "_base");
-                Cyl("beacon", x, z, Crest + 3.5f, Crest + 9.0f, 2.0f, colour, id + "_tower");
-                Box("beacon", x - 0.9f, x + 0.9f, Crest + 9.0f, Crest + 10.6f, z - 0.9f, z + 0.9f, "glass_dark", id: id + "_lantern");
-                Cyl("beacon", x, z, Crest + 10.6f, Crest + 11.0f, 2.2f, colour, id + "_cap");
+                Cyl("beacon", x, z, Crest, Crest + 0.04f, 7f, "concrete", id + "_base");
+                Prefab("beacon", colour == "beacon_red" ? "breakwater_light_red" : colour == "beacon_green" ? "breakwater_light_green" : "breakwater_light_white",
+                    new Vector3(x, Crest + 0.04f, z), doorYaw, Vector3.one * 1.04f, id: id + "_tower");
             }
-            Beacon("beacon_red_w", 36.5f, -247.5f, "beacon_red");
-            Beacon("beacon_green_e", 98.5f, -247.5f, "beacon_green");
+            Beacon("beacon_red_w", 36.5f, -247.5f, "beacon_red", -90f);
+            Beacon("beacon_green_e", 98.5f, -247.5f, "beacon_green", 90f);
         }
 
         // ------------------------------------------------------------------ STS crane
@@ -403,10 +445,11 @@ namespace PortCCTV
 
         internal static void Tree(float x, float z, float baseY, float hgt)
         {
-            if (_treeCount++ >= MaxTrees) return;
-            int k = Rng.Next(1, 3);
-            float sc = hgt / (k == 1 ? 5.03f : 3.41f);  // Poly Haven island_tree_01/02 native heights
-            Prefab("tree", "tree_0" + k, new Vector3(x, baseY, z), R(0, 360), new Vector3(sc, sc, sc));
+            // Every tree starts as a billboard impostor (shape "billboard_tree", merged by Vegetation); at the end of the build the
+            // MaxTrees trees nearest a camera preset become scanned 3-D prefabs (PromoteNearTrees) — near-field quality by
+            // distance, not by creation order (detail review 2026-11-09 §4).
+            _treeCount++;
+            E.Add(new HarborElement { id = Uid("bbtree"), kind = "tree", shape = "billboard_tree", center = new Vector3(x, baseY, z), size = new Vector3(1f, hgt, 1f), yaw_deg = R(0, 360) });
         }
 
         /// <summary>Forested hill whose peak sits CameraMastOnHill below a camera preset (replaces roof-mounted cameras).</summary>
@@ -421,7 +464,7 @@ namespace PortCCTV
             float d = 0.22f * Mathf.Min(sx, sz);
             float hx = centre?.x ?? p.position.x - fwd.x * d, hz = centre?.y ?? p.position.z - fwd.y * d, baseY = -5f;
             float u = (p.position.x - hx) / sx + 0.5f, w = (p.position.z - hz) / sz + 0.5f;
-            float hUnit = Mathf.Max(ProcNoise.HillHeight(hillIndex, u, w), 0.05f);
+            float hUnit = Mathf.Max(ProcNoise.HillHeight(hillIndex, u, w, false), 0.05f);
             float sy = (p.position.y - CameraMastOnHill - baseY) / hUnit;
             // Meadow material (hill_m_*): the canopy macro texture only works beyond ~150 m; the camera sees this slope up close.
             Prefab("hill", "hill_m_" + hillIndex, new Vector3(hx, baseY, hz), 0f, new Vector3(sx, sy, sz), id: "camera_hill_" + p.id);
@@ -452,11 +495,11 @@ namespace PortCCTV
         internal static void HillIdx(int idx, float x, float z, float baseY, float sx, float sy, float sz)
             => Prefab("hill", (Mathf.Max(sx, sz) > 700f ? "hill_L_" : "hill_") + idx, new Vector3(x, baseY, z), 0f, new Vector3(sx, sy, sz));
 
-        internal static float HillY(int idx, float hx, float hz, float baseY, float sx, float sy, float sz, float px, float pz)
+        internal static float HillY(int idx, float hx, float hz, float baseY, float sx, float sy, float sz, float px, float pz, bool ridged = false)
         {
             float u = (px - hx) / sx + 0.5f, w = (pz - hz) / sz + 0.5f;
             if (u < 0.02f || u > 0.98f || w < 0.02f || w > 0.98f) return float.NaN;
-            return baseY + sy * ProcNoise.HillHeight(idx, u, w);
+            return baseY + sy * ProcNoise.HillHeight(idx, u, w, ridged);
         }
 
         internal static void TreesOnHill(int idx, float hx, float hz, float baseY, float sx, float sy, float sz, int count, float minY = 1f, Vector3 avoid = default, float avoidR = 0f, HillFeatures.Village vil = null)
@@ -464,7 +507,7 @@ namespace PortCCTV
             for (int i = 0; i < count; i++)
             {
                 float px = hx + R(-0.42f, 0.42f) * sx, pz = hz + R(-0.42f, 0.42f) * sz;
-                float y = HillY(idx, hx, hz, baseY, sx, sy, sz, px, pz);
+                float y = HillY(idx, hx, hz, baseY, sx, sy, sz, px, pz, vil == null);    // background hills use the ridged shape
                 if (float.IsNaN(y) || y < minY) continue;
                 if (avoidR > 0f && Vector2.Distance(new Vector2(px, pz), new Vector2(avoid.x, avoid.z)) < avoidR) continue;
                 if (vil != null && vil.Blocked((px - hx) / sx + 0.5f, (pz - hz) / sz + 0.5f)) continue;
@@ -520,8 +563,14 @@ namespace PortCCTV
             BoxC("house", new Vector3(x, baseY + hgt + 0.3f, z), new Vector3(w + 0.8f, 0.6f, d + 0.8f), roofs[Rng.Next(roofs.Length)], yaw);
         }
 
+        /// <summary>Hill with a shape variant fixed by its position (not by the shared builder RNG): adding or removing other map
+        /// content must not reshape fixed hills next to default vessel positions (2026-11-09: a road fix reshaped the CT bay
+        /// hill into the feeder ship's berth).</summary>
         internal static void Hill(float x, float z, float baseY, float sx, float sy, float sz, float yaw)
-            => Prefab("hill", (Mathf.Max(sx, sz) > 700f ? "hill_L_" : "hill_") + Rng.Next(0, 4), new Vector3(x, baseY, z), yaw, new Vector3(sx, sy, sz));
+        {
+            uint hv = unchecked((uint)Mathf.RoundToInt(x) * 73856093u ^ (uint)Mathf.RoundToInt(z) * 19349663u);
+            Prefab("hill", (Mathf.Max(sx, sz) > 700f ? "hill_L_" : "hill_") + (int)(hv % 4u), new Vector3(x, baseY, z), yaw, new Vector3(sx, sy, sz));
+        }
 
         internal static void Backdrop()
         {

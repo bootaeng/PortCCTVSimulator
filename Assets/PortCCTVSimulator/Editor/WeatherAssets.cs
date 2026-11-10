@@ -14,6 +14,13 @@ namespace PortCCTV.EditorTools
     {
         const string Root = "Assets/PortCCTVSimulator";
 
+        /// <summary>Regenerates only these materials (same result as the bootstrap step): -executeMethod PortCCTV.EditorTools.WeatherAssets.RunBatch</summary>
+        public static void RunBatch()
+        {
+            try { var t = HarborTheme.Load(); Build(t); EditorUtility.SetDirty(t); AssetDatabase.SaveAssets(); EditorApplication.Exit(0); }
+            catch (System.Exception ex) { Debug.LogException(ex); EditorApplication.Exit(1); }
+        }
+
         public static void Build(HarborTheme theme)
         {
             var lit = Shader.Find("HDRP/Lit");
@@ -46,6 +53,11 @@ namespace PortCCTV.EditorTools
             Add(theme, "weather_wet_decal", MakeDecal(decal, "M_weather_wet_decal", new Color(0.09f, 0.09f, 0.10f, 1f), 0.55f, 0.92f));
             Add(theme, "weather_snow_decal", MakeDecal(decal, "M_weather_snow_decal", new Color(0.93f, 0.94f, 0.96f, 1f), 0.97f, 0.3f));
             Add(theme, "weather_snow", Make(lit, tex, "M_weather_snow", new Color(0.97f, 0.97f, 0.98f, 0.92f), 0.15f));
+            // ground wear decals (GroundWear): colour = tint, texture alpha = shape; smoothness: oil glossy, others matte
+            Add(theme, "wear_grime", MakeWearDecal(decal, texDir, "wear_grime", new Color(0.13f, 0.12f, 0.11f, 1f), 0.7f, 0.25f, WearGrime, 2.2f));
+            Add(theme, "wear_oil", MakeWearDecal(decal, texDir, "wear_oil", new Color(0.04f, 0.035f, 0.03f, 1f), 0.9f, 0.7f, WearOil, 1.3f));
+            Add(theme, "wear_tyre", MakeWearDecal(decal, texDir, "wear_tyre", new Color(0.06f, 0.06f, 0.06f, 1f), 0.8f, 0.2f, WearTyre, 3.5f));
+            Add(theme, "wear_patch", MakeWearDecal(decal, texDir, "wear_patch", new Color(0.18f, 0.18f, 0.17f, 1f), 0.55f, 0.15f, WearPatch, 1.0f));
             // instance-ID material for the GPU visible mask (keeps the hidden shader in the build; per-instance copies at runtime)
             var idShader = Shader.Find("Hidden/PortCCTV/InstanceId");
             if (idShader != null)
@@ -151,6 +163,56 @@ namespace PortCCTV.EditorTools
             m.SetFloat("_AffectMetal", 0f); m.SetFloat("_AffectAO", 0f); m.SetFloat("_AffectEmission", 0f);
             m.SetFloat("_Smoothness", smooth); m.SetFloat("_Metallic", 0f);
             m.SetFloat("_MaskBlendSrc", 1f);
+            HDMaterial.ValidateMaterial(m);
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        // ---------------- ground wear decal textures (alpha = coverage), 256 px, deterministic ----------------
+        delegate float AlphaFn(float u, float v, System.Random rng);
+
+        static float Fbm(float x, float y) => 0.5f * Mathf.PerlinNoise(x, y) + 0.3f * Mathf.PerlinNoise(x * 2.1f + 7f, y * 2.1f + 3f) + 0.2f * Mathf.PerlinNoise(x * 4.3f + 11f, y * 4.3f + 5f);
+        static float Edge(float u, float v) { float dx = u * 2f - 1f, dy = v * 2f - 1f; return Mathf.Sqrt(dx * dx + dy * dy); }
+
+        static float WearGrime(float u, float v, System.Random r) { float n = Fbm(u * 3f + 13f, v * 3f + 29f); float e = 1f - Mathf.SmoothStep(0.45f, 1f, Edge(u, v) + (n - 0.5f) * 0.6f); return Mathf.Clamp01(e * (0.35f + 0.65f * n)); }
+        static float WearOil(float u, float v, System.Random r) { float n = Fbm(u * 5f + 3f, v * 5f + 17f); float e = Edge(u, v) + (n - 0.5f) * 0.9f; return Mathf.Clamp01((1f - Mathf.SmoothStep(0.35f, 0.7f, e)) * 0.95f); }
+        static float WearTyre(float u, float v, System.Random r)
+        {
+            // two wheel tracks along v, slightly wavy, with tread breaks; fade at both ends
+            float wave = (Mathf.PerlinNoise(v * 3f, 1.7f) - 0.5f) * 0.06f, a = 0f;
+            foreach (var c in new[] { 0.25f, 0.75f }) a = Mathf.Max(a, 1f - Mathf.SmoothStep(0.03f, 0.08f, Mathf.Abs(u - c - wave)));
+            float tread = 0.6f + 0.4f * Mathf.PerlinNoise(u * 40f, v * 40f);
+            float ends = Mathf.SmoothStep(0f, 0.2f, v) * Mathf.SmoothStep(1f, 0.75f, v);
+            return Mathf.Clamp01(a * tread * ends * 0.85f);
+        }
+        static float WearPatch(float u, float v, System.Random r)
+        {
+            // repaired paving: rectangle with a crisp edge, mottled fill, darker sealed joint around it
+            float d = Mathf.Max(Mathf.Abs(u * 2f - 1f), Mathf.Abs(v * 2f - 1f));
+            float fill = d < 0.86f ? 0.55f + 0.25f * Fbm(u * 6f, v * 6f) : 0f;
+            float joint = d >= 0.86f && d < 0.93f ? 0.95f : 0f;
+            return Mathf.Clamp01(Mathf.Max(fill, joint));
+        }
+
+        static Material MakeWearDecal(Shader decal, string texDir, string name, Color color, float blend, float smooth, AlphaFn fn, float alphaGain)
+        {
+            const int N = 256;
+            var path = $"{texDir}/{name}.png";
+            var rng = new System.Random(name.GetHashCode() & 0x7fffffff);
+            var t = new Texture2D(N, N, TextureFormat.RGBA32, false, false);
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                    t.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01(alphaGain * fn((x + 0.5f) / N, (y + 0.5f) / N, rng))));
+            File.WriteAllBytes(path, t.EncodeToPNG());
+            Object.DestroyImmediate(t);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            var imp = (TextureImporter)AssetImporter.GetAtPath(path);
+            imp.alphaIsTransparency = true; imp.wrapMode = TextureWrapMode.Clamp; imp.mipmapEnabled = true; imp.sRGBTexture = true;
+            imp.SaveAndReimport();
+            var m = MakeDecal(decal, "M_" + name, color, blend, smooth);
+            m.SetTexture("_BaseColorMap", AssetDatabase.LoadAssetAtPath<Texture2D>(path));
+            // albedo only: with smoothness on, the whole projector box changed the specular and showed as a rectangle
+            m.SetFloat("_AffectSmoothness", 0f);
             HDMaterial.ValidateMaterial(m);
             EditorUtility.SetDirty(m);
             return m;

@@ -357,7 +357,7 @@ namespace PortCCTV.EditorTools
 
         /// <summary>Hill/mountain/island mound on a 64x64 grid, 1x1 footprint, base at y=0; heights from ProcNoise.HillHeight so the
         /// runtime can compute the peak (camera hills).</summary>
-        static Mesh HillMesh(int hillIndex)
+        static Mesh HillMesh(int hillIndex, bool ridged = false)
         {
             const int N = ProcNoise.HillGrid;
             var verts = new Vector3[(N + 1) * (N + 1)]; var uvs = new Vector2[verts.Length];
@@ -365,7 +365,7 @@ namespace PortCCTV.EditorTools
                 for (int x = 0; x <= N; x++)
                 {
                     float u = (float)x / N, w = (float)z / N;
-                    float hgt = ProcNoise.HillHeight(hillIndex, u, w);
+                    float hgt = ProcNoise.HillHeight(hillIndex, u, w, ridged);
                     if (x == 0 || z == 0 || x == N || z == N) hgt = -0.05f;
                     verts[z * (N + 1) + x] = new Vector3(u - 0.5f, hgt, w - 0.5f);
                     uvs[z * (N + 1) + x] = new Vector2(u, w);     // baked per-hill textures (HillBaker) are UV-mapped
@@ -807,10 +807,10 @@ namespace PortCCTV.EditorTools
                 "procedural tetrapod armour unit (~2.6 m)");
             // Hills: per-mesh baked albedo/normal (HillBaker: rock on steep slopes and the shore band, meadow clearings, forest canopy).
             for (int i = 0; i < 4; i++)
-                Add("hill_" + i, SaveMeshPrefab("hill_" + i, SaveMesh(HillMesh(i), "hill_" + i), HillBaker.Material(i, HillBaker.Variant.Forest), false),
+                Add("hill_" + i, SaveMeshPrefab("hill_" + i, SaveMesh(HillMesh(i, true), "hill_" + i), HillBaker.Material(i, HillBaker.Variant.Forest), false),
                     "procedural hill mesh (seed " + (2000 + i) + "), unit footprint, scale in the harbor definition; baked forest/rock texture");
             for (int i = 0; i < 4; i++)
-                Add("hill_L_" + i, SaveMeshPrefab("hill_L_" + i, SaveMesh(HillMesh(i), "hill_L_" + i), HillBaker.Material(i, HillBaker.Variant.ForestLarge), false),
+                Add("hill_L_" + i, SaveMeshPrefab("hill_L_" + i, SaveMesh(HillMesh(i, true), "hill_L_" + i), HillBaker.Material(i, HillBaker.Variant.ForestLarge), false),
                     "same hill mesh with the forest/rock bake tiled for instances wider than ~700 m");
             // Meadow variants for hills right under a camera: the canopy texture reads as flat "bubbles" at <100 m.
             for (int i = 0; i < 4; i++)
@@ -826,11 +826,14 @@ namespace PortCCTV.EditorTools
                 ("fence", "modular_chainlink_fence"), ("power_pole", "modular_electricity_poles"),
                 ("tree_01", "island_tree_01_dec"), ("tree_02", "island_tree_02_dec"),
                 ("shore_rock_01", "coast_rocks_01_dec"), ("shore_rock_02", "coast_land_rocks_02_dec"),
+                ("shore_line_01", "coast_line_01_dec"), ("concrete_barrier", "concrete_road_barrier_02"),
             })
             {
                 var gltf = Directory.GetFiles($"{PHM}/{dir}", "*.gltf")[0].Replace('\\', '/');
                 Add(key, WrapImported(key, gltf, out var nk), nk);
             }
+            // Cross-billboard trees for distant hill forests, baked from decimated Poly Haven pine_tree_01 / tree_small_02.
+            TreeImpostors.Build(theme);
             // Sketchfab CC BY buildings (ThirdParty/SketchfabCCBY/buildings, SOURCE_buildings.md), scaled to a target height.
             foreach (var (key, file, hgt) in new[]
             {
@@ -886,11 +889,21 @@ namespace PortCCTV.EditorTools
             Add("vending_machine", WrapKeep("vending_machine", $"{SS}/japanese_traffic_assets_erikkinc.glb", 150f, new[] { "vending_machine" }, true, out var s8), "Japanese Traffic Assets (erikkinc, CC BY), vending machine: " + s8);
             Add("citylight_panel", WrapKeep("citylight_panel", $"{SS}/japanese_traffic_assets_erikkinc.glb", 150f, new[] { "citylight" }, true, out var s9), "Japanese Traffic Assets (erikkinc, CC BY), city-light panel: " + s9);
             Add("street_bin", WrapKeep("street_bin", $"{SS}/japanese_traffic_assets_erikkinc.glb", 150f, new[] { "street_bin_outside1", "street_bin_inside1" }, true, out var s10), "Japanese Traffic Assets (erikkinc, CC BY), street bin: " + s10);
+            // Road assets, second batch (user 2026-11-09; ThirdParty/SketchfabCCBY/road2/SOURCE_road2.md): coastal-road guardrail
+            // (4 m W-beam segment + end terminal), six pictogram road signs, and a tall coastal lighthouse for distant headlands.
+            const string SR = Root + "/ThirdParty/SketchfabCCBY/road2";
+            Add("guardrail_seg", WrapKeep("guardrail_seg", $"{SR}/guardrail_terminal_xplanepilot_1k.glb", 1f, new[] { "GuardRail_CrashBarrier" }, true, out var r1), "GuardRail and Terminal (xplanepilot, CC BY), 4 m segment: " + r1);
+            Add("guardrail_end", WrapKeep("guardrail_end", $"{SR}/guardrail_terminal_xplanepilot_1k.glb", 1f, new[] { "GuardRail_terminal" }, true, out var r2), "GuardRail and Terminal (xplanepilot, CC BY), end terminal: " + r2);
+            for (int i = 1; i <= 6; i++)
+                Add($"road_sign_{i}", WrapKeep($"road_sign_{i}", $"{SR}/road_sign_pack_awlokdev_2k.glb", 1f, new[] { $"Road_Sign_0{i}" }, true, out var rs), $"Road Sign Pack (Free) (awlok.dev, CC BY), sign {i}: " + rs);
+            Add("lighthouse_tall", WrapBuilding("lighthouse_tall", $"{SR}/lighthouse_fabiolopez_2k.glb", 26f, new[] { "aiStandardSurface10" }, 0f, out var r3), "Lighthouse (Fabio, CC BY), light beam cylinder dropped, scaled to 26 m: " + r3);
             Add("ocean_buoy", WrapImported("ocean_buoy", $"{PH}/ocean_buoy/ocean_buoy_2k.gltf", out var n1), n1);
             Add("lateral_marker", WrapImported("lateral_marker", $"{PH}/lateral_sea_marker/lateral_sea_marker_2k.gltf", out var n2), n2);
             Add("coastal_cliff", WrapImported("coastal_cliff", $"{PH}/coastal_cliff_01/coastal_cliff_01_2k.gltf", out var n3), n3);
             Add("godown_warehouse", WrapImported("godown_warehouse", $"{IS}/innerscene_godown_warehouse.glb", out var n4), n4);
             Add("mobile_crane", WrapImported("mobile_crane", $"{IS}/innerscene_mobile_crane.glb", out var n5), n5);
+            // replacements of crude scenery (2026-11-09): breakwater lights, excavator, forklift, near containers, fish boxes
+            ReplacementAssets.Build(theme, Add);
             EditorUtility.SetDirty(theme);
         }
 

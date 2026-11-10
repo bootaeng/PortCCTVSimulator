@@ -55,6 +55,10 @@ namespace PortCCTV
         public float water_reference_y = 0f;
         public List<HarborElement> elements = new List<HarborElement>();
         public List<WaterRegion> water_regions = new List<WaterRegion>();
+        /// <summary>Parking lots / truck parks / service rows / yards with their aisles and driveways, and every marked bay
+        /// (lines, wheel stops and vehicles are generated from these records; Parking.cs, checked by ParkingCheck).</summary>
+        public List<ParkingLotInfo> parking_lots = new List<ParkingLotInfo>();
+        public List<ParkingBay> parking_bays = new List<ParkingBay>();
 
         public bool InAnyWaterRegion(Vector2 xz) => water_regions.Any(r => r.Contains(xz));
 
@@ -305,6 +309,8 @@ namespace PortCCTV
             foreach (var el in def.elements)
             {
                 var kind = el.kind ?? "misc";
+                if (el.shape == "billboard_tree") continue;      // merged into impostor meshes by Vegetation.Scatter
+                if (el.shape == "marker") continue;              // build-time markers (Vegetation footpath starts), nothing to draw
                 if (el.shape == "box" && MergedKinds.Contains(kind))
                 {
                     var key = (kind, el.material, Mathf.FloorToInt(el.center.x / MergeChunk), Mathf.FloorToInt(el.center.z / MergeChunk));
@@ -325,6 +331,7 @@ namespace PortCCTV
                     if (pf == null) { Debug.LogWarning("[PortCCTV] missing harbor prefab " + el.prefab); continue; }
                     go = UnityEngine.Object.Instantiate(pf, parent);
                     go.transform.localScale = el.size == Vector3.zero ? Vector3.one : el.size;
+                    if (el.kind == "car") CarPaint.Apply(go, el.id);                 // Korean car colour mix (white / grey / black)
                     colliders.AddRange(go.GetComponentsInChildren<Collider>(true));
                 }
                 else
@@ -369,7 +376,7 @@ namespace PortCCTV
         /// <summary>Box kinds that occur by the thousand (container stacks, stall lines, steel stock, paint markings): built as one
         /// combined mesh per (kind, material, 150 m tile) with a MeshCollider of the same mesh, instead of one GameObject +
         /// BoxCollider per box. Same geometry and materials; the individual boxes are not addressable in HarborObjects.</summary>
-        public static readonly HashSet<string> MergedKinds = new HashSet<string> { "container", "parking_lines", "laydown", "marking", "reefer_rack" };
+        public static readonly HashSet<string> MergedKinds = new HashSet<string> { "container", "parking_lines", "laydown", "marking", "reefer_rack", "wheel_stop" };
         const float MergeChunk = 150f;
         static Mesh s_Cube;
 

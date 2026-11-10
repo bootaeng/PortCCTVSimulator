@@ -42,16 +42,24 @@ namespace PortCCTV.EditorTools
         /// <summary>
         /// Lofted hull: stations along X, each a half-section (keel -> bilge -> side -> sheer) mirrored to both sides,
         /// closed with a flat deck and a transom. fullness: 1 = very fine bow, 4+ = barge-like.
+        /// With <paramref name="waterline"/> >= 0 (local y of the design waterline = default immersion above the keel) two extra
+        /// rings are inserted at the boot-top edges and the triangles are split by height into three sub-meshes:
+        /// 0 topside (and deck), 1 boot-top band, 2 bottom (anti-fouling). UVs are metres / 6 (x, y) for a tiling weathering map.
         /// </summary>
-        static Mesh LoftedHull(string name, float L, float B, float D, float bowFullness, float sternFullness, float bowRake, float sheerRise, float deadrise)
+        static Mesh LoftedHull(string name, float L, float B, float D, float bowFullness, float sternFullness, float bowRake, float sheerRise, float deadrise, float waterline = -1f)
         {
             const int N = 40;              // stations
             float[] sy = { 0f, 0.0f, 0.12f, 0.35f, 0.7f, 1f };     // section height fractions
             float[] sz = { 0f, 0.55f, 0.88f, 1f, 1f, 1f };         // half-breadth fractions
-            int P = sy.Length;
+            int P0 = sy.Length;
+            bool split = waterline >= 0f;
+            float boot = Mathf.Clamp(0.08f * D, 0.25f, 1.4f);
+            float bandLo = waterline - 0.3f * boot, bandHi = waterline + 0.7f * boot;
+            var extra = split ? new[] { bandLo, bandHi } : new float[0];
+            int P = P0 + extra.Length;
             var v = new List<Vector3>();
-            var t = new List<int>();
-            Vector3 Pt(int i, int k, float side)
+            var t0 = new List<int>(); var t1 = new List<int>(); var t2 = new List<int>();
+            Vector3 Base(int i, int k, float side)
             {
                 float u = (float)i / N;                        // 0 stern .. 1 bow
                 float x = -L / 2 + u * L;
@@ -63,17 +71,42 @@ namespace PortCCTV.EditorTools
                 if (k == 2) y = Mathf.Max(y, keelLift + deadrise * half + 0.04f * D);   // keep the section monotonic above the deadrise
                 return new Vector3(x, y, side * half * sz[k]);
             }
+            // One station section: base rings plus the boot-top rings, inserted on the side between the bilge and the sheer at
+            // their absolute height (clamped inside the section where the keel rises above the waterline at the bow).
+            List<Vector3> Section(int i, float side)
+            {
+                var pts = new List<Vector3>();
+                for (int k = 0; k < P0; k++) pts.Add(Base(i, k, side));
+                foreach (var ty in extra)
+                {
+                    float lo = pts[2].y + 1e-3f, hi = pts[pts.Count - 1].y - 1e-3f;
+                    float y = Mathf.Clamp(ty, lo, Mathf.Max(lo, hi));
+                    int seg = 2;
+                    while (seg < pts.Count - 2 && pts[seg + 1].y < y) seg++;
+                    var a = pts[seg]; var b = pts[seg + 1];
+                    float f = b.y > a.y ? Mathf.Clamp01((y - a.y) / (b.y - a.y)) : 0.5f;
+                    var q = Vector3.Lerp(a, b, f); q.y = y;
+                    pts.Insert(seg + 1, q);
+                }
+                return pts;
+            }
+            void Tri(int a, int b, int c)
+            {
+                float cy = (v[a].y + v[b].y + v[c].y) / 3f;
+                var list = !split || cy >= bandHi ? t0 : cy >= bandLo ? t1 : t2;
+                list.Add(a); list.Add(b); list.Add(c);
+            }
             foreach (var side in new[] { 1f, -1f })
             {
                 int baseIdx = v.Count;
-                for (int i = 0; i <= N; i++) for (int k = 0; k < P; k++) v.Add(Pt(i, k, side));
+                for (int i = 0; i <= N; i++) v.AddRange(Section(i, side));
                 for (int i = 0; i < N; i++)
                     for (int k = 0; k < P - 1; k++)
                     {
                         int a = baseIdx + i * P + k, b = a + P, c = a + 1, d = b + 1;
                         // Outward winding: +Z starboard / -Z port. Inward faces were
                         // culled above water, making barges look like submerged decks.
-                        if (side > 0) t.AddRange(new[] { a, b, c, b, d, c }); else t.AddRange(new[] { a, c, b, b, c, d });
+                        if (side > 0) { Tri(a, b, c); Tri(b, d, c); } else { Tri(a, c, b); Tri(b, c, d); }
                     }
             }
             // Deck (top) and transom (stern) caps.
@@ -81,15 +114,20 @@ namespace PortCCTV.EditorTools
             for (int i = 0; i < N; i++)
             {
                 int a = s0 + i * P + (P - 1), b = s0 + (i + 1) * P + (P - 1), c = s1 + i * P + (P - 1), d = s1 + (i + 1) * P + (P - 1);
-                t.AddRange(new[] { a, b, c, c, b, d });
+                t0.AddRange(new[] { a, b, c, c, b, d });
             }
             for (int k = 0; k < P - 1; k++)
             {
                 int a = s0 + k, b = s0 + k + 1, c = s1 + k, d = s1 + k + 1;
-                t.AddRange(new[] { a, b, c, b, d, c });
+                Tri(a, b, c); Tri(b, d, c);
             }
+            var uv = new List<Vector2>(v.Count);
+            foreach (var p in v) uv.Add(new Vector2(p.x / 6f, p.y / 6f));
             var m = new Mesh { name = name };
-            m.SetVertices(v); m.SetTriangles(t, 0); m.RecalculateNormals(); m.RecalculateBounds(); m.RecalculateTangents();
+            m.SetVertices(v); m.SetUVs(0, uv);
+            if (split) { m.subMeshCount = 3; m.SetTriangles(t0, 0); m.SetTriangles(t1, 1); m.SetTriangles(t2, 2); }
+            else m.SetTriangles(t0, 0);
+            m.RecalculateNormals(); m.RecalculateBounds(); m.RecalculateTangents();
             Directory.CreateDirectory(MeshDir);
             var path = $"{MeshDir}/{name}.asset";
             var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
@@ -97,6 +135,88 @@ namespace PortCCTV.EditorTools
             AssetDatabase.CreateAsset(m, path);
             return m;
         }
+
+        const string TexDir = "Assets/PortCCTVSimulator/Textures/Generated";
+
+        /// <summary>Tileable greyscale hull weathering (1 tile = 6 m): welded plate seams, rust/grime streaks running down from
+        /// seams and scuppers, waterline scuffs at the bottom of the tile and fine noise. Multiplied with the paint colour, so the
+        /// paint randomiser still recolours the hull. Deterministic (fixed seed).</summary>
+        static Texture2D s_weathering;
+        internal static Texture2D HullWeathering()
+        {
+            if (s_weathering != null) return s_weathering;
+            var path = $"{TexDir}/hull_weathering.png";
+            const int S = 1024;
+            var rng = new System.Random(7713);
+            var g = new float[S * S];
+            for (int i = 0; i < g.Length; i++) g[i] = 0.93f;
+            float Noise(float x, float y) => Mathf.PerlinNoise(x, y);
+            for (int y = 0; y < S; y++)
+                for (int x = 0; x < S; x++)
+                {
+                    float u = x / (float)S, w = y / (float)S;
+                    // tileable low-frequency mottling (sum of periodic perlin at integer periods)
+                    float n = 0.5f * Noise(u * 4f, w * 4f) + 0.5f * Noise((u + 0.37f) * 4f, (w + 0.11f) * 4f);
+                    g[y * S + x] += (n - 0.5f) * 0.08f + (float)(rng.NextDouble() - 0.5) * 0.03f;
+                }
+            // plate seams: horizontal every 2 m, vertical every 3 m (tile = 6 m)
+            for (int y = 0; y < S; y++)
+                for (int x = 0; x < S; x++)
+                {
+                    bool hs = (y % (S / 3)) < 3, vs = (x % (S / 2)) < 3;
+                    if (hs || vs) g[y * S + x] -= 0.07f;
+                }
+            // streaks: start at a random point (often a seam), run downwards (v decreasing), fade, wrap vertically
+            for (int k = 0; k < 140; k++)
+            {
+                int x0 = rng.Next(S), y0 = rng.Next(S);
+                if (rng.NextDouble() < 0.5) y0 = (y0 / (S / 3)) * (S / 3);
+                int len = rng.Next(S / 12, S / 3), wid = rng.Next(2, 9);
+                float strength = (float)(0.08 + rng.NextDouble() * 0.22);
+                for (int d = 0; d < len; d++)
+                {
+                    float fade = 1f - (float)d / len;
+                    int yy = ((y0 - d) % S + S) % S;
+                    int jitter = (int)((Noise(k * 3.1f, d * 0.02f) - 0.5f) * 6f);
+                    for (int dx = -wid; dx <= wid; dx++)
+                    {
+                        int xx = ((x0 + dx + jitter) % S + S) % S;
+                        float edge = 1f - Mathf.Abs(dx) / (wid + 1f);
+                        g[yy * S + xx] -= strength * fade * edge;
+                    }
+                }
+            }
+            var t = new Texture2D(S, S, TextureFormat.RGBA32, false, false);
+            var px = new Color32[S * S];
+            for (int i = 0; i < px.Length; i++) { byte b = (byte)Mathf.Clamp(Mathf.RoundToInt(g[i] * 255f), 120, 255); px[i] = new Color32(b, b, b, 255); }
+            t.SetPixels32(px);
+            Directory.CreateDirectory(TexDir);
+            File.WriteAllBytes(path, t.EncodeToPNG());
+            Object.DestroyImmediate(t);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            var imp = (TextureImporter)AssetImporter.GetAtPath(path);
+            imp.sRGBTexture = true; imp.wrapMode = TextureWrapMode.Repeat; imp.mipmapEnabled = true; imp.anisoLevel = 8;
+            imp.SaveAndReimport();
+            return s_weathering = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
+        /// <summary>Material with the hull weathering map multiplied into the base colour.</summary>
+        internal static Material WeatheredMat(string key, Color c, float smooth, float metal)
+        {
+            var m = Mat(key, c, smooth, metal);
+            m.SetTexture("_BaseColorMap", HullWeathering());
+            HDMaterial.ValidateMaterial(m);
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
+        /// <summary>Hull paint zones below the topside: black boot-top and red-brown anti-fouling, weathered.</summary>
+        static Material[] HullZones(Material topside, string prefix) => new[]
+        {
+            topside,
+            WeatheredMat(prefix + "_boottop", new Color(0.05f, 0.05f, 0.05f), 0.35f, 0.1f),
+            WeatheredMat(prefix + "_antifouling", new Color(0.42f, 0.12f, 0.09f), 0.3f, 0.1f),
+        };
 
         static GameObject Part(Transform parent, PrimitiveType type, string name, Vector3 pos, Vector3 scale, Material m, Vector3 euler = default)
         {
@@ -109,12 +229,15 @@ namespace PortCCTV.EditorTools
             return go;
         }
 
-        static GameObject Hull(Transform root, Mesh mesh, Material m)
+        static GameObject Hull(Transform root, Mesh mesh, Material m) => Hull(root, mesh, new[] { m });
+
+        static GameObject Hull(Transform root, Mesh mesh, Material[] mats)
         {
             var h = new GameObject(HullNodeName);
             h.transform.SetParent(root, false);
             h.AddComponent<MeshFilter>().sharedMesh = mesh;
-            h.AddComponent<MeshRenderer>().sharedMaterial = m;
+            var r = h.AddComponent<MeshRenderer>();
+            r.sharedMaterials = mesh.subMeshCount > 1 && mats.Length >= mesh.subMeshCount ? mats : new[] { mats[0] };
             return h;
         }
 
@@ -127,8 +250,8 @@ namespace PortCCTV.EditorTools
             var blue = Mat("tug_blue", new Color(0.10f, 0.22f, 0.45f), 0.4f, 0.1f);
             var black = Mat("tug_black", new Color(0.04f, 0.04f, 0.04f), 0.3f, 0f);
             var glass = Mat("glass", new Color(0.06f, 0.08f, 0.10f), 0.9f, 0.1f);
-            var mesh = LoftedHull("hull_tug_24m", 24f, 9f, 3.6f, 1.6f, 2f, 0.35f, 0.25f, 0.15f);
-            Hull(root.transform, mesh, hullRed);
+            var mesh = LoftedHull("hull_tug_24m", 24f, 9f, 3.6f, 1.6f, 2f, 0.35f, 0.25f, 0.15f, 1.0f);
+            Hull(root.transform, mesh, HullZones(hullRed, "tug"));
             var t = root.transform;
             Part(t, PrimitiveType.Cube, "bulwark_band", new Vector3(0, 3.55f, 0), new Vector3(17.5f, 0.35f, 8.2f), blue);
             Part(t, PrimitiveType.Cube, "deckhouse", new Vector3(1.0f, 4.9f, 0), new Vector3(10f, 2.6f, 6.4f), white);
@@ -157,13 +280,14 @@ namespace PortCCTV.EditorTools
         public static GameObject BuildContainerShip(HarborTheme theme)
         {
             var root = new GameObject("container_ship_model");
-            var hull = Mat("cs_hull", new Color(0.08f, 0.14f, 0.28f), 0.4f, 0.2f);
-            var deckGrey = Mat("cs_deck", new Color(0.35f, 0.36f, 0.36f), 0.35f, 0.3f);
-            var white = Mat("cs_white", new Color(0.86f, 0.86f, 0.84f), 0.35f, 0.1f);
+            // muted navy (merchant hull paint fades and chalks), weathered; white superstructure with grime streaks
+            var hull = WeatheredMat("cs_hull", new Color(0.10f, 0.14f, 0.22f), 0.3f, 0.15f);
+            var deckGrey = WeatheredMat("cs_deck", new Color(0.35f, 0.36f, 0.36f), 0.3f, 0.3f);
+            var white = WeatheredMat("cs_white", new Color(0.84f, 0.84f, 0.81f), 0.3f, 0.1f);
             var funnel = Mat("cs_funnel", new Color(0.70f, 0.12f, 0.10f), 0.4f, 0.1f);
             var glass = Mat("glass", new Color(0.06f, 0.08f, 0.10f), 0.9f, 0.1f);
             const float L = 172f, Bm = 27f, D = 14.5f;
-            Hull(root.transform, LoftedHull("hull_container_172m", L, Bm, D, 2.4f, 1.5f, 0.45f, 0.12f, 0.02f), hull);
+            Hull(root.transform, LoftedHull("hull_container_172m", L, Bm, D, 2.4f, 1.5f, 0.45f, 0.12f, 0.02f, 4.2f), HullZones(hull, "cs"));
             var t = root.transform;
             Part(t, PrimitiveType.Cylinder, "fore_mast", new Vector3(72f, D + 5f, 0), new Vector3(0.3f, 3f, 0.3f), white);
             // Stepped marine accommodation, individually framed bridge windows and deck brows.
@@ -290,6 +414,56 @@ namespace PortCCTV.EditorTools
             return root;
         }
 
+        /// <summary>Stockpile height field on a length x width deck patch: three cones (angle of repose ~33 deg), crest noise, a
+        /// scooped face at +x (where the excavator works), rubble-scale noise; edges come down to the deck.</summary>
+        static Mesh AggregatePile(float len, float wid, float peak, int seed)
+        {
+            const int nx = 72, nz = 28;
+            var rnd = new System.Random(seed);
+            var cones = new (float x, float z, float h, float r)[3];
+            for (int i = 0; i < 3; i++)
+                cones[i] = (-len * 0.3f + i * len * 0.27f + (float)(rnd.NextDouble() - 0.5) * 3f, (float)(rnd.NextDouble() - 0.5) * 2.5f,
+                            peak * (0.75f + 0.25f * (float)rnd.NextDouble()), wid * (0.55f + 0.1f * (float)rnd.NextDouble()));
+            var v = new Vector3[(nx + 1) * (nz + 1)]; var uv = new Vector2[v.Length];
+            for (int j = 0; j <= nz; j++)
+                for (int i = 0; i <= nx; i++)
+                {
+                    float x = -len / 2f + len * i / nx, z = -wid / 2f + wid * j / nz;
+                    float h = 0f;
+                    foreach (var c in cones)
+                    {
+                        float d = Mathf.Sqrt((x - c.x) * (x - c.x) * 0.55f + (z - c.z) * (z - c.z));
+                        h = Mathf.Max(h, c.h - d * 0.65f);                          // ~33 deg repose
+                    }
+                    h += 0.35f * (ProcNoise.Fbm(x / len + 0.5f, z / wid + 0.5f, 4, 4, seed) - 0.5f);   // uneven crest / ridges
+                    h += 0.12f * (ProcNoise.Hash(i, j, seed + 7) - 0.5f);                                // rubble
+                    if (x > len * 0.28f) h -= Mathf.Clamp01((x - len * 0.28f) / 3f) * 1.4f * (0.6f + 0.4f * Mathf.Sin(z * 1.3f));   // dug face
+                    float edge = Mathf.Min(Mathf.Min(x + len / 2f, len / 2f - x), Mathf.Min(z + wid / 2f, wid / 2f - z));
+                    h = Mathf.Min(h, edge * 0.9f);
+                    v[j * (nx + 1) + i] = new Vector3(x, Mathf.Max(h, 0.02f), z);
+                    uv[j * (nx + 1) + i] = new Vector2(x / 3f, z / 3f);
+                }
+            var tri = new int[nx * nz * 6]; int k = 0;
+            for (int j = 0; j < nz; j++)
+                for (int i = 0; i < nx; i++)
+                {
+                    int a = j * (nx + 1) + i;
+                    tri[k++] = a; tri[k++] = a + nx + 1; tri[k++] = a + 1; tri[k++] = a + 1; tri[k++] = a + nx + 1; tri[k++] = a + nx + 2;
+                }
+            var m = new Mesh { name = "barge_aggregate_pile", vertices = v, uv = uv, triangles = tri };
+            m.RecalculateNormals(); m.RecalculateBounds();
+            return m;
+        }
+
+        static Mesh SaveMeshAsset(Mesh m, string name)
+        {
+            var path = $"Assets/PortCCTVSimulator/Meshes/{name}.asset";
+            var old = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null) UnityEditor.AssetDatabase.DeleteAsset(path);
+            UnityEditor.AssetDatabase.CreateAsset(m, path);
+            return m;
+        }
+
         /// <summary>~50 m flat-deck barge with an aggregate heap and a deck coaming (as in Korean harbour construction work).</summary>
         public static GameObject BuildBarge(Material aggregate)
         {
@@ -302,7 +476,13 @@ namespace PortCCTV.EditorTools
             Part(t, PrimitiveType.Cube, "deck_plate", new Vector3(-1f, 3.25f, 0), new Vector3(44f, 0.1f, 13.4f), deck);
             Part(t, PrimitiveType.Cube, "coaming_p", new Vector3(-1f, 3.65f, 6.6f), new Vector3(44f, 0.8f, 0.25f), rust);
             Part(t, PrimitiveType.Cube, "coaming_s", new Vector3(-1f, 3.65f, -6.6f), new Vector3(44f, 0.8f, 0.25f), rust);
-            Part(t, PrimitiveType.Sphere, "aggregate_heap", new Vector3(-2f, 3.3f, 0), new Vector3(30f, 5f, 11f), aggregate);
+            // aggregate as a worked stockpile (reference R01, Wando): three overlapping cones with an uneven crest, a bucket-dug
+            // face towards the excavator and a fine rubble surface, instead of one smooth half-ellipsoid
+            var heap = new GameObject("aggregate_heap");
+            heap.transform.SetParent(t, false);
+            heap.transform.localPosition = new Vector3(-4f, 3.28f, 0f);
+            heap.AddComponent<MeshFilter>().sharedMesh = SaveMeshAsset(AggregatePile(30f, 11.4f, 4.2f, 9071), "barge_aggregate_pile");
+            heap.AddComponent<MeshRenderer>().sharedMaterial = aggregate;
             VesselDetails.Barge(t);
             return root;
         }

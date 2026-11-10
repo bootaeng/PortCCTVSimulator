@@ -6,7 +6,7 @@ using static PortCCTV.HarborGeneric02;
 namespace PortCCTV
 {
     /// <summary>Parametric parts shared by the map builders (uses the element list started by HarborGeneric02.Begin).</summary>
-    internal static class HarborParts
+    internal static partial class HarborParts
     {
         // ------------------------------------------------------------ quays
         /// <summary>Quay face along X at z (water towards dir = -1 / +1 in z): wet band, coping, fenders, bollards, ladders.</summary>
@@ -192,15 +192,12 @@ namespace PortCCTV
         {
             Box("breakwater", x0, x1, Bottom, 1.6f, z0, z1, "breakwater", id: id + "_core");
             float wall0 = seaIsMinusZ ? z0 : z1 - 2.4f, wall1 = seaIsMinusZ ? z0 + 2.4f : z1;
-            Box("breakwater", x0, x1, 1.6f, crest, seaIsMinusZ ? z0 + 2.4f : z0, seaIsMinusZ ? z1 : z1 - 2.4f, "concrete", id: id + "_road");
+            Box("breakwater", x0, x1, 1.6f, crest + 0.03f, seaIsMinusZ ? z0 + 2.4f : z0, seaIsMinusZ ? z1 : z1 - 2.4f, "concrete", id: id + "_road");
             Box("breakwater", x0, x1, 1.6f, crest + 2.5f, wall0, wall1, "breakwater", id: id + "_crownwall");
             float sea = seaIsMinusZ ? z0 : z1, port = seaIsMinusZ ? z1 : z0, s = seaIsMinusZ ? -1f : 1f;
+            TetrapodBank(x0, x1, (along, off, y) => Tetrapod(along, sea + s * off, y));
             for (float x = x0 + 1.5f; x < x1 - 1f; x += 3.2f)
-            {
-                Tetrapod(x + R(-0.6f, 0.6f), sea + s * R(1.0f, 2.2f), R(-0.4f, 1.2f));
-                Tetrapod(x + 1.6f + R(-0.6f, 0.6f), sea + s * R(3.4f, 4.6f), R(-1.2f, 0.2f));
                 Rock(x + R(-0.6f, 0.6f), port - s * R(0.4f, 1.4f), R(-0.6f, 0.4f), R(2.0f, 3.0f));
-            }
             for (float x = x0 + 32f; x < x1 - 24f; x += 55f)
                 Prefab("breakwater_light", "street_lamp", new Vector3(x, crest, port + s * 3f), seaIsMinusZ ? 0f : 180f, Vector3.one * 1.4f);
         }
@@ -212,28 +209,54 @@ namespace PortCCTV
             Box("breakwater", seaIsMinusX ? x0 + 2.4f : x0, seaIsMinusX ? x1 : x1 - 2.4f, 1.6f, crest, z0, z1, "concrete", id: id + "_road");
             Box("breakwater", wall0, wall1, 1.6f, crest + 2.5f, z0, z1, "breakwater", id: id + "_crownwall");
             float sea = seaIsMinusX ? x0 : x1, port = seaIsMinusX ? x1 : x0, s = seaIsMinusX ? -1f : 1f;
+            TetrapodBank(z0, z1, (along, off, y) => Tetrapod(sea + s * off, along, y));
             for (float z = z0 + 1.5f; z < z1 - 1f; z += 3.2f)
-            {
-                Tetrapod(sea + s * R(1.0f, 2.2f), z + R(-0.6f, 0.6f), R(-0.4f, 1.2f));
-                Tetrapod(sea + s * R(3.4f, 4.6f), z + 1.6f + R(-0.6f, 0.6f), R(-1.2f, 0.2f));
                 Rock(port - s * R(0.4f, 1.4f), z + R(-0.6f, 0.6f), R(-0.6f, 0.4f), R(2.0f, 3.0f));
-            }
             for (float z = z0 + 32f; z < z1 - 24f; z += 55f)
                 Prefab("breakwater_light", "street_lamp", new Vector3(port + s * 3f, crest, z), seaIsMinusX ? 90f : 270f, Vector3.one * 1.4f);
+        }
+
+        /// <summary>Densely packed tetrapod armour on the seaward face (user 2026-11-09: "테트라포드도 빽빽하게"): four staggered rows
+        /// stepping down the slope away from the crown wall (offset from the sea face, base height) every 2.4 m, plus a second
+        /// layer stacked on the two upper rows, so the mound reads as interlocked units rather than a sparse line.
+        /// place(along, offsetFromSeaFace, baseY).</summary>
+        static void TetrapodBank(float a0, float a1, System.Action<float, float, float> place)
+        {
+            var rows = new (float off0, float off1, float y0, float y1)[]
+            {
+                (0.5f, 1.4f, 0.2f, 1.2f), (2.3f, 3.2f, -0.4f, 0.6f), (4.1f, 5.0f, -1.0f, 0.0f), (5.9f, 6.8f, -1.7f, -0.8f),
+            };
+            int station = 0;
+            for (float a = a0 + 1.2f; a < a1 - 0.8f; a += 2.4f, station++)
+            {
+                for (int r = 0; r < rows.Length; r++)
+                {
+                    float stagger = (r % 2 == 1) ? 1.2f : 0f;
+                    float along = a + stagger + R(-0.4f, 0.4f);
+                    if (along > a1 - 0.8f) continue;
+                    var row = rows[r];
+                    place(along, R(row.off0, row.off1), R(row.y0, row.y1));
+                }
+                // second layer over the upper rows (every station, alternating between the two)
+                place(a + 0.6f + R(-0.4f, 0.4f), station % 2 == 0 ? R(1.0f, 1.9f) : R(2.6f, 3.4f), R(1.3f, 2.1f));
+            }
         }
 
         /// <summary>Concrete tetrapod armour unit (~2.5 m), random orientation.</summary>
         public static void Tetrapod(float x, float z, float baseY)
             => Prefab("tetrapod", "tetrapod", new Vector3(x, baseY, z), R(0, 360), Vector3.one * R(0.9f, 1.15f), new Vector3(R(-25, 25), 0, R(-25, 25)));
 
-        /// <summary>Korean breakwater lighthouse: white base, coloured tower, lantern (red = port side entering, white = starboard).</summary>
-        public static void Lighthouse(string id, float x, float z, float baseY, string colour, float height = 13f)
+        /// <summary>Korean breakwater lighthouse (2026-11-09: the cylinder + box placeholder replaced by the scanned Manabashima
+        /// tower, prefabs breakwater_light_red / _white, ReplacementAssets): a thin concrete apron on the crown road (kept as
+        /// `{id}_base` so earlier ids and the access audit stay valid), the tower on its plinth with steps up to the door, the door
+        /// turned to `doorYaw` (0 = +z) i.e. towards the breakwater road it is reached by. Colour after the IALA side of the
+        /// entrance (red = port hand entering, white = starboard). `height` (m, tower + plinth) sets a uniform scale of the 10.6 m
+        /// prefab, clamped to 0.85..1.25 so the scan's proportions stay.</summary>
+        public static void Lighthouse(string id, float x, float z, float baseY, string colour, float height = 13f, float doorYaw = 0f)
         {
-            Cyl("lighthouse", x, z, baseY, baseY + 2.2f, 3.4f, "beacon_white", id + "_base");
-            Cyl("lighthouse", x, z, baseY + 2.2f, baseY + height, 2.4f, colour, id + "_tower");
-            Cyl("lighthouse", x, z, baseY + height, baseY + height + 0.3f, 3.0f, "steel_dark", id + "_gallery");
-            Box("lighthouse", x - 0.9f, x + 0.9f, baseY + height + 0.3f, baseY + height + 2.0f, z - 0.9f, z + 0.9f, "glass_dark", id: id + "_lantern");
-            Cyl("lighthouse", x, z, baseY + height + 2.0f, baseY + height + 2.6f, 2.2f, colour, id + "_cap");
+            float k = Mathf.Clamp(height / 10.6f, 0.85f, 1.25f);
+            Cyl("lighthouse", x, z, baseY, baseY + 0.04f, 7.6f * k, "concrete", id + "_base");
+            Prefab("lighthouse", colour == "beacon_red" ? "breakwater_light_red" : "breakwater_light_white", new Vector3(x, baseY + 0.04f, z), doorYaw, Vector3.one * k, id: id + "_tower");
         }
 
         // ------------------------------------------------------------ marina pontoon
@@ -273,9 +296,10 @@ namespace PortCCTV
         {
             int nx = Mathf.Max(1, (int)((x1 - x0) / block)), nz = Mathf.Max(1, (int)((z1 - z0) / block));
             float bx = (x1 - x0) / nx, bz = (z1 - z0) / nz;
-            for (int i = 0; i <= nx; i++) Boulevard(z0 - 4f, z1 + 4f, x0 + i * bx, false, 4, false);
-            for (int k = 0; k <= nz; k++) Boulevard(x0 - 4f, x1 + 4f, z0 + k * bz, true, 4, false);
-            for (int i = 0; i <= nx; i++) for (int k = 0; k <= nz; k++) if ((i + k) % 2 == 0) SignalledCrossing(new Vector2(x0 + i * bx, z0 + k * bz), true, 14f, 14f, true);
+            var xs = new float[nx + 1]; var zs = new float[nz + 1];
+            for (int i = 0; i <= nx; i++) xs[i] = Boulevard(z0 - 4f, z1 + 4f, x0 + i * bx, false, 4, false);
+            for (int k = 0; k <= nz; k++) zs[k] = Boulevard(x0 - 4f, x1 + 4f, z0 + k * bz, true, 4, false);
+            for (int i = 0; i <= nx; i++) for (int k = 0; k <= nz; k++) SignalledCrossing(new Vector2(xs[i], zs[k]), true, 14f, 14f, true, (i == 0 || i == nx || k == 0 || k == nz) && (i + k) % 2 == 0);
             float m = 7f + 3f + 3f;
             for (int i = 0; i < nx; i++)
                 for (int k = 0; k < nz; k++)
@@ -289,39 +313,43 @@ namespace PortCCTV
                         float s = Mathf.Min(1f, (wx - 6f) / 63.2f);
                         Prefab("building", "bld_warehouses", new Vector3(cx, Deck + 0.02f, ez - 16f * s - 4f), 0f, Vector3.one * s);
                         for (float x = cx - 26f * s; x <= cx + 26f * s; x += 6f)                 // trucks backed onto the dock doors
-                            if (Rng.NextDouble() < 0.3) ContainerTruck(x, ez - 32f * s - 10f, 90f, Rng.NextDouble() < 0.6, Rng.NextDouble() < 0.5);
-                        for (float x = ax + 4f; x < ex - 4f; x += 4.5f)
-                            if (Rng.NextDouble() < 0.08) ParkedVehicle( CarKey(0.05f), new Vector3(x, Deck + 0.02f, az + 3.5f), 90f);
-                        for (float x = ax + 6f; x < ex - 10f; x += 9f)                                         // delivery vans at the side doors
-                            if (Rng.NextDouble() < 0.08) ParkedVehicle( $"van_a_{Rng.Next(6):00}", new Vector3(x, Deck + 0.02f, ez - 32f * s - 22f), -90f);
+                            if (Rng.NextDouble() < 0.65) ContainerTruck(x, ez - 32f * s - 10f, 90f, Rng.NextDouble() < 0.6, Rng.NextDouble() < 0.5);
+                        ServiceRow(ax + 4f, ex - 4f, az + 0.6f, 1f, 0.35f, "car");                               // staff bays on the yard edge
+                        ServiceRow(ax + 6f, ex - 10f, ez - 32f * s - 19f, -1f, 0.3f, "van");                       // delivery vans at the doors
+                        RegisterYardAccess(ax, ex, az, ez, Uid("yard"));
                     }
-                    else if (u < 0.40) TruckLot(ax, ex, az, ez, R(0.2f, 0.4f), R(0.3f, 0.7f));
+                    else if (u < 0.40) { if (TruckLot(ax, ex, az, ez, R(0.2f, 0.4f), R(0.3f, 0.7f)) == null) Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "road_asphalt"); }
                     else if (u < 0.68)
                     {
                         Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "concrete");
                         int bays = Mathf.Max(1, (int)((wx - 12f) / 12.6f)), rows = Mathf.Clamp((int)((wz - 30f) / 2.75f / 2f), 2, 8);
                         ContainerBlock(ax + 6f, az + 6f, bays, rows, 5, false);
                         ContainerBlock(ax + 6f, ez - 6f - rows * 2.75f, bays, rows, 5, false);
+                        RegisterYardAccess(ax, ex, az, ez, Uid("depot"), 12f);
+                        // concrete barriers along the street side of the depot, a 16 m gate in the middle (Poly Haven CC0)
+                        for (float x = ax + 2f; x < ex - 2f; x += 1.65f)
+                            if (Mathf.Abs(x - cx) > 8f) Prefab("barrier", "concrete_barrier", new Vector3(x, Deck + 0.02f, az + 1.2f), 0f, Vector3.one);
                         Prefab("crane", "mobile_crane", new Vector3(cx, Deck + 0.02f, cz), R(0f, 360f), Vector3.one);
                     }
                     else if (u < 0.84)
                     {
                         Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "road_asphalt");
                         for (float z = az + 10f; z < ez - 22f; z += 18f)
-                            for (float x = ax + 16f; x < ex - 12f; x += 32f) Prefab("building", Rng.NextDouble() < 0.6 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(x, Deck + 0.02f, z), 0f, Vector3.one);
+                            for (float x = ax + 16f; x < ex - 12f; x += 32f) Prefab("building", Rng.NextDouble() < 0.3 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(x, Deck + 0.02f, z), 0f, Vector3.one);
                         Prefab("building", "bld_brick_factory", new Vector3(ax + 12f, Deck + 0.02f, ez - 12f), 0f, Vector3.one);
                         Tank(ex - 12f, ez - 12f, R(8f, 14f), R(8f, 14f));
-                        for (float x = ax + 4f; x < ex - 30f; x += 4.5f)
-                            if (Rng.NextDouble() < 0.06) ParkedVehicle( CarKey(0.05f), new Vector3(x, Deck + 0.02f, ez - 4f), -90f);
+                        ServiceRow(ax + 4f, ex - 30f, ez - 0.6f, -1f, 0.3f, "car");
+                        RegisterYardAccess(ax, ex, az, ez, Uid("yard"));
                     }
                     else
                     {
                         Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "concrete");
                         for (float z = az + 6f; z < ez - 6f; z += 9f)                           // steel stock: plate stacks and pipe bundles
                             for (float x = ax + 6f; x < ex - 14f; x += 16f)
-                                if (Rng.NextDouble() < 0.7)
+                                if (Rng.NextDouble() < 0.9)
                                     BoxC("laydown", new Vector3(x + 6f, Deck + 0.6f + R(0f, 0.6f), z), new Vector3(12f, R(1.0f, 2.4f), R(2.2f, 4f)), Rng.NextDouble() < 0.5 ? "steel_dark" : "steel_galv", R(-2f, 2f));
                         Prefab("crane", "mobile_crane", new Vector3(ex - 10f, Deck + 0.02f, cz), R(0f, 360f), Vector3.one);
+                        RegisterYardAccess(ax, ex, az, ez, Uid("stockyard"), 12f);
                     }
                 }
         }
@@ -330,7 +358,11 @@ namespace PortCCTV
         /// (tree rows) and farm sheds.</summary>
         public static void Farmland(float x0, float x1, float z0, float z1)
         {
-            for (float z = z0; z < z1 - 20f; z += 70f) Box("lane", x0, x1, Deck, Deck + 0.04f, z, z + 4f, "lane_concrete");     // farm tracks
+            float zLast = z0;
+            for (float z = z0; z < z1 - 20f; z += 70f) { Box("lane", x0, x1, Deck, Deck + 0.04f, z, z + 4f, "lane_concrete"); zLast = z; }   // farm tracks
+            // access track along the west edge joining the farm tracks (2026-11-09: the E-W tracks had no way out; RoadNetwork
+            // joins its ends to the nearest road)
+            if (zLast > z0) Box("lane", x0 - 4f, x0, Deck, Deck + 0.04f, z0, zLast + 4f, "lane_concrete");
             for (float x = x0; x < x1 - 30f; x += R(36f, 48f))
                 for (float z = z0 + 6f; z < z1 - 18f; z += 70f)
                 {
@@ -358,7 +390,7 @@ namespace PortCCTV
         public static void QuayGear(float x0, float x1, float z0, float z1, int clusters, params Vector2[] keepClear)
         {
             string[] boxCols = { "blue", "blue", "red", "green", "white" };
-            for (int c = 0; c < clusters; c++)
+            for (int c = 0; c < clusters * 2; c++)                                   // 2026-11-09: twice the clusters
             {
                 float cx = R(x0 + 4f, x1 - 4f), cz = R(z0 + 2f, z1 - 2f);
                 if (keepClear.Any(k => cx > k.x - 4f && cx < k.y + 4f)) continue;
@@ -375,9 +407,9 @@ namespace PortCCTV
         {
             string[] cols = { "red", "blue", "white", "green", "navy", "red", "blue" };
             for (float z = z0; z <= z1; z += 7f)
-                for (float x = x0 + R(0f, 3f); x < x1; x += R(5f, 8f))
+                for (float x = x0 + R(0f, 3f); x < x1; x += R(4f, 6f))
                 {
-                    if (Rng.NextDouble() < 0.25) continue;
+                    if (Rng.NextDouble() < 0.06) continue;
                     Prefab("beach", "beach_parasol_" + cols[Rng.Next(cols.Length)], new Vector3(x, y, z + R(-0.6f, 0.6f)), R(0f, 360f), Vector3.one);
                 }
             for (float x = x0 + 60f; x < x1; x += 180f) Prefab("beach", "lifeguard_tower", new Vector3(x, y, z0 - 6f), 180f, Vector3.one);
@@ -389,7 +421,7 @@ namespace PortCCTV
             for (float x = x0 + 5f; x < x1; x += 14f)
             {
                 Prefab("bench", "bench", new Vector3(x, Deck, z), seaDir < 0 ? 0f : 180f, Vector3.one);
-                if (Rng.NextDouble() < 0.5) Tree(x + 7f, z - seaDir * 2.5f, Deck, R(5f, 7f));
+                Tree(x + 7f, z - seaDir * 2.5f, Deck, R(5f, 7f));
             }
         }
 
@@ -451,14 +483,20 @@ namespace PortCCTV
             Box("road", x0, x1, Deck + 0.06f, Deck + 0.075f, roadZ - 0.08f, roadZ + 0.08f, "paint_yellow");
             float gz = roadZ + seaDir * 4.3f;
             bool gap = gapX1 > gapX0;
-            for (float x = x0 + 2f; x < x1; x += 4f)
-                if (!gap || x < gapX0 || x > gapX1) Box("guard_rail", x - 0.06f, x + 0.06f, Deck, Deck + 0.75f, gz - 0.06f, gz + 0.06f, "guard_rail");
-            if (!gap) Box("guard_rail", x0, x1, Deck + 0.5f, Deck + 0.82f, gz - 0.05f, gz + 0.05f, "guard_rail");
-            else
+            CoastalRoads.Add((x0, x1, roadZ, seaDir));
+            // W-beam guardrail on the sea side ("GuardRail and Terminal", xplanepilot, CC BY): 4 m segments, end terminals at
+            // both ends of every run (the run is split at the gap, e.g. a bridge junction)
+            void Run(float r0, float r1)
             {
-                Box("guard_rail", x0, gapX0, Deck + 0.5f, Deck + 0.82f, gz - 0.05f, gz + 0.05f, "guard_rail");
-                Box("guard_rail", gapX1, x1, Deck + 0.5f, Deck + 0.82f, gz - 0.05f, gz + 0.05f, "guard_rail");
+                if (r1 - r0 < 8f) return;
+                int n = Mathf.FloorToInt((r1 - r0) / 4f);
+                float s0 = (r0 + r1) / 2f - n * 2f;
+                float yaw = seaDir < 0 ? 180f : 0f;                                    // rail face towards the road
+                for (int k = 0; k < n; k++) Prefab("guard_rail", "guardrail_seg", new Vector3(s0 + k * 4f + 2f, Deck, gz), yaw, Vector3.one);
+                Prefab("guard_rail", "guardrail_end", new Vector3(s0 - 0.3f, Deck, gz), yaw + 180f, Vector3.one);
+                Prefab("guard_rail", "guardrail_end", new Vector3(s0 + n * 4f + 0.3f, Deck, gz), yaw, Vector3.one);
             }
+            if (!gap) Run(x0, x1); else { Run(x0, gapX0); Run(gapX1, x1); }
             float lz = roadZ + land * 4.6f;
             for (float x = x0 + 12f; x < x1; x += 30f)
                 if (!gap || x < gapX0 - 3f || x > gapX1 + 3f) Prefab("street_light", "street_lamp", new Vector3(x, Deck, lz), 0, Vector3.one * 2f);
@@ -473,17 +511,20 @@ namespace PortCCTV
             // house rows and lanes
             var kinds = HillFeatures.HouseKinds;
             var cross = new List<float>();
-            for (float x = x0 + R(20f, 50f); x < x1 - 15f; x += R(55f, 85f)) cross.Add(x);
+            cross.Add(x0 + 6f);                                                    // end lanes close the grid at both village ends
+            for (float x = x0 + R(26f, 50f); x < x1 - 30f; x += R(55f, 85f)) cross.Add(x);
+            cross.Add(x1 - 6f);
             float rowPitch = 22f, firstRow = roadZ + land * 12f;
             for (int r = 0; r < rows; r++)
             {
                 float rz = firstRow + land * r * rowPitch;
                 float laneZ = rz + land * rowPitch / 2f;
                 if (r < rows - 1) Box("lane", x0 + 4f, x1 - 4f, Deck + 0.02f, Deck + 0.05f, laneZ - 1.75f, laneZ + 1.75f, "lane_concrete");
+                else Box("lane", x0 + 4f, x1 - 4f, Deck + 0.02f, Deck + 0.05f, rz + land * (rowPitch / 2f) - 1.75f, rz + land * (rowPitch / 2f) + 1.75f, "lane_concrete");   // back lane behind the last row
                 for (float x = x0 + 9f; x < x1 - 9f; x += R(12f, 15f))
                 {
-                    bool nearCross = false; foreach (var cx in cross) if (Mathf.Abs(cx - x) < 8f) nearCross = true;
-                    if (nearCross || Rng.NextDouble() > 0.86) { if (Rng.NextDouble() < 0.5) Tree(x, rz + land * R(-4f, 4f), Deck, R(5f, 9f)); continue; }
+                    bool nearCross = false; foreach (var cx in cross) if (Mathf.Abs(cx - x) < 13f || Mathf.Abs(cx - (x + 6f)) < 15f) nearCross = true;
+                    if (nearCross || Rng.NextDouble() > 0.95) { if (Rng.NextDouble() < 0.8) Tree(x, rz + land * R(-4f, 4f), Deck, R(5f, 9f)); continue; }
                     float yaw = (land > 0 ? 0f : 180f) + R(-5f, 5f);              // front (-z) faces the road
                     if (Rng.NextDouble() < 0.3)
                     {
@@ -513,7 +554,7 @@ namespace PortCCTV
                 {
                     float w = R(22f, 34f), d = R(16f, 24f);
                     if (Rng.NextDouble() < 0.72) BoxC("field", new Vector3(x + w / 2f, Deck + 0.02f, bz + land * d / 2f), new Vector3(w, 0.04f, d), "field", R(-3f, 3f));
-                    else for (int t = 0; t < 5; t++) Tree(x + R(0, w), bz + land * R(2f, d), Deck, R(5f, 9f));
+                    else for (int t = 0; t < 14; t++) Tree(x + R(0, w), bz + land * R(2f, d), Deck, R(5f, 9f));
                 }
             }
         }
@@ -539,6 +580,7 @@ namespace PortCCTV
             if (key.StartsWith("car_a_") || key.StartsWith("car_b_") || key.StartsWith("van_a_")) return 0f;
             if (key == "truck_kei" || key == "truck_semi_a") return 90f;
             if (key == "forklift_a") return -90f;
+            if (key == "forklift_truck") return 90f;                 // ReplacementAssets: forks along +z
             return 0f;
         }
 
@@ -554,58 +596,6 @@ namespace PortCCTV
                 BoxC("parking_lines", pos + q * new Vector3(0, 0.025f, side * 1.4f), new Vector3(6.5f, 0.02f, 0.10f), "paint_white", yawTravel);
             BoxC("parking_lines", pos + q * new Vector3(3.25f, 0.025f, 0), new Vector3(0.1f, 0.02f, 2.8f), "paint_white", yawTravel);
             Vehicle("car", key, pos, yawTravel);
-        }
-
-        /// <summary>Surface car park: asphalt with kerbs, stall rows along x (2.5 x 5 m stalls, 6.5 m aisles, rows back to back),
-        /// painted stall lines, lamps on the medians, cars parked nose-in or reversed in with small offsets, trees on the long
-        /// edges. occupancy = share of stalls taken.</summary>
-        /// <summary>Surface car park laid out like a real one: double rows of 2.5 x 5 m stalls back to back (10 m), a 6.5 m
-        /// drive aisle between every double row, a 1.5 m planted median with lamps every 30 m between the back-to-back stalls,
-        /// kerbs around, entrance gaps on the long sides. Cars stand squarely in their stalls (nose-in or reversed, the whole
-        /// row the same way, +-1.2 deg), occupancy fills stalls from the lot centre outwards so the lot reads as "parked in
-        /// order" rather than scattered. Stall lines are painted per stall.</summary>
-        public static void ParkingLot(float x0, float x1, float z0, float z1, float occupancy, string id = null, float truckShare = 0.07f, bool trees = true)
-        {
-            const float y = Deck + 0.03f, stallW = 2.8f, stallD = 5.8f, aisle = 6.5f, median = 1.5f;
-            Box("parking", x0, x1, Deck, y, z0, z1, "road_asphalt", id: id);
-            foreach (var (za, zb) in new[] { (z0 - 0.3f, z0), (z1, z1 + 0.3f) }) Box("kerb", x0, x1, Deck, Deck + 0.15f, za, zb, "lane_concrete");
-            foreach (var (xa, xb) in new[] { (x0 - 0.3f, x0), (x1, x1 + 0.3f) }) Box("kerb", xa, xb, Deck, Deck + 0.15f, z0, z1, "lane_concrete");
-            int nStalls = Mathf.Max(2, (int)((x1 - x0 - 8f) / stallW));
-            float sx0 = (x0 + x1) / 2f - nStalls * stallW / 2f;
-            float module = aisle + 2f * stallD + median;                                                     // aisle + double row + median
-            int modules = Mathf.Max(1, (int)((z1 - z0 - 4f + median) / module));
-            float zStart = (z0 + z1) / 2f - (modules * module - median) / 2f;
-            int centre = nStalls / 2;
-            for (int m = 0; m < modules; m++)
-            {
-                float zA = zStart + m * module;                                                               // aisle from zA to zA+aisle
-                float rowA = zA + aisle, rowB = rowA + stallD;                                                // row A: zA+aisle .. +5, row B: +5 .. +10
-                bool noseInA = true, noseInB = true;
-                for (int i = 0; i <= nStalls; i++) foreach (var (za, zb) in new[] { (rowA, rowB), (rowB, rowB + stallD) })
-                    Box("parking_lines", sx0 + i * stallW - 0.06f, sx0 + i * stallW + 0.06f, y, y + 0.01f, za + 0.2f, zb - 0.2f, "paint_white");
-                Box("parking_lines", sx0, sx0 + nStalls * stallW, y, y + 0.01f, rowB - 0.06f, rowB + 0.06f, "paint_white");
-                for (int i = 0; i < nStalls; i++)
-                {
-                    float fill = 1f - Mathf.Abs(i - centre) / (float)Mathf.Max(1, nStalls) * 0.8f;              // centre stalls fill first
-                    float x = sx0 + i * stallW + stallW / 2f;
-                    // row A (next to the aisle on the -z side): nose-in = nose away from the aisle (+z)
-                    if (Rng.NextDouble() < occupancy * fill)
-                        Vehicle("car", CarKey(truckShare), new Vector3(x, y, rowA + stallD / 2f), noseInA ? -90f : 90f);
-                    if (m == modules - 1 && rowB + stallD > z1 - 1f) continue;
-                    // row B (back to back, nose-in = nose towards -z)
-                    if (Rng.NextDouble() < occupancy * fill)
-                        Vehicle("car", CarKey(truckShare), new Vector3(x, y, rowB + stallD / 2f), noseInB ? 90f : -90f);
-                }
-                float zm = rowB + stallD;                                                                      // median after row B
-                if (zm + median <= z1)
-                {
-                    Box("kerb", sx0, sx0 + nStalls * stallW, Deck, Deck + 0.15f, zm, zm + median, "lane_concrete");
-                    for (float x = sx0 + 5f; x < sx0 + nStalls * stallW; x += 30f) Prefab("street_light", "street_lamp", new Vector3(x, Deck + 0.15f, zm + median / 2f), 0, Vector3.one * 2f);
-                    if (trees) for (float x = sx0 + 15f; x < sx0 + nStalls * stallW - 5f; x += 30f) Tree(x, zm + median / 2f, Deck, R(4f, 6f));
-                }
-            }
-            if (!trees) return;
-            for (float x = x0 + 6f; x < x1 - 4f; x += 12f) { Tree(x, z0 - 2.5f, Deck, R(5f, 8f)); Tree(x, z1 + 2.5f, Deck, R(5f, 8f)); }
         }
 
         static readonly string[] TractorCabs = { "red", "white", "blue", "green" };
@@ -624,29 +614,6 @@ namespace PortCCTV
             else BoxC("container", P(-2.9f, Deck + 1.44f + 1.295f), new Vector3(6.06f, 2.59f, 2.44f), Colours[Rng.Next(Colours.Length)], yaw);
         }
 
-        /// <summary>Truck park / staging lot: rows of 4.5 m x 20 m bays (long axis z) separated by 16 m aisles.
-        /// occupancy = share of bays taken; loaded = share of parked trucks carrying a box.</summary>
-        public static void TruckLot(float x0, float x1, float z0, float z1, float occupancy, float loaded, string id = null)
-        {
-            const float y = Deck + 0.03f;
-            Box("parking", x0, x1, Deck, y, z0, z1, "road_asphalt", id: id);
-            Box("kerb", x0, x1, Deck, Deck + 0.15f, z0 - 0.3f, z0, "lane_concrete");
-            Box("kerb", x0, x1, Deck, Deck + 0.15f, z1, z1 + 0.3f, "lane_concrete");
-            for (float zr = z0 + 3f; zr + 20f <= z1 - 3f; zr += 36f)
-            {
-                float zc = zr + 10f;
-                float dir = Rng.NextDouble() < 0.5 ? 1f : -1f;                      // whole row parked the same way
-                for (float x = x0 + 4f; x + 4.5f <= x1 - 4f; x += 4.5f)
-                {
-                    Box("parking_lines", x - 0.06f, x + 0.06f, y, y + 0.01f, zr, zr + 20f, "paint_white");
-                    bool take = Rng.NextDouble() < occupancy;
-                    if (!take) continue;
-                    ContainerTruck(x + 2.25f, zc - dir * 1.9f, dir > 0 ? -90f : 90f, Rng.NextDouble() < loaded, Rng.NextDouble() < 0.8);
-                }
-                for (float x = x0 + 10f; x < x1; x += 40f) Prefab("street_light", "street_lamp", new Vector3(x, y, zr + 21.5f), 0, Vector3.one * 2f);
-            }
-        }
-
         /// <summary>Plain two-lane roads (asphalt + centre line) along x or z.</summary>
         public static void RoadX(float x0, float x1, float z, float width = 8f)
         {
@@ -663,7 +630,41 @@ namespace PortCCTV
         /// <summary>Urban road along x or z: asphalt with edge and dashed lane lines, raised sidewalks with kerbs on both sides
         /// (sidewalk 3 m), street lamps every 30 m, street trees every 15 m on the sidewalk. Lane count 2 or 4 (width 8 / 14 m).
         /// `signalsEvery` > 0 adds a signalised crossing (crosswalks, vehicle + pedestrian signals) at that spacing.</summary>
-        public static void Boulevard(float a0, float a1, float c, bool alongX, int lanes = 4, bool trees = true, float signalsEvery = 0f)
+        /// <summary>Share of 9-14 m lane slots holding a car on boulevards (user 2026-11-09: denser, more lived-in maps).</summary>
+        public static float TrafficDensity = 0.22f;
+
+        /// <summary>Boulevards already laid in the current map build: (alongX, centre, a0, a1, half width incl. sidewalks).
+        /// Neighbouring city / industrial grids share their edge streets, and grids are laid next to arterial roads; without
+        /// this register those streets were built twice on top of each other (or 15 m apart with overlapping sidewalks).</summary>
+        internal static readonly List<(bool alongX, float c, float a0, float a1, float half)> LaidBoulevards = new List<(bool, float, float, float, float)>();
+        internal static readonly List<Vector2> LaidCrossings = new List<Vector2>();
+
+        /// <summary>Lays a boulevard, skipping the parts already covered by a parallel boulevard closer than both half-widths + 3 m.
+        /// Returns the centre line actually serving this alignment (an existing road's when this one is fully covered), so grid
+        /// builders can put their junctions and bus stops on the road that is really there.</summary>
+        public static float Boulevard(float a0, float a1, float c, bool alongX, int lanes = 4, bool trees = true, float signalsEvery = 0f)
+        {
+            float half = (lanes >= 4 ? 7f : 4f) + 3f;
+            var covered = new List<(float s, float e)>(); float snap = c;
+            foreach (var b in LaidBoulevards)
+            {
+                if (b.alongX != alongX || Mathf.Abs(b.c - c) >= b.half + half + 3f) continue;
+                float s0 = Mathf.Max(a0, b.a0), s1 = Mathf.Min(a1, b.a1);
+                if (s1 > s0) { covered.Add((s0, s1)); snap = b.c; }
+            }
+            if (covered.Count == 0) { LaidBoulevards.Add((alongX, c, a0, a1, half)); BoulevardRaw(a0, a1, c, alongX, lanes, trees, signalsEvery); return c; }
+            covered.Sort((p, q) => p.s.CompareTo(q.s));
+            float cur = a0; bool any = false;
+            foreach (var (s0, s1) in covered)
+            {
+                if (s0 - cur >= 30f) { LaidBoulevards.Add((alongX, c, cur, s0, half)); BoulevardRaw(cur, s0, c, alongX, lanes, trees, signalsEvery); any = true; }
+                cur = Mathf.Max(cur, s1);
+            }
+            if (a1 - cur >= 30f) { LaidBoulevards.Add((alongX, c, cur, a1, half)); BoulevardRaw(cur, a1, c, alongX, lanes, trees, signalsEvery); any = true; }
+            return any ? c : snap;
+        }
+
+        static void BoulevardRaw(float a0, float a1, float c, bool alongX, int lanes, bool trees, float signalsEvery)
         {
             float w = lanes >= 4 ? 14f : 8f, hw = w / 2f, sw = 3f;
             void B(string kind, float u0, float u1, float y0, float y1, float v0, float v1, string mat)
@@ -676,7 +677,7 @@ namespace PortCCTV
             if (lanes >= 4) foreach (var e in new[] { -hw / 2f, hw / 2f }) for (float u = a0 + 2f; u < a1 - 3f; u += 8f) B("marking", u, u + 3f, Deck + 0.06f, Deck + 0.075f, e - 0.07f, e + 0.07f, "paint_white");
             foreach (var s in new[] { -1f, 1f })
             {
-                B("sidewalk", a0, a1, Deck, Deck + 0.16f, s * hw, s * (hw + sw), "lane_concrete");
+                B("sidewalk", a0, a1, Deck, Deck + (alongX ? 0.16f : 0.17f), s * hw, s * (hw + sw), "sidewalk_paving");   // 1 cm apart where sidewalks cross (no z-fight)
                 B("kerb", a0, a1, Deck, Deck + 0.17f, s * hw, s * (hw + 0.25f), "concrete");
             }
             for (float u = a0 + 10f; u < a1 - 5f; u += 30f)
@@ -685,8 +686,20 @@ namespace PortCCTV
                     var p = alongX ? new Vector3(u, Deck + 0.16f, c + s * (hw + 0.8f)) : new Vector3(c + s * (hw + 0.8f), Deck + 0.16f, u);
                     Prefab("street_light", "street_lamp", p, alongX ? 0f : 90f, Vector3.one * 2f);
                 }
+            // road traffic: cars standing in the lanes (right-hand traffic), clear of the 25 m at each end (junctions)
+            {
+                float[] lanesC = lanes >= 4 ? new[] { -5.25f, -1.75f, 1.75f, 5.25f } : new[] { -2f, 2f };
+                foreach (var lc in lanesC)
+                    for (float u = a0 + 25f; u < a1 - 25f; u += R(9f, 14f))
+                    {
+                        if (Rng.NextDouble() > TrafficDensity) continue;
+                        float travel = lc < 0 ? 0f : 180f;                              // -side lanes run +u, +side lanes run -u
+                        var p = alongX ? new Vector3(u, Deck + 0.06f, c + lc) : new Vector3(c + lc, Deck + 0.06f, u);
+                        Vehicle("car", CarKey(0.08f), p, (alongX ? 0f : -90f) + travel + R(-1.5f, 1.5f));
+                    }
+            }
             if (trees)
-                for (float u = a0 + 18f; u < a1 - 8f; u += 30f)                                               // one tree per 30 m per side
+                for (float u = a0 + 12f; u < a1 - 6f; u += 10f)                                               // one tree per 10 m per side
                     foreach (var s in new[] { -1f, 1f })
                     {
                         var p = alongX ? new Vector3(u, Deck, c + s * (hw + 2.2f)) : new Vector3(c + s * (hw + 2.2f), Deck, u);
@@ -701,8 +714,11 @@ namespace PortCCTV
         /// stop lines, zebra crosswalks on all four arms, four vehicle signals on the far-side corners facing each approach,
         /// pedestrian signals beside each crosswalk. `full` = cross road exists on both sides, else a T-junction (cross road on
         /// the +side only).</summary>
-        public static void SignalledCrossing(Vector2 centre, bool mainAlongX, float wMain, float wCross, bool full)
+        public static void SignalledCrossing(Vector2 centre, bool mainAlongX, float wMain, float wCross, bool full, bool signals = true)
         {
+            foreach (var p in LaidCrossings) if ((p - centre).sqrMagnitude < 12f * 12f) return;     // a junction is laid once
+            LaidCrossings.Add(centre);
+            Junctions.Add(new Junction { c = centre, alongX = mainAlongX, wMain = wMain, wCross = wCross, full = full, signals = signals });
             float hm = wMain / 2f, hc = wCross / 2f;
             Vector3 P(float along, float across) => mainAlongX ? new Vector3(centre.x + along, Deck, centre.y + across) : new Vector3(centre.x + across, Deck, centre.y + along);
             void Zebra(float along0, float along1, float across0, float across1)
@@ -731,7 +747,9 @@ namespace PortCCTV
                 var p = P(s * (hc + 3.4f), -s * hm / 2f);
                 BoxC("marking", new Vector3(p.x, Deck + 0.065f, p.z), mainAlongX ? new Vector3(0.4f, 0.012f, hm) : new Vector3(hm, 0.012f, 0.4f), "paint_white");
             }
-            // signals: vehicle signal on each far corner, facing the approach (prefab faces -z at yaw 0; mast arm over the road)
+            // signals: vehicle signal on each far corner, facing the approach (prefab faces -z at yaw 0; mast arm over the road).
+            // Junctions of local streets inside a grid have stop lines and crosswalks but no signals (2026-11-09).
+            if (!signals) return;
             float yawMain = mainAlongX ? 0f : 90f;
             foreach (var s in new[] { -1f, 1f })
             {
@@ -755,8 +773,8 @@ namespace PortCCTV
         {
             float d = z1 - z0;
             for (float x = x0 + 4f; x < x1; x += 3.9f) Prefab("fence", "fence", new Vector3(x, Deck, z0 + 1f), 0, Vector3.one);
-            for (float x = x0 + 5f; x < x1 - 3f; x += R(12f, 18f)) Tree(x, z0 + d * R(0.2f, 0.8f), Deck, R(7f, 12f));
-            Scrub(x0, x1, z0 + 2f, z1 - 2f, (int)((x1 - x0) * d / 400f), 2f, 4f);
+            for (float x = x0 + 5f; x < x1 - 3f; x += R(5f, 8f)) Tree(x, z0 + d * R(0.2f, 0.8f), Deck, R(7f, 12f));
+            Scrub(x0, x1, z0 + 2f, z1 - 2f, (int)((x1 - x0) * d / 150f), 2f, 4f);
             Box("lane", x0, x1, Deck, Deck + 0.04f, z1 - 3f, z1 - 1f, "lane_concrete");   // walking path on the town side
             for (float x = x0 + 12f; x < x1; x += 14f) Prefab("bench", "bench", new Vector3(x, Deck, z1 - 4.2f), 180f, Vector3.one);
         }
@@ -807,15 +825,22 @@ namespace PortCCTV
         /// <summary>Grid of city blocks on flat land: roads every `block` m in x and z, and per block one of: towers on a paved
         /// plot (bld_tower, 2-4), a surface car park, a shop row with a small car park, a pocket park, or warehouses on asphalt.
         /// Fills large flats with built-up land at CCTV distance without crude procedural boxes.</summary>
-        public static void CityBlocks(float x0, float x1, float z0, float z1, float block = 115f, float roadW = 12f)
+        /// <summary>
+        /// Grid of city blocks. zone (detail review 2026-11-09 §5, references R02 Haeundae / R01 Wando):
+        ///  "mixed"       apartments, shop blocks with a customers' car park, parks, a few warehouses (the old behaviour);
+        ///  "highrise"    point towers / officetels, shop rows at street level, pocket parks; few car parks (towers park underground);
+        ///  "residential" apartment complexes and slabs, blocks of 3-4 storey villas (빌라) with alleys, neighbourhood shops, parks.
+        /// </summary>
+        public static void CityBlocks(float x0, float x1, float z0, float z1, float block = 115f, float roadW = 12f, string zone = "mixed")
         {
             int nx = Mathf.Max(1, (int)((x1 - x0) / block)), nz = Mathf.Max(1, (int)((z1 - z0) / block));
             float bx = (x1 - x0) / nx, bz = (z1 - z0) / nz;
             // streets: 2-lane boulevards with sidewalks, lamps and street trees; every intersection signalised
-            for (int i = 0; i <= nx; i++) Boulevard(z0 - 4f, z1 + 4f, x0 + i * bx, false, 2, i % 2 == 0);
-            for (int k = 0; k <= nz; k++) Boulevard(x0 - 4f, x1 + 4f, z0 + k * bz, true, 2, k % 2 == 0);
-            for (int i = 0; i <= nx; i++) for (int k = 0; k <= nz; k++) SignalledCrossing(new Vector2(x0 + i * bx, z0 + k * bz), true, 8f, 8f, true);
-            for (int i = 0; i < nx; i++) if (Rng.NextDouble() < 0.5) BusStop(x0 + i * bx + bx / 2f, z0 + 4f + 1.5f, 1f);
+            var xs = new float[nx + 1]; var zs = new float[nz + 1];
+            for (int i = 0; i <= nx; i++) xs[i] = Boulevard(z0 - 4f, z1 + 4f, x0 + i * bx, false, 2, true);
+            for (int k = 0; k <= nz; k++) zs[k] = Boulevard(x0 - 4f, x1 + 4f, z0 + k * bz, true, 2, true);
+            for (int i = 0; i <= nx; i++) for (int k = 0; k <= nz; k++) SignalledCrossing(new Vector2(xs[i], zs[k]), true, 8f, 8f, true, i == 0 || i == nx || k == 0 || k == nz);
+            for (int i = 0; i < nx; i++) if (Rng.NextDouble() < 0.8 && Mathf.Abs(zs[0] - z0) < 0.5f) BusStop(x0 + i * bx + bx / 2f, z0 + 4f + 1.5f, 1f);
             float m = 4f + 3f + 3f;
             for (int i = 0; i < nx; i++)
                 for (int k = 0; k < nz; k++)
@@ -823,50 +848,184 @@ namespace PortCCTV
                     float ax = x0 + i * bx + m, ex = x0 + (i + 1) * bx - m, az = z0 + k * bz + m, ez = z0 + (k + 1) * bz - m;
                     float cx = (ax + ex) / 2f, cz = (az + ez) / 2f, wx = ex - ax, wz = ez - az;
                     double u = Rng.NextDouble();
+                    if (zone == "highrise" || zone == "residential")
+                    {
+                        CityPlotZoned(zone, ax, ex, az, ez, u);
+                        continue;
+                    }
                     if (u < 0.50)
                     {
                         Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete");
-                        ApartmentPlot(ax, ex, az, ez);
-                        for (int t = 0; t < 2; t++) Tree(R(ax + 2f, ex - 2f), Rng.NextDouble() < 0.5 ? az + 2f : ez - 2f, Deck, R(5f, 8f));
-                        // residents' parking along both long sides of the plot
-                        for (float x = ax + 4f; x < ex - 4f; x += 4.5f)
-                            if (Rng.NextDouble() < 0.07) ParkedVehicle( CarKey(0.01f), new Vector3(x, Deck + 0.02f, az + 3.5f), 90f);
+                        ApartmentPlot(ax, ex, az + 7f, ez);                        // 7 m residents' parking strip on the -z side
+                        for (float x = ax + 3f; x < ex - 3f; x += 7f) Tree(x, az + 3.5f, Deck, R(5f, 8f));   // front planting (residents park inside the complex)
                     }
                     else if (u < 0.54) GreenBuffer(ax, ex, az, ez);
                     else if (u < 0.78)
                     {
-                        Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete");
+                        Box("pad", ax, ex, Deck, Deck + 0.02f, az, az + 18f, "lane_concrete");
+                        if (ez - az > 70f) Box("pad", ax, ex, Deck, Deck + 0.02f, ez - 22f, ez, "lane_concrete");
                         ShopRow(ax + 4f, ex - 4f, az + 6f, 180f);
-                        Box("shop_forecourt", ax + 2f, ex - 2f, Deck, Deck + 0.03f, az + 16f, Mathf.Min(ez - 2f, az + 52f), "lane_concrete");
-                        if (ez - az > 70f) ShopRow(ax + 4f, ex - 4f, ez - 6f, 0f);
+                        bool backRow = ez - az > 70f;
+                        if (backRow) ShopRow(ax + 4f, ex - 4f, ez - 6f, 0f);
+                        // customers' car park filling the plot between the shop rows (2026-11-09: was an empty forecourt)
+                        float pz1 = backRow ? ez - 24f : ez - 3f;
+                        if (pz1 - (az + 20f) < 12.5f || ParkingLot(ax + 3f, ex - 3f, az + 20f, pz1, R(0.3f, 0.6f), null, 0.04f) == null)
+                            Box("shop_forecourt", ax + 2f, ex - 2f, Deck, Deck + 0.03f, az + 16f, Mathf.Min(ez - 2f, az + 52f), "lane_concrete");
                     }
                     else if (u < 0.90)
                     {
-                        for (int t = 0; t < 8; t++) Tree(R(ax + 4f, ex - 4f), R(az + 4f, ez - 4f), Deck, R(6f, 11f));
-                        Box("path", cx - 1.5f, cx + 1.5f, Deck, Deck + 0.03f, az, ez, "lane_concrete");
-                        Box("path", ax, ex, Deck, Deck + 0.03f, cz - 1.5f, cz + 1.5f, "lane_concrete");
+                        for (int t = 0; t < 34; t++) Tree(R(ax + 4f, ex - 4f), R(az + 4f, ez - 4f), Deck, R(6f, 11f));
+                        Box("path", cx - 1.5f, cx + 1.5f, Deck, Deck + 0.03f, az - 3.2f, ez + 3.2f, "lane_concrete");
+                        Box("path", ax - 3.2f, ex + 3.2f, Deck, Deck + 0.03f, cz - 1.5f, cz + 1.5f, "lane_concrete");
                     }
                     else
                     {
                         Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "road_asphalt");
-                        for (float z = az + 10f; z < ez - 8f; z += 22f) Prefab("building", Rng.NextDouble() < 0.5 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(cx, Deck + 0.02f, z), 0f, Vector3.one);
-                        for (float x = ax + 4f; x < ex - 4f; x += 5f) if (Rng.NextDouble() < 0.06) ParkedVehicle( CarKey(0.05f), new Vector3(x, Deck + 0.02f, az + 3.5f), 90f);
+                        for (float z = az + 10f; z < ez - 8f; z += 22f) Prefab("building", Rng.NextDouble() < 0.3 ? "bld_ind_warehouse" : "bld_warehouse_blue", new Vector3(cx, Deck + 0.02f, z), 0f, Vector3.one);
+                        ServiceRow(ax + 4f, ex - 4f, az + 0.6f, 1f, 0.3f, "car");
+                        RegisterYardAccess(ax, ex, az, ez, Uid("yard"));
                     }
                 }
         }
 
-        /// <summary>Apartment plot (Korean 아파트 단지 feel): one of the CC BY blocks sized to the plot — a 12-storey complex,
-        /// two 9-storey slabs, a 110 m point tower with a small podium, or a scaled officetel — with trees along the edges.</summary>
-        public static void ApartmentPlot(float ax, float ex, float az, float ez)
+        /// <summary>Apartment plot (Korean 아파트 단지): a grid of one building type filling the plot — 12-storey complexes
+        /// (26 x 60 m), 9-storey slabs (18 x 43 m), 110 m point towers (38 x 38 m, scaled 0.8) or officetels (33 x 26 m) — with
+        /// 8-10 m between buildings, trees in the gaps and along the plot edge (2026-11-09: was one building per plot).
+        /// Footprints are the wrapped prefab bounds (theme notes), yaw 0.</summary>
+        static void CityPlotZoned(string zone, float ax, float ex, float az, float ez, double u)
         {
-            float cx = (ax + ex) / 2f, cz = (az + ez) / 2f, wx = ex - ax, wz = ez - az;
-            double u = Rng.NextDouble();
-            if (u < 0.35 && wx > 60f && wz > 60f) Prefab("building", "bld_apt_complex", new Vector3(cx, Deck + 0.02f, cz), Rng.NextDouble() < 0.5 ? 0f : 90f, Vector3.one * Mathf.Min(1f, Mathf.Min(wx, wz) / 90f));
-            else if (u < 0.65)
-                foreach (var ox in new[] { -0.25f, 0.25f })
-                    Prefab("building", "bld_apt_slab", new Vector3(cx + ox * wx, Deck + 0.02f, cz + R(-0.08f, 0.08f) * wz), 0f, Vector3.one * R(0.9f, 1.1f));
-            else if (u < 0.85) Prefab("building", "bld_hirise", new Vector3(cx + R(-0.1f, 0.1f) * wx, Deck + 0.02f, cz + R(-0.1f, 0.1f) * wz), R(0f, 90f), Vector3.one * R(0.8f, 1.0f));
-            else Prefab("building", "bld_officetel", new Vector3(cx, Deck + 0.02f, cz), Rng.NextDouble() < 0.5 ? 0f : 180f, Vector3.one * 0.6f);
+            float cx = (ax + ex) / 2f, cz = (az + ez) / 2f;
+            void Park()
+            {
+                for (int t = 0; t < 30; t++) Tree(R(ax + 4f, ex - 4f), R(az + 4f, ez - 4f), Deck, R(6f, 11f));
+                Box("path", cx - 1.5f, cx + 1.5f, Deck, Deck + 0.03f, az - 3.2f, ez + 3.2f, "lane_concrete");
+                Box("path", ax - 3.2f, ex + 3.2f, Deck, Deck + 0.03f, cz - 1.5f, cz + 1.5f, "lane_concrete");
+            }
+            if (zone == "highrise")
+            {
+                if (u < 0.62) { Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete"); ApartmentPlot(ax, ex, az + 4f, ez, "tower"); for (float x = ax + 3f; x < ex - 3f; x += 7f) Tree(x, az + 2f, Deck, R(5f, 8f)); }
+                else if (u < 0.84)
+                {
+                    // street-level shops on the front, towers behind; a small surface lot only on some blocks
+                    Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete");
+                    ShopRow(ax + 4f, ex - 4f, az + 6f, 180f);
+                    if (ez - az > 75f) ApartmentPlot(ax, ex, az + 24f, ez, "tower");
+                    else if (Rng.NextDouble() < 0.5 && ParkingLot(ax + 3f, ex - 3f, az + 20f, ez - 3f, R(0.4f, 0.7f), null, 0.03f) != null) { }
+                    else for (int t = 0; t < 10; t++) Tree(R(ax + 4f, ex - 4f), R(az + 22f, ez - 4f), Deck, R(5f, 9f));
+                }
+                else Park();
+                return;
+            }
+            // residential
+            if (u < 0.48) { Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete"); ApartmentPlot(ax, ex, az + 7f, ez, "low"); for (float x = ax + 3f; x < ex - 3f; x += 7f) Tree(x, az + 3.5f, Deck, R(5f, 8f)); }
+            else if (u < 0.80) VillaBlock(ax, ex, az, ez);
+            else if (u < 0.90)
+            {
+                // neighbourhood shops facing the street, villas behind (no customers' car park: walk-in trade)
+                Box("pad", ax, ex, Deck, Deck + 0.02f, az, az + 18f, "lane_concrete");
+                ShopRow(ax + 4f, ex - 4f, az + 6f, 180f);
+                VillaBlock(ax, ex, az + 20f, ez);
+            }
+            else Park();
+        }
+
+        /// <summary>Block of 3-4 storey multi-family villas (빌라, CC BY scan model scaled 0.55-0.7, ~16 x 15 m) in rows with
+        /// 6 m alleys; alleys open onto the surrounding streets and residents park in the alleys.</summary>
+        public static void VillaBlock(float ax, float ex, float az, float ez)
+        {
+            Box("pad", ax, ex, Deck, Deck + 0.02f, az, ez, "lane_concrete");
+            const float px = 22f, pz = 22f;
+            int nx = Mathf.Max(1, (int)((ex - ax) / px)), nz = Mathf.Max(1, (int)((ez - az) / pz));
+            float ox = (ex - ax - nx * px) / 2f, oz = (ez - az - nz * pz) / 2f;
+            for (int i = 0; i < nx; i++)
+                for (int k = 0; k < nz; k++)
+                {
+                    float x = ax + ox + (i + 0.5f) * px, z = az + oz + (k + 0.5f) * pz;
+                    if (Rng.NextDouble() < 0.08) { Tree(x, z, Deck, R(5f, 8f)); continue; }
+                    Prefab("building", "bld_villa_kr", new Vector3(x, Deck + 0.02f, z), (k % 2 == 0 ? 180f : 0f) + R(-2f, 2f), Vector3.one * R(0.55f, 0.68f));
+                }
+            // alleys run through to the surrounding sidewalks (3 m beyond the plot edge)
+            for (int i = 1; i < nx; i++) Box("lane", ax + ox + i * px - 1.6f, ax + ox + i * px + 1.6f, Deck + 0.02f, Deck + 0.05f, az - 3.2f, ez + 3.2f, "lane_concrete");
+            for (int k = 1; k < nz; k++) Box("lane", ax - 3.2f, ex + 3.2f, Deck + 0.02f, Deck + 0.05f, az + oz + k * pz - 1.6f, az + oz + k * pz + 1.6f, "lane_concrete");
+        }
+
+        /// <summary>
+        /// Low-rise fishing-port town on a strip between the port road (zRoad, sidewalk edge) and zBack (reference R01 Wando):
+        /// a front row of 2-3 storey fishery shops / restaurants (회센터, 수산물 가게) facing the road with awnings and fish tanks,
+        /// a 3.5 m alley, a back row of houses and gear sheds, and cross alleys every 35-45 m from the sidewalk to the back;
+        /// fish boxes and drums stand in the alleys. Building fronts face -z (the road).
+        /// </summary>
+        public static void FishingTown(float x0, float x1, float zRoad, float zBack)
+        {
+            float frontZ = zRoad + 8f, alleyZ = zRoad + 20.5f, backZ = Mathf.Min(zBack - 11f, zRoad + 32f);
+            var cross = new List<float> { x0 + 2f };
+            for (float x = x0 + R(35f, 45f); x < x1 - 25f; x += R(35f, 45f)) cross.Add(x);
+            cross.Add(x1 - 2f);
+            float ax0 = cross[0] - 1.75f, ax1 = cross[cross.Count - 1] + 1.75f, backLane = backZ + 7.5f;
+            Box("lane", ax0, ax1, Deck + 0.02f, Deck + 0.05f, alleyZ - 1.75f, alleyZ + 1.75f, "lane_concrete");
+            Box("lane", ax0, ax1, Deck + 0.02f, Deck + 0.05f, backLane - 1.75f, backLane + 1.75f, "lane_concrete");   // lane behind the houses
+            foreach (var cx in cross) Box("lane", cx - 1.75f, cx + 1.75f, Deck + 0.02f, Deck + 0.05f, zRoad, backLane + 1.75f, "lane_concrete");
+            string[] awn = { "roof_blue", "roof_red", "roof_teal" };
+            for (int c = 0; c + 1 < cross.Count; c++)
+            {
+                float a = cross[c] + 2.2f, b = cross[c + 1] - 2.2f;
+                // front row: small shops of 7-10 m frontage
+                for (float x = a; x < b - 6f;)
+                {
+                    float w = Mathf.Min(R(7f, 10f), b - x);
+                    if (w < 6f) break;
+                    double u = Rng.NextDouble();
+                    if (u < 0.55)
+                    {
+                        float hgt = R(6.5f, 10f);
+                        BoxC("building", new Vector3(x + w / 2f, Deck + hgt / 2f, frontZ + 1.5f), new Vector3(w - 0.4f, hgt, 9f), Rng.NextDouble() < 0.5 ? "wall_white" : "wall_cream");
+                        BoxC("awning", new Vector3(x + w / 2f, Deck + 3.0f, frontZ - 3.6f), new Vector3(w - 0.6f, 0.08f, 2.4f), awn[Rng.Next(awn.Length)], 0f, new Vector3(-12f, 0f, 0f));
+                        if (Rng.NextDouble() < 0.6) BoxC("fish_tank", new Vector3(x + w / 2f, Deck + 0.55f, frontZ - 3.9f), new Vector3(Mathf.Min(3f, w - 2f), 1.1f, 1.0f), "glass_dark");
+                    }
+                    else if (u < 0.8) Prefab("building", "bld_bakery_kr", new Vector3(x + w / 2f, Deck + 0.02f, frontZ + 1.5f), 180f + R(-2f, 2f), Vector3.one * 0.9f);
+                    else Prefab("house", HillFeatures.HouseKinds[2].key, new Vector3(x + w / 2f, Deck + 0.05f, frontZ + 1f), 180f, Vector3.one);
+                    x += w;
+                }
+                // back row: houses and gear sheds facing the alley
+                for (float x = a + 1f; x < b - 5f;)
+                {
+                    int kind = Rng.NextDouble() < 0.2 ? 5 : Rng.Next(5);
+                    var k = HillFeatures.HouseKinds[kind];
+                    if (x + k.w > b) break;
+                    Prefab("house", k.key, new Vector3(x + k.w / 2f, Deck + 0.05f, backZ), 180f + R(-3f, 3f), Vector3.one * R(0.92f, 1.0f));
+                    x += k.w + R(1f, 2.5f);
+                }
+                // fish boxes / drums along the alley
+                for (int g = 0; g < 3; g++)
+                {
+                    var key = Rng.NextDouble() < 0.6 ? (Rng.NextDouble() < 0.5 ? "crate_01" : "crate_02") : "barrel";
+                    Prefab("fishing_gear", key, new Vector3(R(a + 2f, b - 2f), Deck + 0.05f, alleyZ + (Rng.NextDouble() < 0.5 ? -1.2f : 1.2f)), R(0f, 360f), Vector3.one);
+                }
+            }
+        }
+
+        public static void ApartmentPlot(float ax, float ex, float az, float ez, string mix = null)
+        {
+            float wx = ex - ax, wz = ez - az;
+            double u = mix == "tower" ? 0.6 + 0.4 * Rng.NextDouble() : mix == "low" ? 0.6 * Rng.NextDouble() : Rng.NextDouble();
+            string key; float fx, fz, sc, gap;
+            if (u < 0.3) { key = "bld_apt_complex"; fx = 26f; fz = 60f; sc = 1f; gap = 9f; }
+            else if (u < 0.6) { key = "bld_apt_slab"; fx = 17.9f; fz = 43.4f; sc = R(0.9f, 1.05f); gap = 9f; }
+            else if (u < 0.82) { key = "bld_hirise"; fx = 38f; fz = 38f; sc = R(0.7f, 0.85f); gap = 10f; }
+            else { key = "bld_officetel"; fx = 33f; fz = 26f; sc = 0.8f; gap = 9f; }
+            float px = fx * sc + gap, pz = fz * sc + gap;
+            int nx = Mathf.Max(1, (int)((wx - 4f + gap) / px)), nz = Mathf.Max(1, (int)((wz - 4f + gap) / pz));
+            if (nx * px - gap > wx || nz * pz - gap > wz) sc *= Mathf.Min((wx - 4f) / (nx * px - gap), (wz - 4f) / (nz * pz - gap));
+            float sx0 = (ax + ex) / 2f - (nx - 1) * px / 2f, sz0 = (az + ez) / 2f - (nz - 1) * pz / 2f;
+            for (int i = 0; i < nx; i++)
+                for (int k = 0; k < nz; k++)
+                    Prefab("building", key, new Vector3(sx0 + i * px, Deck + 0.02f, sz0 + k * pz), 0f, Vector3.one * sc * R(0.97f, 1.03f));
+            // trees in the gaps between buildings and along the plot edge
+            for (int i = 0; i + 1 < nx; i++)
+                for (float z = az + 3f; z < ez - 3f; z += 6f) Tree(sx0 + (i + 0.5f) * px, z, Deck, R(5f, 8f));
+            for (int k = 0; k + 1 < nz; k++)
+                for (float x = ax + 3f; x < ex - 3f; x += 6f) Tree(x, sz0 + (k + 0.5f) * pz, Deck, R(5f, 8f));
+            for (float x = ax + 2f; x < ex - 2f; x += 6f) { Tree(x, az + 1.2f, Deck, R(5f, 8f)); Tree(x, ez - 1.2f, Deck, R(5f, 8f)); }
         }
 
         /// <summary>Street-level shop row along x at depth z: Asian shop-pack rows mixed with the Korean bakery and small
@@ -892,7 +1051,7 @@ namespace PortCCTV
         /// <summary>Scattered scrub / small trees over open flat land so it does not read as a lawn.</summary>
         public static void Scrub(float x0, float x1, float z0, float z1, int count, float hMin = 3f, float hMax = 6f)
         {
-            for (int i = 0; i < count; i++) Tree(R(x0, x1), R(z0, z1), Deck - 0.2f, R(hMin, hMax));
+            for (int i = 0; i < count * 3; i++) Tree(R(x0, x1), R(z0, z1), Deck - 0.2f, R(hMin, hMax));   // 2026-11-09: 3x denser
         }
 
         public static WaterRegion Region(string id, params float[] xz)

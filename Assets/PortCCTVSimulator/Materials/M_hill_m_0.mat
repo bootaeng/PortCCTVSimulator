@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - _DETAIL_MAP
   - _DISABLE_SSR_TRANSPARENT
+  - _MASKMAP
   - _NORMALMAP
   - _NORMALMAP_TANGENT_SPACE
   m_InvalidKeywords: []
@@ -37,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColorMap:
-        m_Texture: {fileID: 2800000, guid: 9584b853d07ccaa408e4e3b8bd5c0ebd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 03811b508e49cc546804ccc74616d700, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BentNormalMap:
@@ -53,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailMap:
-        m_Texture: {fileID: 2800000, guid: d9e52d30cf659f14ba5ec16393c097df, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9a464c6e0a9a06b48833e07eabfc4c5f, type: 3}
         m_Scale: {x: 2.5, y: 2.5}
         m_Offset: {x: 0, y: 0}
     - _EmissiveColorMap:
@@ -73,15 +74,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 9584b853d07ccaa408e4e3b8bd5c0ebd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 03811b508e49cc546804ccc74616d700, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7e2ae2d1e1cbf1748b24a9c38ea74722, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 2c0b7005ec070ff438aa86d0c5622cae, type: 3}
+        m_Texture: {fileID: 2800000, guid: fac693e4496ab7a4da88ff0e58789ac2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMapOS:
@@ -151,8 +152,8 @@ Material:
     - _CullModeForward: 2
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
-    - _DetailAlbedoScale: 0.5
-    - _DetailNormalScale: 0.6
+    - _DetailAlbedoScale: 0.3
+    - _DetailNormalScale: 0.35
     - _DetailSmoothnessScale: 0
     - _DiffusionProfile: 0
     - _DiffusionProfileHash: 0
@@ -188,7 +189,7 @@ Material:
     - _LinkDetailsWithBase: 0
     - _MaterialID: 1
     - _Metallic: 0
-    - _MetallicRemapMax: 1
+    - _MetallicRemapMax: 0
     - _MetallicRemapMin: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
@@ -206,8 +207,8 @@ Material:
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _Smoothness: 0.15
-    - _SmoothnessRemapMax: 1
-    - _SmoothnessRemapMin: 0
+    - _SmoothnessRemapMax: 0.15
+    - _SmoothnessRemapMin: 0.15
     - _SpecularAAScreenSpaceVariance: 0.1
     - _SpecularAAThreshold: 0.2
     - _SpecularOcclusionMode: 1

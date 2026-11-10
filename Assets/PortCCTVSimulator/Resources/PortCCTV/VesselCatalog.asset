@@ -22128,7 +22128,7 @@ MonoBehaviour:
     prefab: {fileID: 7935429745592667837, guid: 7195a67627273d644a06a14418ee8726, type: 3}
     geometry: {fileID: 11400000, guid: f8b1a18ddafcce44d8e6cca66594f480, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#tug
-    source_sha256: 16a00d09616bf91158cbc9b7211a033af1e540f1fe2130886a352a8d97c88d42
+    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
     license: procedural (this project)
     source_url: 
     default_immersion_m: 1
@@ -22139,15 +22139,43 @@ MonoBehaviour:
       material_name: M_vessel_tug_hull
       role: hull
       reason: largest low slot
-      area_m2: 519.24744
-      height_frac: 0.17704742
-      height_min_frac: 0
+      area_m2: 328.18372
+      height_frac: 0.25257596
+      height_min_frac: 0.08826907
       height_max_frac: 0.3629032
-      above_water_area_m2: 343.95508
-      topside_band_area_m2: 94.4005
+      above_water_area_m2: 328.18372
+      topside_band_area_m2: 78.629135
       original_srgb: {r: 0.45, g: 0.079999976, b: 0.06999998, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0
+      submesh: 1
+      material_name: M_vessel_tug_boottop
+      role: keep
+      reason: low, other colour (boot-top / accent)
+      area_m2: 24.719437
+      height_frac: 0.08460565
+      height_min_frac: 0.06708038
+      height_max_frac: 0.10161288
+      above_water_area_m2: 22.023777
+      topside_band_area_m2: 22.023777
+      original_srgb: {r: 0.041115835, g: 0.041058354, b: 0.041115835, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
+    - renderer_path: 0/0
+      submesh: 2
+      material_name: M_vessel_tug_antifouling
+      role: keep
+      reason: name:antifoul
+      area_m2: 166.34114
+      height_frac: 0.041773427
+      height_min_frac: 0
+      height_max_frac: 0.07723851
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3798098, g: 0.10509724, b: 0.07773139, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/1
       submesh: 0
       material_name: M_vessel_tug_blue
@@ -22610,18 +22638,22 @@ MonoBehaviour:
       original_srgb: {r: 0.049999982, g: 0.8, b: 0.19999996, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    paint_note: slots=34 hull=1 (36 % of area) super=4 (23 %) textured_kept=0
+    paint_note: slots=36 hull=1 (23 % of area) super=4 (23 %) textured_kept=0
   - asset_id: barge
     display_name: Deck barge 50 m (procedural)
     category: barge
     prefab: {fileID: 1510086013009763721, guid: e747e7be52bac3947920b35dd16bd0c4, type: 3}
     geometry: {fileID: 11400000, guid: 930fe999e044b1e4a881891459c016e2, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#barge
-    source_sha256: 16a00d09616bf91158cbc9b7211a033af1e540f1fe2130886a352a8d97c88d42
+    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
     license: procedural (this project)
     source_url: 
     default_immersion_m: 0.15
-    material_note: 'none; flattened 0 texture slots; kept textured: none'
+    material_note: 'replaced with M_vessel_glazing_opaque: poclainaiStandardSurface136(a=0.328);
+      flattened 6 texture slots; kept textured: poclainaiStandardSurface124, poclainaiStandardSurface127,
+      poclainaiStandardSurface129, poclainaiStandardSurface130, poclainaiStandardSurface137,
+      poclainaiStandardSurface141, poclainaiStandardSurface143, poclainaiStandardSurface144,
+      poclainaiStandardSurface146, poclainaiStandardSurface149, poclainaiStandardSurface151'
     paint_slots:
     - renderer_path: 0/0
       submesh: 0
@@ -22682,18 +22714,900 @@ MonoBehaviour:
     - renderer_path: 0/4
       submesh: 0
       material_name: M_sand
-      role: keep
-      reason: textured atlas spans the vessel
-      area_m2: 619.533
-      height_frac: 0.43771774
-      height_min_frac: 0.10596026
-      height_max_frac: 0.7682119
-      above_water_area_m2: 619.533
-      topside_band_area_m2: 45.71911
+      role: superstructure
+      reason: largest light upper slot
+      area_m2: 386.97406
+      height_frac: 0.5699116
+      height_min_frac: 0.43708608
+      height_max_frac: 0.8903866
+      above_water_area_m2: 386.97406
+      topside_band_area_m2: 0
       original_srgb: {r: 0.5148456, g: 0.45243794, b: 0.36639923, a: 1}
       textured: 1
       texture_mean_srgb: {r: 0.51484567, g: 0.452438, b: 0.36639926, a: 1}
-    - renderer_path: 0/5
+    - renderer_path: 0/5/0/0/0/0/0/0/0
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface139
+      role: keep
+      reason: small
+      area_m2: 24.962938
+      height_frac: 0.48821822
+      height_min_frac: 0.43708608
+      height_max_frac: 0.5572168
+      above_water_area_m2: 24.962938
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4068669, g: 0.37192023, b: 0.34105983, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/0/1
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface139
+      role: keep
+      reason: small
+      area_m2: 18.189669
+      height_frac: 0.49138412
+      height_min_frac: 0.43708608
+      height_max_frac: 0.5572168
+      above_water_area_m2: 18.189669
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4068669, g: 0.37192023, b: 0.34105983, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/1/0/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 12.682121
+      height_frac: 0.5156127
+      height_min_frac: 0.49463448
+      height_max_frac: 0.5406831
+      above_water_area_m2: 12.682121
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/1/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 6.533231
+      height_frac: 0.49565825
+      height_min_frac: 0.44773573
+      height_max_frac: 0.54512644
+      above_water_area_m2: 6.533231
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/1/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 6.530425
+      height_frac: 0.4956597
+      height_min_frac: 0.44773573
+      height_max_frac: 0.54512644
+      above_water_area_m2: 6.530425
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/2/0
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface152
+      role: keep
+      reason: small
+      area_m2: 24.962942
+      height_frac: 0.48821822
+      height_min_frac: 0.43708608
+      height_max_frac: 0.5572168
+      above_water_area_m2: 24.962942
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4068669, g: 0.37192023, b: 0.34105983, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/2/1
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface152
+      role: keep
+      reason: small
+      area_m2: 18.189674
+      height_frac: 0.4913841
+      height_min_frac: 0.43708608
+      height_max_frac: 0.5572168
+      above_water_area_m2: 18.189674
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4068669, g: 0.37192023, b: 0.34105983, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/0/0
+      submesh: 0
+      material_name: lambert1
+      role: keep
+      reason: small
+      area_m2: 1.4933931
+      height_frac: 0.6123723
+      height_min_frac: 0.58838737
+      height_max_frac: 0.6399334
+      above_water_area_m2: 1.4933931
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.16371676, g: 0.16371676, b: 0.16371676, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface38
+      role: keep
+      reason: small
+      area_m2: 0.030275783
+      height_frac: 0.7285562
+      height_min_frac: 0.7227883
+      height_max_frac: 0.734609
+      above_water_area_m2: 0.030275783
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26106188, g: 0.26106188, b: 0.26106188, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface143
+      role: keep
+      reason: textured
+      area_m2: 18.52616
+      height_frac: 0.5890146
+      height_min_frac: 0.55479795
+      height_max_frac: 0.66934407
+      above_water_area_m2: 18.52616
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34116337, g: 0.31490436, b: 0.2625041, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.3411634, g: 0.3149044, b: 0.26250413, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/3/0
+      submesh: 0
+      material_name: M_vessel_glazing_opaque
+      role: keep
+      reason: name:glaz
+      area_m2: 8.173292
+      height_frac: 0.66719776
+      height_min_frac: 0.589843
+      height_max_frac: 0.7611161
+      above_water_area_m2: 8.173292
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/4/0
+      submesh: 0
+      material_name: poclainaiStandardSurface151
+      role: keep
+      reason: textured
+      area_m2: 1.892969
+      height_frac: 0.6697275
+      height_min_frac: 0.62505406
+      height_max_frac: 0.7168315
+      above_water_area_m2: 1.892969
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7184312, g: 0.55045193, b: 0.19936931, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.7184312, g: 0.550452, b: 0.19936934, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/5/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.5296295
+      height_frac: 0.6061868
+      height_min_frac: 0.58681375
+      height_max_frac: 0.6266769
+      above_water_area_m2: 0.5296295
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/6/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 2.867141
+      height_frac: 0.62022
+      height_min_frac: 0.57267207
+      height_max_frac: 0.6706726
+      above_water_area_m2: 2.867141
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/7/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.34282255
+      height_frac: 0.7030467
+      height_min_frac: 0.650279
+      height_max_frac: 0.74230105
+      above_water_area_m2: 0.34282255
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/8/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.15962344
+      height_frac: 0.71764225
+      height_min_frac: 0.6594658
+      height_max_frac: 0.75418615
+      above_water_area_m2: 0.15962344
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/9/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.5632542
+      height_frac: 0.7115345
+      height_min_frac: 0.6662607
+      height_max_frac: 0.7558199
+      above_water_area_m2: 0.5632542
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/10/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.3707412
+      height_frac: 0.6927471
+      height_min_frac: 0.6720706
+      height_max_frac: 0.70761865
+      above_water_area_m2: 0.3707412
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/11/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 5.823707
+      height_frac: 0.71104836
+      height_min_frac: 0.589843
+      height_max_frac: 0.7689373
+      above_water_area_m2: 5.823707
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/12/0
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface154
+      role: keep
+      reason: small
+      area_m2: 0.12153932
+      height_frac: 0.62388164
+      height_min_frac: 0.602477
+      height_max_frac: 0.6537123
+      above_water_area_m2: 0.12153932
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.22513017, g: 0.21020633, b: 0.17657194, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/13/0
+      submesh: 0
+      material_name: poclainlambert2
+      role: keep
+      reason: small
+      area_m2: 2.319849
+      height_frac: 0.61372274
+      height_min_frac: 0.589843
+      height_max_frac: 0.6496937
+      above_water_area_m2: 2.319849
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.1548672, g: 0.1548672, b: 0.1548672, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/14/0
+      submesh: 0
+      material_name: poclainaiStandardSurface130
+      role: keep
+      reason: textured
+      area_m2: 30.270428
+      height_frac: 0.60611355
+      height_min_frac: 0.56154394
+      height_max_frac: 0.6770557
+      above_water_area_m2: 30.270428
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.51879007, g: 0.43527418, b: 0.3004734, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.51879007, g: 0.4352742, b: 0.30047342, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/15/0
+      submesh: 0
+      material_name: barge_poclainaiStandardSurface153
+      role: keep
+      reason: small
+      area_m2: 0.57504666
+      height_frac: 0.6349507
+      height_min_frac: 0.6139578
+      height_max_frac: 0.6620997
+      above_water_area_m2: 0.57504666
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.22513017, g: 0.21020633, b: 0.17657194, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/15/1
+      submesh: 0
+      material_name: poclainaiStandardSurface146
+      role: keep
+      reason: textured
+      area_m2: 0.8965858
+      height_frac: 0.6468531
+      height_min_frac: 0.6154933
+      height_max_frac: 0.6952364
+      above_water_area_m2: 0.8965858
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3639814, g: 0.3753463, b: 0.3952294, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.36398146, g: 0.37534633, b: 0.39522943, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/16/0
+      submesh: 0
+      material_name: poclainaiStandardSurface137
+      role: keep
+      reason: textured
+      area_m2: 3.3708713
+      height_frac: 0.6807618
+      height_min_frac: 0.59077936
+      height_max_frac: 0.75991774
+      above_water_area_m2: 3.3708713
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.15085763, g: 0.13706112, b: 0.12352478, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.15085766, g: 0.13706115, b: 0.12352481, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/17/0
+      submesh: 0
+      material_name: poclainaiStandardSurface38
+      role: keep
+      reason: small
+      area_m2: 0.030275099
+      height_frac: 0.67331433
+      height_min_frac: 0.66754645
+      height_max_frac: 0.6793671
+      above_water_area_m2: 0.030275099
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26106188, g: 0.26106188, b: 0.26106188, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/18/0
+      submesh: 0
+      material_name: poclainaiStandardSurface38
+      role: keep
+      reason: small
+      area_m2: 0.030275783
+      height_frac: 0.67331433
+      height_min_frac: 0.66754645
+      height_max_frac: 0.6793671
+      above_water_area_m2: 0.030275783
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26106188, g: 0.26106188, b: 0.26106188, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/19/0
+      submesh: 0
+      material_name: poclainaiStandardSurface38
+      role: keep
+      reason: small
+      area_m2: 0.030275099
+      height_frac: 0.7285562
+      height_min_frac: 0.7227883
+      height_max_frac: 0.734609
+      above_water_area_m2: 0.030275099
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26106188, g: 0.26106188, b: 0.26106188, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/20/0
+      submesh: 0
+      material_name: poclainaiStandardSurface149
+      role: keep
+      reason: textured
+      area_m2: 3.3914032
+      height_frac: 0.5522997
+      height_min_frac: 0.5345636
+      height_max_frac: 0.56800485
+      above_water_area_m2: 3.3914032
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.36015052, g: 0.33536634, b: 0.2863757, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.36015055, g: 0.33536637, b: 0.28637573, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/0/0/0
+      submesh: 0
+      material_name: poclainaiStandardSurface124
+      role: keep
+      reason: textured
+      area_m2: 10.299948
+      height_frac: 0.7995816
+      height_min_frac: 0.6244356
+      height_max_frac: 0.8950178
+      above_water_area_m2: 10.299948
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5287232, g: 0.4487077, b: 0.31592244, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5287232, g: 0.44870776, b: 0.31592247, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/0/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface144
+      role: keep
+      reason: textured
+      area_m2: 0.76689416
+      height_frac: 0.6647589
+      height_min_frac: 0.5789687
+      height_max_frac: 0.74516875
+      above_water_area_m2: 0.76689416
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34877315, g: 0.34877315, b: 0.34876186, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.34877318, g: 0.34877318, b: 0.3487619, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/0/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface144
+      role: keep
+      reason: textured
+      area_m2: 0.77130073
+      height_frac: 0.6642616
+      height_min_frac: 0.577863
+      height_max_frac: 0.74516875
+      above_water_area_m2: 0.77130073
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34877315, g: 0.34877315, b: 0.34876186, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.34877318, g: 0.34877318, b: 0.3487619, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/0/3/0
+      submesh: 0
+      material_name: poclainaiStandardSurface145
+      role: keep
+      reason: small
+      area_m2: 0.3966836
+      height_frac: 0.7462623
+      height_min_frac: 0.6502253
+      height_max_frac: 0.8422993
+      above_water_area_m2: 0.3966836
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56637156, g: 0.56637156, b: 0.56637156, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/0/4/0
+      submesh: 0
+      material_name: poclainaiStandardSurface145
+      role: keep
+      reason: small
+      area_m2: 0.39668366
+      height_frac: 0.7462623
+      height_min_frac: 0.6502253
+      height_max_frac: 0.8422993
+      above_water_area_m2: 0.39668366
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56637156, g: 0.56637156, b: 0.56637156, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface144
+      role: keep
+      reason: textured
+      area_m2: 0.84962183
+      height_frac: 0.8992901
+      height_min_frac: 0.8715109
+      height_max_frac: 0.9260201
+      above_water_area_m2: 0.84962183
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34877315, g: 0.34877315, b: 0.34876186, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.34877318, g: 0.34877318, b: 0.3487619, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/0/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface145
+      role: keep
+      reason: small
+      area_m2: 0.43245333
+      height_frac: 0.91831696
+      height_min_frac: 0.89445513
+      height_max_frac: 0.94217885
+      above_water_area_m2: 0.43245333
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56637156, g: 0.56637156, b: 0.56637156, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.17829792
+      height_frac: 0.8638286
+      height_min_frac: 0.8557397
+      height_max_frac: 0.8719174
+      above_water_area_m2: 0.17829792
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface123
+      role: keep
+      reason: small
+      area_m2: 0.44751212
+      height_frac: 0.836812
+      height_min_frac: 0.814507
+      height_max_frac: 0.8561614
+      above_water_area_m2: 0.44751212
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.48230082, g: 0.48230082, b: 0.48230082, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/3/0
+      submesh: 0
+      material_name: poclainaiStandardSurface123
+      role: keep
+      reason: small
+      area_m2: 0.44751215
+      height_frac: 0.836794
+      height_min_frac: 0.8145128
+      height_max_frac: 0.8561557
+      above_water_area_m2: 0.44751215
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.48230082, g: 0.48230082, b: 0.48230082, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/4/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.11997656
+      height_frac: 0.88396573
+      height_min_frac: 0.8760526
+      height_max_frac: 0.89223033
+      above_water_area_m2: 0.11997656
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/4/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.01811336
+      height_frac: 0.8853054
+      height_min_frac: 0.8760527
+      height_max_frac: 0.89223033
+      above_water_area_m2: 0.01811336
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/5/0
+      submesh: 0
+      material_name: poclainaiStandardSurface142
+      role: keep
+      reason: small
+      area_m2: 0.1772395
+      height_frac: 0.8172177
+      height_min_frac: 0.67205054
+      height_max_frac: 0.9064222
+      above_water_area_m2: 0.1772395
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.35398224, g: 0.35398224, b: 0.35398224, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/6/0
+      submesh: 0
+      material_name: poclainaiStandardSurface142
+      role: keep
+      reason: small
+      area_m2: 0.17723948
+      height_frac: 0.8172177
+      height_min_frac: 0.67205054
+      height_max_frac: 0.9064222
+      above_water_area_m2: 0.17723948
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.35398224, g: 0.35398224, b: 0.35398224, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/0/0/0
+      submesh: 0
+      material_name: poclainaiStandardSurface127
+      role: keep
+      reason: textured
+      area_m2: 4.618413
+      height_frac: 0.80549896
+      height_min_frac: 0.62389785
+      height_max_frac: 0.95605594
+      above_water_area_m2: 4.618413
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56460476, g: 0.4650097, b: 0.30363145, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5646048, g: 0.4650097, b: 0.30363148, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface144
+      role: keep
+      reason: textured
+      area_m2: 0.6947521
+      height_frac: 0.81380516
+      height_min_frac: 0.7333192
+      height_max_frac: 0.9038696
+      above_water_area_m2: 0.6947521
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34877315, g: 0.34877315, b: 0.34876186, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.34877318, g: 0.34877318, b: 0.3487619, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface142
+      role: keep
+      reason: small
+      area_m2: 0.39099833
+      height_frac: 0.80565906
+      height_min_frac: 0.6325615
+      height_max_frac: 0.92363155
+      above_water_area_m2: 0.39099833
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.35398224, g: 0.35398224, b: 0.35398224, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/3/0
+      submesh: 0
+      material_name: poclainaiStandardSurface142
+      role: keep
+      reason: small
+      area_m2: 0.39099866
+      height_frac: 0.80565906
+      height_min_frac: 0.6325615
+      height_max_frac: 0.92363155
+      above_water_area_m2: 0.39099866
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.35398224, g: 0.35398224, b: 0.35398224, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/4/0
+      submesh: 0
+      material_name: poclainaiStandardSurface145
+      role: keep
+      reason: small
+      area_m2: 0.3393591
+      height_frac: 0.6900401
+      height_min_frac: 0.5974925
+      height_max_frac: 0.7825894
+      above_water_area_m2: 0.3393591
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56637156, g: 0.56637156, b: 0.56637156, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/5/0
+      submesh: 0
+      material_name: poclainaiStandardSurface150
+      role: keep
+      reason: small
+      area_m2: 0.1330577
+      height_frac: 0.82117325
+      height_min_frac: 0.79534817
+      height_max_frac: 0.8676854
+      above_water_area_m2: 0.1330577
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.23008841, g: 0.23008841, b: 0.23008841, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/0/0
+      submesh: 0
+      material_name: poclainaiStandardSurface127
+      role: keep
+      reason: textured
+      area_m2: 0.43340456
+      height_frac: 0.6196525
+      height_min_frac: 0.58398396
+      height_max_frac: 0.64594156
+      above_water_area_m2: 0.43340456
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56460476, g: 0.4650097, b: 0.30363145, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5646048, g: 0.4650097, b: 0.30363148, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface127
+      role: keep
+      reason: textured
+      area_m2: 0.43340442
+      height_frac: 0.6196525
+      height_min_frac: 0.58398396
+      height_max_frac: 0.64594156
+      above_water_area_m2: 0.43340442
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.56460476, g: 0.4650097, b: 0.30363145, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5646048, g: 0.4650097, b: 0.30363148, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.008385934
+      height_frac: 0.6182408
+      height_min_frac: 0.6137165
+      height_max_frac: 0.62276506
+      above_water_area_m2: 0.008385934
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/2/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.15130971
+      height_frac: 0.6182408
+      height_min_frac: 0.6101519
+      height_max_frac: 0.62632966
+      above_water_area_m2: 0.15130971
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/3/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.008351723
+      height_frac: 0.63349944
+      height_min_frac: 0.62897515
+      height_max_frac: 0.6380237
+      above_water_area_m2: 0.008351723
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/3/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.1485481
+      height_frac: 0.63349944
+      height_min_frac: 0.62541056
+      height_max_frac: 0.6415883
+      above_water_area_m2: 0.1485481
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/4/0/0
+      submesh: 0
+      material_name: poclainaiStandardSurface141
+      role: keep
+      reason: textured
+      area_m2: 11.362042
+      height_frac: 0.5186574
+      height_min_frac: 0.47217843
+      height_max_frac: 0.61468506
+      above_water_area_m2: 11.362042
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3529816, g: 0.316583, b: 0.27628836, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.35298163, g: 0.31658304, b: 0.2762884, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/4/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface129
+      role: keep
+      reason: textured
+      area_m2: 0.70416623
+      height_frac: 0.60178185
+      height_min_frac: 0.5868486
+      height_max_frac: 0.6224625
+      above_water_area_m2: 0.70416623
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42369443, g: 0.3956692, b: 0.34393868, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.42369446, g: 0.39566922, b: 0.3439387, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/4/2/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.004077483
+      height_frac: 0.6110954
+      height_min_frac: 0.60673386
+      height_max_frac: 0.6160463
+      above_water_area_m2: 0.004077483
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/0/6/4/2/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.28802684
+      height_frac: 0.6113942
+      height_min_frac: 0.60256165
+      height_max_frac: 0.62021846
+      above_water_area_m2: 0.28802684
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.0018007766
+      height_frac: 0.8981955
+      height_min_frac: 0.89444256
+      height_max_frac: 0.90297484
+      above_water_area_m2: 0.0018007766
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/0/1/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.110912256
+      height_frac: 0.898717
+      height_min_frac: 0.8906198
+      height_max_frac: 0.9067975
+      above_water_area_m2: 0.110912256
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/1/0
+      submesh: 0
+      material_name: poclainaiStandardSurface147
+      role: keep
+      reason: small
+      area_m2: 0.036038157
+      height_frac: 0.9396691
+      height_min_frac: 0.9319624
+      height_max_frac: 0.94590056
+      above_water_area_m2: 0.036038157
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5707963, g: 0.5707963, b: 0.5707963, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5/0/0/0/0/0/3/21/7/1/1
+      submesh: 0
+      material_name: Default_Material
+      role: keep
+      reason: small
+      area_m2: 0.1649501
+      height_frac: 0.93676573
+      height_min_frac: 0.9282287
+      height_max_frac: 0.94634396
+      above_water_area_m2: 0.1649501
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.26991144, g: 0.26991144, b: 0.26991144, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/6
       submesh: 0
       material_name: M_vessel_detail_black
       role: keep
@@ -22707,7 +23621,7 @@ MonoBehaviour:
       original_srgb: {r: 0.04, g: 0.04, b: 0.04, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/6
+    - renderer_path: 0/7
       submesh: 0
       material_name: M_vessel_detail_rust
       role: keep
@@ -22721,7 +23635,7 @@ MonoBehaviour:
       original_srgb: {r: 0.31999996, g: 0.19999996, b: 0.13999996, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/7
+    - renderer_path: 0/8
       submesh: 0
       material_name: M_vessel_detail_grey
       role: keep
@@ -22735,7 +23649,7 @@ MonoBehaviour:
       original_srgb: {r: 0.62, g: 0.63, b: 0.6399999, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/8
+    - renderer_path: 0/9
       submesh: 0
       material_name: M_vessel_detail_white
       role: keep
@@ -22749,14 +23663,14 @@ MonoBehaviour:
       original_srgb: {r: 0.9, g: 0.9, b: 0.88, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    paint_note: slots=9 hull=3 (47 % of area) super=0 (0 %) textured_kept=0
+    paint_note: slots=72 hull=3 (47 % of area) super=1 (10 %) textured_kept=26
   - asset_id: container_ship
     display_name: Container feeder 172 m (procedural)
     category: container_ship
     prefab: {fileID: 6616157609668042835, guid: 9a3c1221883ea2046b8fbed392e2d0cb, type: 3}
     geometry: {fileID: 11400000, guid: 398dcb1ae304c8741bf6a51773ef231b, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#container_ship
-    source_sha256: 16a00d09616bf91158cbc9b7211a033af1e540f1fe2130886a352a8d97c88d42
+    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
     license: procedural (this project)
     source_url: 
     default_immersion_m: 4.2
@@ -22767,15 +23681,43 @@ MonoBehaviour:
       material_name: M_vessel_cs_hull
       role: hull
       reason: largest low slot
-      area_m2: 12318.966
-      height_frac: 0.19389786
-      height_min_frac: 0
+      area_m2: 7660.633
+      height_frac: 0.2912729
+      height_min_frac: 0.103724614
       height_max_frac: 0.38166863
-      above_water_area_m2: 7759.5254
-      topside_band_area_m2: 1953.9447
-      original_srgb: {r: 0.079999976, g: 0.13999996, b: 0.27999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      above_water_area_m2: 7660.633
+      topside_band_area_m2: 1855.0521
+      original_srgb: {r: 0.08688528, g: 0.12339408, b: 0.19673198, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
+    - renderer_path: 0/0
+      submesh: 1
+      material_name: M_vessel_cs_boottop
+      role: keep
+      reason: small
+      area_m2: 506.229
+      height_frac: 0.10341431
+      height_min_frac: 0.076245055
+      height_max_frac: 0.11996488
+      above_water_area_m2: 450.54266
+      topside_band_area_m2: 450.54266
+      original_srgb: {r: 0.041115835, g: 0.041058354, b: 0.041115835, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
+    - renderer_path: 0/0
+      submesh: 2
+      material_name: M_vessel_cs_antifouling
+      role: keep
+      reason: name:antifoul
+      area_m2: 4152.1
+      height_frac: 0.025272567
+      height_min_frac: 0
+      height_max_frac: 0.0960113
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3798098, g: 0.10509724, b: 0.07773139, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/1
       submesh: 0
       material_name: M_vessel_cs_white
@@ -22787,9 +23729,9 @@ MonoBehaviour:
       height_max_frac: 0.52878964
       above_water_area_m2: 5.7707334
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/2
       submesh: 0
       material_name: M_vessel_cs_white
@@ -22801,9 +23743,9 @@ MonoBehaviour:
       height_max_frac: 0.74030554
       above_water_area_m2: 1930
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/3
       submesh: 0
       material_name: M_vessel_glass
@@ -22885,9 +23827,9 @@ MonoBehaviour:
       height_max_frac: 0.41433606
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/9
       submesh: 0
       material_name: M_vessel_glass
@@ -22969,9 +23911,9 @@ MonoBehaviour:
       height_max_frac: 0.41433606
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/15
       submesh: 0
       material_name: M_vessel_glass
@@ -23151,9 +24093,9 @@ MonoBehaviour:
       height_max_frac: 0.48719153
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/28
       submesh: 0
       material_name: M_vessel_glass
@@ -23235,9 +24177,9 @@ MonoBehaviour:
       height_max_frac: 0.48719153
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/34
       submesh: 0
       material_name: M_vessel_glass
@@ -23417,9 +24359,9 @@ MonoBehaviour:
       height_max_frac: 0.56004703
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/47
       submesh: 0
       material_name: M_vessel_glass
@@ -23501,9 +24443,9 @@ MonoBehaviour:
       height_max_frac: 0.56004703
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/53
       submesh: 0
       material_name: M_vessel_glass
@@ -23683,9 +24625,9 @@ MonoBehaviour:
       height_max_frac: 0.63290244
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/66
       submesh: 0
       material_name: M_vessel_glass
@@ -23767,9 +24709,9 @@ MonoBehaviour:
       height_max_frac: 0.63290244
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/72
       submesh: 0
       material_name: M_vessel_glass
@@ -23949,9 +24891,9 @@ MonoBehaviour:
       height_max_frac: 0.7057579
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/85
       submesh: 0
       material_name: M_vessel_glass
@@ -24033,9 +24975,9 @@ MonoBehaviour:
       height_max_frac: 0.7057579
       above_water_area_m2: 21.807991
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/91
       submesh: 0
       material_name: M_vessel_glass
@@ -24145,9 +25087,9 @@ MonoBehaviour:
       height_max_frac: 0.7544066
       above_water_area_m2: 678.59985
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/99
       submesh: 0
       material_name: M_vessel_cs_white
@@ -24159,9 +25101,9 @@ MonoBehaviour:
       height_max_frac: 0.8084606
       above_water_area_m2: 557.1999
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/100
       submesh: 0
       material_name: M_vessel_cs_white
@@ -24173,9 +25115,9 @@ MonoBehaviour:
       height_max_frac: 0.8190365
       above_water_area_m2: 654.30023
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/101
       submesh: 0
       material_name: M_vessel_glass
@@ -24453,9 +25395,9 @@ MonoBehaviour:
       height_max_frac: 0.9518214
       above_water_area_m2: 8.156862
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/121
       submesh: 0
       material_name: M_vessel_cs_white
@@ -24467,9 +25409,9 @@ MonoBehaviour:
       height_max_frac: 0.94300824
       above_water_area_m2: 9.300022
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/122
       submesh: 0
       material_name: M_vessel_cs_white
@@ -24481,9 +25423,9 @@ MonoBehaviour:
       height_max_frac: 0.5757932
       above_water_area_m2: 344
       topside_band_area_m2: 0
-      original_srgb: {r: 0.86, g: 0.86, b: 0.8399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/123
       submesh: 0
       material_name: M_vessel_cs_funnel
@@ -24523,9 +25465,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.7999
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/126
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24537,9 +25479,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.7999
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/127
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24551,9 +25493,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.80005
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/128
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24565,9 +25507,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.80005
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/129
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24579,9 +25521,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.80005
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/130
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24593,9 +25535,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.8
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/131
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24607,9 +25549,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 650.7999
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/132
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24621,9 +25563,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 514.7999
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/133
       submesh: 0
       material_name: M_vessel_cs_deck
@@ -24635,9 +25577,9 @@ MonoBehaviour:
       height_max_frac: 0.36427733
       above_water_area_m2: 378.80008
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/134
       submesh: 0
       material_name: M_container_navy
@@ -24845,9 +25787,9 @@ MonoBehaviour:
       height_max_frac: 0.49588716
       above_water_area_m2: 2218.8398
       topside_band_area_m2: 0
-      original_srgb: {r: 0.34999996, g: 0.35999998, b: 0.35999998, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
     - renderer_path: 0/149
       submesh: 0
       material_name: M_vessel_detail_orange
@@ -24876,14 +25818,14 @@ MonoBehaviour:
       original_srgb: {r: 0.9, g: 0.9, b: 0.88, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    paint_note: slots=151 hull=1 (19 % of area) super=18 (7 %) textured_kept=0
+    paint_note: slots=153 hull=1 (12 % of area) super=18 (7 %) textured_kept=0
   - asset_id: korean_fishing_boat
     display_name: Korean coastal fishing boat 19 m (procedural)
     category: fishing_boat_coastal
     prefab: {fileID: 3543435817713007860, guid: 92e77d9ce6a7a7f4c99114d358843cc0, type: 3}
     geometry: {fileID: 11400000, guid: b89cd709da00b2d40892fb83f90e9567, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#kfish
-    source_sha256: 16a00d09616bf91158cbc9b7211a033af1e540f1fe2130886a352a8d97c88d42
+    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
     license: procedural (this project)
     source_url: 
     default_immersion_m: 0.45

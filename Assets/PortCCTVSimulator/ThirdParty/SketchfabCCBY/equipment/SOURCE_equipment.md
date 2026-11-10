@@ -1,0 +1,23 @@
+# Sketchfab CC BY 4.0 equipment models (2026-11-09) — attribution required
+
+Downloaded 2026-11-09 through the user's logged-in Sketchfab session in Chrome (`i/models/<uid>/download` -> `/i/archives/latest`
+-> signed URL -> loopback-only receiver on 127.0.0.1:8765, CORS limited to sketchfab.com; receiver stopped and tab closed
+afterwards). Licence re-checked on the Sketchfab API at download time: all "CC Attribution", downloadable, no NoAI tag. No
+purchase, no account creation. Unmodified originals are kept outside Assets in `ThirdParty_raw/sketchfab_assets_20261109/`
+(not in the repository).
+
+| file in project | title / author | URL | SHA256 of the original GLB (texture size) | changes (scripted, reproducible) |
+|---|---|---|---|---|
+| excavator_cat_sarvesh777_1k.glb (sha256 f7d1970142858d6741231d6058b17a98bd382fd6a2c77f6910e82a487cbdc27d) | "Excavator (CAT)" by sarvesh777 | https://sketchfab.com/3d-models/5f195244108c46e495a1e78040f02f7e | c26f9f427d73ff10f3b4ffcca21946e200417bb602d95a8ef78cece3e8c3527a (4k) | `Tools/glb_derive.py --max-px 1024 --decimate-over 20000 --keep 0.40 --inpaint "11:195,55,350,295;18:380,1220,480,1320;18:760,1190,850,1290"`: the manufacturer logo ("CAT" with triangle) inpainted on the boom side and the two arm decals (OpenCV Telea, see `Logs/excavator_derive.json`); the two track-link meshes (73,986 triangles each) quadric-decimated to 40 %, attributes carried by nearest vertex; 29 textures 4k/2k -> 1k. 181,276 -> 92,490 triangles. Prefab `equip_excavator` (ReplacementAssets): uniform scale so the tracks are 3.19 m wide (20 t class), boom along +z, track bottoms at y 0, no colliders. Used as deck equipment of the procedural barge (`VesselDetails.Barge`). |
+| forklift_truck_louismuir_1k.glb (sha256 33d1fa29bfbbc8e853e36966ae31ce0e547f414cec6d8395c55f76444511cbdf) | "Forklift Truck" by louis-muir | https://sketchfab.com/3d-models/060f3f8bc7de4e6ca2f348d414702e9d | 88aeee1daa1682641053b5f6a77028e2781a0924b6ec0bd08952264b626ca165 (2k) | textures 2k -> 1k (`glb_derive.py --max-px 1024`); prefab `forklift_truck`: width 1.20 m, length 3.27 m with forks, height 2.06 m; forks along +z, wheels on y 0, one BoxCollider. Replaces `forklift_a` at the three container-terminal forklift spots (`Vehicle("crane", "forklift_truck", ...)`, yaw offset +90). |
+| shipping_container_sebastianwebster_1k.glb (sha256 e510481b0e350839637f001795e63ed360ea4ba18b776e13464c12d6369a23ee) | "Classic Shipping Container (Free/Gameready)" by Sebastian Webster | https://sketchfab.com/3d-models/772f4be391a245f699c54e6cf157c58d | 489582c7efc7e3f40e69fe762379616820db3a1ffdcd2c4078c0c1d864716cf3 (2k) | textures -> 1k; operator text ("... LOGISTICS PTY LTD") inpainted from the door texture (`--inpaint "0:780,980,1120,1620"`); the half-open door leaf rotated shut about its hinge (`Tools/container_close_door.py`, 2,436 vertices, -140.7 deg) so it does not stick out of a stack. Prefabs `container_detail_<colour>` (10 yard colours): resized to ISO 20 ft 6.058 x 2.591 x 2.438 m (40 ft boxes stretch it), material = the model's textures x yard colour; LOD1 = plain box in the yard colour (screen height < 3.5 %). Up to 400 container boxes within 150 m of a preset camera use it (`HarborParts.DetailNearContainers`). |
+
+## Credit lines (carry with any published render or dataset)
+- "Excavator (CAT)" by sarvesh777 is licensed under Creative Commons Attribution 4.0 (https://sketchfab.com/3d-models/5f195244108c46e495a1e78040f02f7e); used in PortCCTVSimulator with the manufacturer logo removed, decimated track links and downscaled textures.
+- "Forklift Truck" by louis-muir is licensed under Creative Commons Attribution 4.0 (https://sketchfab.com/3d-models/060f3f8bc7de4e6ca2f348d414702e9d); used in PortCCTVSimulator with downscaled textures and a new pivot.
+- "Classic Shipping Container (Free/Gameready)" by Sebastian Webster is licensed under Creative Commons Attribution 4.0 (https://sketchfab.com/3d-models/772f4be391a245f699c54e6cf157c58d); used in PortCCTVSimulator with the door closed, the operator text removed, recoloured materials and rescaling.
+
+## Content checks (2026-11-09)
+- The excavator textures carried the "CAT" manufacturer mark on the boom (texture 11) and two small marks on the arm (texture 18); all three were inpainted and re-checked on the derived textures. The remaining decals are plain hazard stripes and service labels without text. Texture 23 (the second arm atlas) holds no marks.
+- The forklift textures hold no brand text. The container texture held the operator name on the door; removed. No vessel in any model.
+- Manufacturer names stay in the Sketchfab titles above only as source identification.

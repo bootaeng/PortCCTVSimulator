@@ -18,6 +18,8 @@ namespace PortCCTV.EditorTools
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             if (scenes.Length == 0) throw new InvalidOperationException("No scenes in build settings (run bootstrap).");
             Directory.CreateDirectory(Path.GetDirectoryName(OutputExe));
+            var manifest = BuildManifestGenerator.Generate();   // shipped in Resources; captures copy it into metadata
+            Debug.Log($"[Build] content manifest {manifest.content_files} files sha256={manifest.content_sha256} git={manifest.git_commit} uncommitted={manifest.git_uncommitted_files}");
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = scenes, locationPathName = OutputExe,

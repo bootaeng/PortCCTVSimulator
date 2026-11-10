@@ -30,6 +30,17 @@ namespace PortCCTV.EditorTools
             return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
 
+        /// <summary>A texture outside the Poly Haven folder (e.g. extracted from a CC BY pack), imported like Tex().</summary>
+        static Texture2D TexAt(string path, bool normal)
+        {
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            var imp = (TextureImporter)AssetImporter.GetAtPath(path) ?? throw new InvalidOperationException("missing " + path);
+            imp.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
+            imp.sRGBTexture = !normal; imp.wrapMode = TextureWrapMode.Repeat; imp.anisoLevel = 8; imp.maxTextureSize = 2048;
+            imp.SaveAndReimport();
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
         static Texture2D ImportPng(string path, bool normal)
         {
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
@@ -90,6 +101,17 @@ namespace PortCCTV.EditorTools
             Set("breakwater", mk("breakwater", new Color(0.85f, 0.85f, 0.83f), 0.15f, 0, layA, layN, 4f));
             Set("asphalt", mk("asphalt", new Color(0.85f, 0.85f, 0.85f), 0.2f, 0, asphA, asphN, 5f));
             Set("sand", mk("sand", new Color(1, 1, 1), 0.15f, 0, sandA, sandN, 4f));
+            // Paved surfaces, 2026-11-09: large aprons / yards / car parks use the Poly Haven aerial asphalt scan (one 2k tile
+            // covers 30 x 30 m: cracks, patches and wear read at CCTV distance); streets use the asphalt of "Modular Road Pack
+            // (FREE) + 4K Textures" (intfloat, CC BY; ambientCG-based) and sidewalks its paving
+            // (ThirdParty/SketchfabCCBY/road2/SOURCE_road2.md).
+            var aaA = Tex("aerial_asphalt_01", "diff", false); var aaN = Tex("aerial_asphalt_01", "nor_gl", true);
+            Set("asphalt", mk("asphalt", new Color(0.92f, 0.92f, 0.92f), 0.18f, 0, aaA, aaN, 30f));
+            const string RT = Root + "/ThirdParty/SketchfabCCBY/road2/tex";
+            var rdA = TexAt($"{RT}/road_pack_road_diff_2k.jpg", false); var rdN = TexAt($"{RT}/road_pack_road_nor_gl_2k.jpg", true);
+            Set("road_asphalt", mk("road_asphalt", new Color(0.78f, 0.78f, 0.79f), 0.22f, 0, rdA, rdN, 6f));
+            var swA = TexAt($"{RT}/road_pack_sidewalk_diff_2k.jpg", false); var swN = TexAt($"{RT}/road_pack_sidewalk_nor_gl_2k.jpg", true);
+            Set("sidewalk_paving", mk("sidewalk_paving", new Color(0.95f, 0.94f, 0.92f), 0.15f, 0, swA, swN, 3f));
             // land: aerial scan of grass with rocks (Poly Haven aerial_grass_rock), slight green tint
             var aerA = Tex("aerial_grass_rock", "diff", false); var aerN = Tex("aerial_grass_rock", "nor_gl", true);
             var meaA = ImportPng("Assets/PortCCTVSimulator/Textures/Canopy/T_meadow_albedo.png", false);

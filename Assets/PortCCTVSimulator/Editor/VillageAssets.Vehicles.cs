@@ -236,66 +236,202 @@ namespace PortCCTV.EditorTools
             return b.Flush("fishbox_stack");
         }
 
-        /// <summary>Pile of fishing net (low irregular mound, r ~1.7 m, 0.9 m high) with orange floats.</summary>
+        /// <summary>
+        /// Gill / trap net laid up on the quay (2026-11-09 rebuild of the single mound): the net is folded in long flaked layers
+        /// (5 flattened, slightly offset and rotated folds, each with a sagging outline), the float line runs along the top fold
+        /// with a row of small floats (orange / white), the lead line hangs out at one end, and a coiled rope sits beside it.
+        /// About 2.6 x 1.6 m, 0.75 m high. The netting itself is a solid fold surface (a mesh of every mesh hole would cost far
+        /// more than it adds at CCTV range).
+        /// </summary>
         static GameObject NetPile()
         {
             var b = new MB();
-            const int n = 10; var top = new Vector3(0.2f, 0.9f, -0.1f);
-            var rim = new Vector3[n]; var mid = new Vector3[n];
-            for (int i = 0; i < n; i++)
+            var rnd = new System.Random(7341);
+            float R01() => (float)rnd.NextDouble();
+            void Fold(string mat, Vector3 c, float lx, float lz, float h, float yaw)
             {
-                float a = Mathf.PI * 2 * i / n, r = 1.7f * (0.85f + 0.15f * Mathf.Sin(3f * a));
-                rim[i] = new Vector3(r * Mathf.Cos(a), 0f, r * Mathf.Sin(a) * 0.8f);
-                mid[i] = new Vector3(0.6f * rim[i].x, 0.65f, 0.6f * rim[i].z);
+                // flattened rounded slab: rim polygon (12 points, wavy) to a smaller raised top polygon
+                const int n = 12; var q = Quaternion.Euler(0, yaw, 0);
+                var rim = new Vector3[n]; var top = new Vector3[n];
+                for (int i = 0; i < n; i++)
+                {
+                    float a = Mathf.PI * 2 * i / n, wob = 1f + 0.08f * Mathf.Sin(3 * a + yaw) + 0.05f * (R01() - 0.5f);
+                    var d = new Vector3(Mathf.Cos(a) * lx * 0.5f * wob, 0f, Mathf.Sin(a) * lz * 0.5f * wob);
+                    rim[i] = c + q * d; top[i] = c + q * (d * 0.78f) + Vector3.up * h * (0.85f + 0.3f * R01());
+                }
+                var tc = c + Vector3.up * h;
+                for (int i = 0; i < n; i++)
+                {
+                    int j = (i + 1) % n; var o = (rim[i] + rim[j]) / 2f - c; o.y = 0.2f;
+                    b.QuadN(mat, rim[i], rim[j], top[j], top[i], o);
+                    b.TriN(mat, top[i], top[j], tc, Vector3.up);
+                }
             }
-            for (int i = 0; i < n; i++)
+            float y = 0f;
+            string[] mats = { "net_green", "net_green", "net_green", "net_green", "net_green" };
+            for (int k = 0; k < 5; k++)
             {
-                int j = (i + 1) % n; var o = new Vector3(rim[i].x + rim[j].x, 0.5f, rim[i].z + rim[j].z);
-                b.QuadN("net_green", rim[i], rim[j], mid[j], mid[i], o);
-                b.TriN("net_green", mid[i], mid[j], top, new Vector3(o.x * 0.3f, 1f, o.z * 0.3f));
-                if (i % 2 == 0) b.Box("float_orange", (rim[i] + mid[i]) / 2f + Vector3.up * 0.1f, new Vector3(0.22f, 0.16f, 0.22f), i * 23f);
+                float h = 0.14f + 0.03f * R01();
+                Fold(mats[k], new Vector3(0.08f * (R01() - 0.5f) + 0.05f * k, y, 0.1f * (R01() - 0.5f)), 2.6f - 0.18f * k, 1.6f - 0.1f * k, h, -6f + 12f * R01());
+                y += h * 0.82f;
             }
+            // float line along the top fold, floats every ~0.22 m
+            for (float x = -1.05f; x <= 1.05f; x += 0.22f)
+            {
+                bool white = ((int)((x + 2f) / 0.22f)) % 4 == 0;
+                b.Box(white ? "float_white" : "float_orange", new Vector3(x, y + 0.03f, 0.55f + 0.04f * Mathf.Sin(x * 5f)), new Vector3(0.13f, 0.09f, 0.09f), 20f * Mathf.Sin(x * 3f));
+            }
+            b.Box("rope_yellow", new Vector3(0f, y - 0.02f, 0.55f), new Vector3(2.2f, 0.025f, 0.025f));
+            // lead line out of the bottom fold at one end, onto the quay
+            for (int i = 0; i < 8; i++) b.Box("steel_dark", new Vector3(1.35f + i * 0.14f, 0.03f, -0.4f + 0.05f * Mathf.Sin(i)), new Vector3(0.15f, 0.04f, 0.04f), 15f * Mathf.Sin(i * 1.3f));
+            // coiled rope beside the pile
+            for (int t = 0; t < 4; t++)
+                for (int i = 0; i < 14; i++)
+                {
+                    float a = Mathf.PI * 2 * i / 14, r = 0.32f - t * 0.035f;
+                    b.Box("rope_yellow", new Vector3(-1.75f + r * Mathf.Cos(a), 0.03f + t * 0.045f, 0.35f + r * Mathf.Sin(a)), new Vector3(0.16f, 0.04f, 0.045f), -a * Mathf.Rad2Deg + 90f);
+                }
             return b.Flush("net_pile");
         }
 
         /// <summary>Rail-mounted gantry crane (ARMG) for perpendicular container blocks: legs on rails at x = +-17 m, 12 m wide
         /// along the rails (z), girders at 24-26 m, trolley with cabin and spreader, sill beams and bogies.</summary>
+        /// <summary>
+        /// Automated rail-mounted gantry (ARMG, 2026-11-09 rebuild of the box frame): runs on two rails along the block (z), span
+        /// 34 m between the rail centres (x +-17), 24 m under the girders. Each side has two tapered A-frame legs on rail bogies
+        /// (two 4-wheel bogies per leg with buffers), a sill beam with cable reel, the two box girders carry rails and walkways
+        /// with handrails, end ties and diagonal bracing; the trolley carries a machinery house, the hoist ropes and a headblock with
+        /// a telescopic spreader; ladders and a landing on one leg; an electric room on the sill. Not to be confused with an RTG
+        /// (rubber tyres, no rails) - prop_rtg is the tyred machine.
+        /// </summary>
         static GameObject ArmgCrane()
         {
             var b = new MB();
             const float hx = 17f, hz = 6f, top = 24f;
+            void Beam(string mat, Vector3 a, Vector3 c, float t)
+            {
+                var d = c - a; var mid = (a + c) / 2f; float len = d.magnitude;
+                float yaw = Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg, pitch = -Mathf.Asin(Mathf.Clamp(d.y / Mathf.Max(len, 1e-4f), -1f, 1f)) * Mathf.Rad2Deg;
+                // MB.Box only yaws: approximate a sloped member with short yawed boxes stacked along the line
+                int n = Mathf.Max(1, Mathf.CeilToInt(len / 1.2f));
+                for (int i = 0; i < n; i++) b.Box(mat, Vector3.Lerp(a, c, (i + 0.5f) / n), new Vector3(t, Mathf.Max(t, Mathf.Abs(d.y) / n + 0.05f), Mathf.Max(t, new Vector2(d.x, d.z).magnitude / n + 0.05f)), yaw);
+            }
             foreach (var sx in new[] { -hx, hx })
             {
                 foreach (var sz in new[] { -hz, hz })
                 {
-                    b.Box("crane_blue", new Vector3(sx, top / 2f, sz), new Vector3(1.2f, top, 1.2f));
-                    b.Box("steel_dark", new Vector3(sx, 0.7f, sz), new Vector3(1.6f, 1.4f, 3.2f));            // bogie
+                    // tapered leg: wide at the bogie, narrow under the girder, plus a slanted brace towards the sill centre
+                    for (int k = 0; k < 6; k++)
+                    {
+                        float y0 = 2.2f + k * (top - 3.4f) / 6f, h = (top - 3.4f) / 6f, w = Mathf.Lerp(1.5f, 1.0f, k / 5f);
+                        b.Box("crane_blue", new Vector3(sx, y0 + h / 2f, sz), new Vector3(w, h + 0.02f, w));
+                    }
+                    Beam("crane_blue", new Vector3(sx, 3.0f, sz * 0.25f), new Vector3(sx, top - 4f, sz * 0.92f), 0.5f);
+                    foreach (var bz in new[] { -0.9f, 0.9f })                                         // two 4-wheel bogies
+                    {
+                        b.Box("steel_dark", new Vector3(sx, 0.75f, sz + bz), new Vector3(1.1f, 0.7f, 1.6f));
+                        foreach (var wz in new[] { -0.45f, 0.45f }) b.Box("rubber", new Vector3(sx, 0.38f, sz + bz + wz), new Vector3(0.5f, 0.7f, 0.7f));
+                    }
+                    b.Box("crane_yellow", new Vector3(sx, 0.9f, sz + Mathf.Sign(sz) * 2.0f), new Vector3(0.5f, 0.5f, 0.4f));   // buffer
+                    b.Box("crane_blue", new Vector3(sx, 1.35f, sz), new Vector3(1.6f, 0.5f, 3.6f));   // equaliser beam
                 }
-                b.Box("crane_blue", new Vector3(sx, 2.2f, 0), new Vector3(1.4f, 1.4f, 2f * hz + 1.2f));         // sill beam
-                b.Box("crane_blue", new Vector3(sx, top - 1.2f, 0), new Vector3(1.4f, 1.6f, 2f * hz + 1.2f));
+                b.Box("crane_blue", new Vector3(sx, 2.2f, 0), new Vector3(1.4f, 1.2f, 2f * hz + 1.2f));          // sill beam
+                b.Box("crane_blue", new Vector3(sx, top - 1.2f, 0), new Vector3(1.4f, 1.6f, 2f * hz + 1.2f));    // portal head
+                b.Box("crane_house", new Vector3(sx + Mathf.Sign(sx) * 1.6f, 3.5f, 0), new Vector3(1.8f, 2.4f, 3.0f));   // electric room on the sill
             }
-            foreach (var sz in new[] { -hz, hz }) b.Box("crane_blue", new Vector3(0, top + 1f, sz), new Vector3(2f * hx + 6f, 2.2f, 1.6f));   // main girders (cantilevers)
-            for (float x = -hx; x <= hx; x += 8.5f) b.Box("crane_blue", new Vector3(x, top + 1.9f, 0), new Vector3(0.6f, 0.4f, 2f * hz));
+            b.Box("steel_dark", new Vector3(-hx - 1.4f, 4.0f, 0), new Vector3(0.6f, 2.6f, 2.6f));                  // cable reel
+            foreach (var sz in new[] { -hz, hz })
+            {
+                b.Box("crane_blue", new Vector3(0, top + 0.9f, sz), new Vector3(2f * hx + 6f, 2.0f, 1.3f));         // box girder (with cantilevers)
+                b.Box("steel_dark", new Vector3(0, top + 1.95f, sz), new Vector3(2f * hx + 6f, 0.12f, 0.18f));      // trolley rail
+                b.Box("steel_galv", new Vector3(0, top + 1.95f, sz + Mathf.Sign(sz) * 1.05f), new Vector3(2f * hx + 6f, 0.06f, 0.9f));   // walkway grating
+                b.Box("steel_galv", new Vector3(0, top + 3.0f, sz + Mathf.Sign(sz) * 1.5f), new Vector3(2f * hx + 6f, 0.05f, 0.05f));    // handrail
+                for (float x = -hx - 3f; x <= hx + 3f; x += 2.5f) b.Box("steel_galv", new Vector3(x, top + 2.5f, sz + Mathf.Sign(sz) * 1.5f), new Vector3(0.05f, 1.0f, 0.05f));
+                for (float x = -hx + 2f; x < hx - 2f; x += 4.25f)                                  // vertical stiffeners on the girder web
+                    b.Box("steel_dark", new Vector3(x, top + 0.9f, sz + Mathf.Sign(sz) * 0.66f), new Vector3(0.12f, 1.9f, 0.04f));
+            }
+            for (float x = -hx; x <= hx; x += 8.5f) b.Box("crane_blue", new Vector3(x, top + 1.7f, 0), new Vector3(0.5f, 0.4f, 2f * hz));    // end / mid ties
+            for (int i = 0; i < 4; i++)                                                           // diagonal bracing between the girders
+            {
+                float xa = -hx + i * 8.5f, xb = xa + 8.5f;
+                b.Box("steel_dark", new Vector3((xa + xb) / 2f, top + 1.75f, 0), new Vector3(0.18f, 0.18f, Mathf.Sqrt(8.5f * 8.5f + 4f * hz * hz)), Mathf.Atan2(8.5f, 2f * hz) * Mathf.Rad2Deg);
+            }
+            // ladders and a landing on one leg
+            for (float y = 3f; y < top - 2f; y += 0.35f) b.Box("steel_galv", new Vector3(hx + 0.85f, y, hz - 0.4f), new Vector3(0.05f, 0.04f, 0.5f));
+            foreach (var dz in new[] { -0.65f, -0.15f }) b.Box("steel_galv", new Vector3(hx + 0.85f, (top - 2f + 3f) / 2f, hz + dz), new Vector3(0.05f, top - 5f, 0.05f));
+            b.Box("steel_galv", new Vector3(hx + 1.2f, 12f, hz - 0.4f), new Vector3(1.2f, 0.08f, 1.4f));
+            // trolley with machinery house, ropes, headblock, telescopic spreader (holding nothing, hoisted)
             float tx = 3f;
-            b.Box("crane_house", new Vector3(tx, top + 2.8f, 0), new Vector3(6f, 1.6f, 2f * hz - 1f));                  // trolley
-            b.Box("crane_house", new Vector3(tx + 2.5f, top - 1.6f, -hz + 1.6f), new Vector3(2.2f, 2.2f, 2.2f));       // operator cabin
-            b.Box("glass_dark", new Vector3(tx + 2.5f, top - 1.6f, -hz + 0.48f), new Vector3(1.8f, 1.2f, 0.04f));
-            foreach (var sz in new[] { -2f, 2f }) b.Box("steel_dark", new Vector3(tx, top - 6f, sz), new Vector3(0.06f, 12f, 0.06f));  // ropes
-            b.Box("crane_yellow", new Vector3(tx, top - 12.3f, 0), new Vector3(2.6f, 0.6f, 12.4f));                // spreader
+            b.Box("steel_dark", new Vector3(tx, top + 2.2f, 0), new Vector3(5.6f, 0.5f, 2f * hz + 1.2f));           // trolley frame
+            b.Box("crane_house", new Vector3(tx - 0.8f, top + 3.6f, 0), new Vector3(3.6f, 2.3f, 6.5f));            // machinery house
+            b.Box("steel_dark", new Vector3(tx - 0.8f, top + 4.8f, 0), new Vector3(3.8f, 0.12f, 6.8f));
+            foreach (var sz in new[] { -2.1f, -1.1f, 1.1f, 2.1f }) b.Box("steel_dark", new Vector3(tx, top - 5.5f, sz), new Vector3(0.05f, 15f, 0.05f));   // ropes
+            b.Box("crane_yellow", new Vector3(tx, top - 13.0f, 0), new Vector3(2.2f, 0.7f, 4.6f));                  // headblock
+            b.Box("crane_yellow", new Vector3(tx, top - 13.6f, 0), new Vector3(2.4f, 0.45f, 12.2f));                // spreader frame
+            foreach (var sz in new[] { -6.0f, 6.0f })
+                foreach (var dx in new[] { -1.0f, 1.0f }) b.Box("steel_dark", new Vector3(tx + dx, top - 14.0f, sz), new Vector3(0.25f, 0.4f, 0.25f));   // twistlocks
             return b.Flush("armg_crane");
         }
 
-        /// <summary>Empty-container handler (top-lift forklift for empties): body 7.5 m, cab, twin mast 16 m, spreader, big wheels.</summary>
+        /// <summary>
+        /// Empty-container handler (top-lift, Kalmar DCG-class, 2026-11-09 rebuild of the box truck): frame with front drive axle
+        /// on twin tyres and a steered rear axle, rounded counterweight, side-mounted raised cab with glazing and a roof guard,
+        /// two-stage mast (outer and inner channel uprights with cross ties), two lift cylinders and lift chains, a carriage and a
+        /// telescopic top-lift spreader across the truck (6.1 m, end beams with twistlock housings) carried 7.6 m up. Front along
+        /// +x, as the other vehicle prefabs (VehicleYawOffset 0).
+        /// </summary>
         static GameObject EmptyHandler()
         {
             var b = new MB();
-            b.Box("crane_yellow", new Vector3(-0.8f, 1.6f, 0), new Vector3(6.0f, 1.6f, 3.4f));
-            b.Box("crane_yellow", new Vector3(-3.4f, 2.6f, 0), new Vector3(1.4f, 1.4f, 3.2f));                 // counterweight
-            b.Box("crane_yellow", new Vector3(0.8f, 3.6f, 1.0f), new Vector3(1.8f, 2.2f, 1.4f));                // cab
-            b.Box("car_glass", new Vector3(1.72f, 3.8f, 1.0f), new Vector3(0.04f, 1.2f, 1.2f));
-            foreach (var sz in new[] { -0.9f, 0.9f }) b.Box("steel_dark", new Vector3(2.6f, 8.5f, sz), new Vector3(0.5f, 15f, 0.35f));   // mast
-            b.Box("steel_dark", new Vector3(3.1f, 8.0f, 0), new Vector3(0.6f, 0.6f, 6.2f));                       // spreader
-            foreach (var sz in new[] { -1f, 1f }) { Wheel(b, 1.6f, sz * 1.45f, 0.75f, 0.6f, sz > 0); Wheel(b, -2.8f, sz * 1.45f, 0.7f, 0.5f, sz > 0); }
+            // frame and body
+            b.Box("crane_yellow", new Vector3(-0.6f, 1.25f, 0), new Vector3(5.4f, 0.9f, 2.5f));                     // main frame
+            b.Box("crane_yellow", new Vector3(-0.3f, 1.95f, -0.55f), new Vector3(3.2f, 0.5f, 1.3f));                // engine hood (right side)
+            b.Box("crane_yellow", new Vector3(-3.35f, 1.95f, 0), new Vector3(0.9f, 1.9f, 2.7f));                   // counterweight
+            b.Box("crane_yellow", new Vector3(-3.85f, 1.75f, 0), new Vector3(0.25f, 1.4f, 2.5f));                  // counterweight rounding
+            b.Box("steel_dark", new Vector3(-3.95f, 0.85f, 0), new Vector3(0.3f, 0.4f, 2.2f));                     // rear bumper
+            b.Box("steel_dark", new Vector3(-1.0f, 2.25f, -0.55f), new Vector3(0.6f, 0.08f, 0.6f));                // engine grille
+            b.Box("steel_dark", new Vector3(-0.6f, 2.55f, -0.85f), new Vector3(0.12f, 0.9f, 0.12f));               // exhaust stack
+            // cab: raised, left side, glazed, with a roof guard and steps
+            b.Box("crane_yellow", new Vector3(0.6f, 3.05f, 0.75f), new Vector3(1.7f, 0.25f, 1.25f));               // cab floor
+            foreach (var cx in new[] { -0.2f, 1.4f }) foreach (var cz in new[] { 0.15f, 1.35f })
+                b.Box("crane_yellow", new Vector3(cx, 3.95f, cz), new Vector3(0.08f, 1.6f, 0.08f));                 // pillars
+            b.Box("crane_yellow", new Vector3(0.6f, 4.8f, 0.75f), new Vector3(1.75f, 0.12f, 1.3f));                // roof
+            b.Box("car_glass", new Vector3(1.42f, 3.95f, 0.75f), new Vector3(0.03f, 1.4f, 1.15f));                 // front glass
+            b.Box("car_glass", new Vector3(0.6f, 3.95f, 1.38f), new Vector3(1.5f, 1.4f, 0.03f));                   // side glass
+            b.Box("car_glass", new Vector3(0.6f, 3.95f, 0.12f), new Vector3(1.5f, 1.4f, 0.03f));
+            b.Box("steel_dark", new Vector3(0.6f, 4.95f, 0.75f), new Vector3(1.9f, 0.06f, 1.45f));                // guard
+            for (int k = 0; k < 3; k++) b.Box("steel_dark", new Vector3(0.0f, 1.0f + k * 0.65f, 1.45f), new Vector3(0.45f, 0.05f, 0.25f));   // steps
+            // mast: outer uprights (channel), inner stage, cross ties, lift cylinders and chains
+            foreach (var sz in new[] { -0.75f, 0.75f })
+            {
+                b.Box("steel_dark", new Vector3(2.35f, 6.4f, sz), new Vector3(0.32f, 11.2f, 0.22f));               // outer channel
+                b.Box("crane_yellow", new Vector3(2.62f, 8.6f, sz * 0.82f), new Vector3(0.22f, 10.4f, 0.18f));     // inner stage
+                b.Box("steel_galv", new Vector3(2.15f, 4.6f, sz * 0.45f), new Vector3(0.16f, 7.2f, 0.16f));        // lift cylinder
+                b.Box("steel_galv", new Vector3(2.15f, 8.6f, sz * 0.45f), new Vector3(0.09f, 2.0f, 0.09f));        // rod
+                b.Box("steel_dark", new Vector3(2.48f, 9.0f, sz * 0.62f), new Vector3(0.05f, 6.0f, 0.05f));        // chain
+            }
+            foreach (var y in new[] { 1.4f, 6.0f, 11.8f }) b.Box("steel_dark", new Vector3(2.35f, y, 0), new Vector3(0.3f, 0.3f, 1.75f));   // cross ties
+            b.Box("steel_dark", new Vector3(2.62f, 13.7f, 0), new Vector3(0.28f, 0.35f, 1.6f));                    // mast head
+            b.Box("steel_dark", new Vector3(1.6f, 1.6f, 0), new Vector3(1.2f, 0.25f, 0.25f));                     // tilt cylinder
+            // carriage and top-lift spreader across the truck (7.6 m up)
+            b.Box("steel_dark", new Vector3(2.95f, 7.6f, 0), new Vector3(0.35f, 1.4f, 1.9f));                      // carriage
+            b.Box("crane_yellow", new Vector3(3.35f, 7.75f, 0), new Vector3(0.55f, 0.45f, 2.6f));                  // spreader centre beam
+            foreach (var sz in new[] { -1f, 1f })
+            {
+                b.Box("crane_yellow", new Vector3(3.35f, 7.75f, sz * 2.15f), new Vector3(0.42f, 0.36f, 1.7f));     // telescopic arm
+                b.Box("crane_yellow", new Vector3(3.35f, 7.55f, sz * 3.05f), new Vector3(1.2f, 0.55f, 0.32f));     // end beam
+                foreach (var sx in new[] { -0.42f, 0.42f })
+                    b.Box("steel_dark", new Vector3(3.35f + sx, 7.12f, sz * 3.05f), new Vector3(0.2f, 0.32f, 0.2f)); // twistlock housings
+                b.Box("steel_galv", new Vector3(3.35f, 8.1f, sz * 1.25f), new Vector3(0.12f, 0.25f, 0.5f));       // hydraulic block
+            }
+            // wheels: front drive axle with twin tyres, steered rear axle
+            foreach (var sz in new[] { -1f, 1f })
+            {
+                Wheel(b, 1.35f, sz * 1.05f, 0.8f, 0.5f, sz > 0);
+                Wheel(b, 1.35f, sz * 1.6f, 0.8f, 0.5f, sz > 0);
+                Wheel(b, -2.75f, sz * 1.25f, 0.75f, 0.55f, sz > 0);
+                b.Box("crane_yellow", new Vector3(1.35f, 1.75f, sz * 1.35f), new Vector3(1.9f, 0.08f, 0.95f));     // mudguard
+            }
             return b.Flush("empty_handler");
         }
 
@@ -357,6 +493,8 @@ namespace PortCCTV.EditorTools
             add("car_light_front", ProceduralAssets.MakeLit("car_light_front", new Color(0.82f, 0.82f, 0.78f), 0.9f, 0.3f));
             add("net_green", ProceduralAssets.MakeLit("net_green", new Color(0.10f, 0.22f, 0.14f), 0.2f, 0f));
             add("float_orange", ProceduralAssets.MakeLit("float_orange", new Color(0.85f, 0.35f, 0.05f), 0.5f, 0f));
+            add("float_white", ProceduralAssets.MakeLit("float_white", new Color(0.86f, 0.86f, 0.82f), 0.5f, 0f));
+            add("rope_yellow", ProceduralAssets.MakeLit("rope_yellow", new Color(0.78f, 0.62f, 0.12f), 0.15f, 0f));
             add("bench_wood", ProceduralAssets.MakeLit("bench_wood", new Color(0.45f, 0.30f, 0.18f), 0.25f, 0f));
             add("greenhouse_film", ProceduralAssets.MakeLit("greenhouse_film", new Color(0.80f, 0.82f, 0.81f), 0.55f, 0f));
             add("car_light_rear", ProceduralAssets.MakeLit("car_light_rear", new Color(0.45f, 0.03f, 0.03f), 0.9f, 0.1f));

@@ -50,3 +50,9 @@ Downloaded with curl into an empty scratch folder. Asset Store items are exclude
 | kloppenheim_07_puresky (HDRI 4k) | Greg Zaal, Jarod Guest | sky of `night_overcast` and of rain / snow at night (overcast, lit from below by town light) | 19,356,904 B | f88d16589849778174261f25a676f2b4 (matches) | 98a94dc8c290a89de0147642750beb9dae4c791ee33c1689bebbf58126e97f22 |
 
 Downloaded with curl from https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/<name>_4k.hdr into an empty scratch folder; MD5 and size checked against https://api.polyhaven.com/files/<name>.
+
+## Aerial asphalt (added 2026-11-09, CC0, `textures/download_manifest_aerial_asphalt_20261109.json`)
+
+| asset | authors | use | files (MD5 from the API matched / SHA-256) |
+|---|---|---|---|
+| aerial_asphalt_01 (2k JPG: diff, nor_gl, rough) | Rob Tuytel | material `asphalt` (terminal yards, aprons, car parks, truck lots), world-mapped at 30 m per tile | diff 4cb311fc… / a85ce28b…, nor_gl 2b2d543f… / cb7e5b75…, rough f46f34b5… / 20fdcdc9… |
