@@ -1,0 +1,853 @@
+{
+    "report_schema": "portcctv.research.coverage.v1",
+    "statement": "Generation coverage statistics (requested vs rendered conditions). NOT detection performance; no detector was trained or evaluated.",
+    "experiment_id": "pilot_20261110_diag",
+    "contract_sha256": "a5e81c4a7217a92cb220b7806568f1754372e6130fabc41157d32d58ce05dd79",
+    "jobs_file": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Research\\jobs\\pilot_20261110_diag\\jobs_diag_r3\\jobs.json",
+    "captures_dir": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Captures\\research\\pilot_20261110_diag\\jobs_diag_r3\\captures",
+    "created_utc": "2026-11-10T03:53:52.1878955Z",
+    "profile_id": "profile_fixture_v1",
+    "profile_kind": "fixture_not_real_data",
+    "modes": [
+        {
+            "mode": "G",
+            "jobs": 9,
+            "planned": 8,
+            "planning_failed": 1,
+            "rendered": 7,
+            "render_failed": 1,
+            "hash_mismatch": 0,
+            "not_rendered": 0,
+            "targets_requested": 27,
+            "targets_unmet_in_planning": 1,
+            "targets_rendered": 22,
+            "size_met": 13,
+            "size_missed": 9,
+            "occlusion_met": 22,
+            "occlusion_missed": 0,
+            "occlusion_unknown": 0,
+            "truncation_met": 22,
+            "truncation_missed": 0,
+            "occluders": 0,
+            "background_vessels": 0,
+            "position_adjusted_targets": 19,
+            "mean_abs_position_dv": 0.17912113666534425,
+            "positive_frames": 7,
+            "negative_frames": 0,
+            "frames_with_ignore": 0,
+            "detect_label": 22,
+            "detect_ignore": 0,
+            "detect_absent": 0,
+            "planning_ms": 29377.088,
+            "render_ms_total": 297.6601,
+            "capture_ms_total": 6952.566400000001,
+            "reference_ms_total": 3518.6361000000006,
+            "disk_mb": 33.692596435546878,
+            "planning_attempts": 32,
+            "histograms": [
+                {
+                    "name": "visible_height_px_at_1080",
+                    "note": "requested = target height x 1080; achieved = rendered visible-mask bbox height",
+                    "bins": [
+                        "<8px",
+                        "8-16px",
+                        "16-32px",
+                        "32-64px",
+                        "64-128px",
+                        ">=128px"
+                    ],
+                    "requested": [
+                        0,
+                        8,
+                        3,
+                        5,
+                        5,
+                        6
+                    ],
+                    "achieved": [
+                        0,
+                        1,
+                        9,
+                        1,
+                        10,
+                        1
+                    ]
+                },
+                {
+                    "name": "center_u",
+                    "note": "",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        4,
+                        9,
+                        1,
+                        8,
+                        5
+                    ],
+                    "achieved": [
+                        3,
+                        7,
+                        0,
+                        7,
+                        5
+                    ]
+                },
+                {
+                    "name": "bottom_v",
+                    "note": "requested bottom_v vs achieved; rows moved by the size-primary rule: see position_adjusted_targets / mean_abs_position_dv",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        8,
+                        10,
+                        9
+                    ],
+                    "achieved": [
+                        0,
+                        5,
+                        9,
+                        4,
+                        4
+                    ]
+                },
+                {
+                    "name": "occlusion",
+                    "note": "requested none/partial; achieved = geometric occlusion bins (reference pass)",
+                    "bins": [
+                        "none",
+                        "partial",
+                        "occ<0.1",
+                        "occ0.1-0.5",
+                        "occ0.5-0.9",
+                        "occ>=0.9",
+                        "unknown"
+                    ],
+                    "requested": [
+                        27,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        22,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "truncation",
+                    "note": "requested none/left/right; achieved = above-water box area outside the image",
+                    "bins": [
+                        "none",
+                        "left",
+                        "right",
+                        "partial",
+                        "heavy",
+                        "unknown"
+                    ],
+                    "requested": [
+                        19,
+                        4,
+                        4,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        16,
+                        0,
+                        0,
+                        0,
+                        6,
+                        0
+                    ]
+                }
+            ],
+            "lighting": [
+                {
+                    "name": "dusk_low_light",
+                    "count": 2
+                },
+                {
+                    "name": "night_overcast",
+                    "count": 1
+                },
+                {
+                    "name": "night_clear",
+                    "count": 1
+                },
+                {
+                    "name": "day_clear",
+                    "count": 3
+                }
+            ],
+            "water": [
+                {
+                    "name": "calm",
+                    "count": 6
+                },
+                {
+                    "name": "light_chop",
+                    "count": 1
+                }
+            ],
+            "fog": [
+                {
+                    "name": "0.3",
+                    "count": 4
+                },
+                {
+                    "name": "0.6",
+                    "count": 3
+                }
+            ],
+            "sensor": [
+                {
+                    "name": "low_quality",
+                    "count": 4
+                },
+                {
+                    "name": "off",
+                    "count": 3
+                }
+            ],
+            "precipitation": [
+                {
+                    "name": "none",
+                    "count": 6
+                },
+                {
+                    "name": "rain",
+                    "count": 1
+                }
+            ],
+            "assets": [
+                {
+                    "name": "police_boat",
+                    "count": 6
+                },
+                {
+                    "name": "pilot_boat",
+                    "count": 3
+                },
+                {
+                    "name": "rib",
+                    "count": 6
+                },
+                {
+                    "name": "barge",
+                    "count": 3
+                },
+                {
+                    "name": "motor_yacht",
+                    "count": 1
+                },
+                {
+                    "name": "cabin_cruiser",
+                    "count": 1
+                },
+                {
+                    "name": "canoe",
+                    "count": 1
+                },
+                {
+                    "name": "kayak",
+                    "count": 1
+                }
+            ],
+            "cameras": [
+                {
+                    "name": "container_terminal_01/ct_B_breakwater_head",
+                    "count": 6
+                },
+                {
+                    "name": "marina_01/mr_C_breakwater",
+                    "count": 1
+                }
+            ],
+            "negative_status": [
+                {
+                    "name": "not_negative",
+                    "count": 7
+                }
+            ],
+            "planning_failure_reasons": [
+                {
+                    "name": "size_unreachable_on_column",
+                    "count": 1
+                }
+            ]
+        },
+        {
+            "mode": "C_U",
+            "jobs": 2,
+            "planned": 2,
+            "planning_failed": 0,
+            "rendered": 2,
+            "render_failed": 0,
+            "hash_mismatch": 0,
+            "not_rendered": 0,
+            "targets_requested": 7,
+            "targets_unmet_in_planning": 0,
+            "targets_rendered": 7,
+            "size_met": 6,
+            "size_missed": 1,
+            "occlusion_met": 7,
+            "occlusion_missed": 0,
+            "occlusion_unknown": 0,
+            "truncation_met": 7,
+            "truncation_missed": 0,
+            "occluders": 3,
+            "background_vessels": 0,
+            "position_adjusted_targets": 5,
+            "mean_abs_position_dv": 0.0991167277097702,
+            "positive_frames": 2,
+            "negative_frames": 0,
+            "frames_with_ignore": 0,
+            "detect_label": 10,
+            "detect_ignore": 0,
+            "detect_absent": 0,
+            "planning_ms": 1038.0135,
+            "render_ms_total": 72.9063,
+            "capture_ms_total": 1753.2606,
+            "reference_ms_total": 786.2345,
+            "disk_mb": 10.680737495422364,
+            "planning_attempts": 12,
+            "histograms": [
+                {
+                    "name": "visible_height_px_at_1080",
+                    "note": "requested = target height x 1080; achieved = rendered visible-mask bbox height",
+                    "bins": [
+                        "<8px",
+                        "8-16px",
+                        "16-32px",
+                        "32-64px",
+                        "64-128px",
+                        ">=128px"
+                    ],
+                    "requested": [
+                        0,
+                        2,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    "achieved": [
+                        0,
+                        1,
+                        2,
+                        1,
+                        2,
+                        1
+                    ]
+                },
+                {
+                    "name": "center_u",
+                    "note": "",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        0,
+                        2,
+                        1,
+                        3,
+                        1
+                    ],
+                    "achieved": [
+                        0,
+                        2,
+                        1,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "name": "bottom_v",
+                    "note": "requested bottom_v vs achieved; rows moved by the size-primary rule: see position_adjusted_targets / mean_abs_position_dv",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        2,
+                        2,
+                        3
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        3,
+                        3,
+                        1
+                    ]
+                },
+                {
+                    "name": "occlusion",
+                    "note": "requested none/partial; achieved = geometric occlusion bins (reference pass)",
+                    "bins": [
+                        "none",
+                        "partial",
+                        "occ<0.1",
+                        "occ0.1-0.5",
+                        "occ0.5-0.9",
+                        "occ>=0.9",
+                        "unknown"
+                    ],
+                    "requested": [
+                        4,
+                        3,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        4,
+                        3,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "truncation",
+                    "note": "requested none/left/right; achieved = above-water box area outside the image",
+                    "bins": [
+                        "none",
+                        "left",
+                        "right",
+                        "partial",
+                        "heavy",
+                        "unknown"
+                    ],
+                    "requested": [
+                        7,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        7,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "lighting": [
+                {
+                    "name": "night_clear",
+                    "count": 1
+                },
+                {
+                    "name": "night_overcast",
+                    "count": 1
+                }
+            ],
+            "water": [
+                {
+                    "name": "calm",
+                    "count": 2
+                }
+            ],
+            "fog": [
+                {
+                    "name": "0.3",
+                    "count": 1
+                },
+                {
+                    "name": "1",
+                    "count": 1
+                }
+            ],
+            "sensor": [
+                {
+                    "name": "night_ir",
+                    "count": 1
+                },
+                {
+                    "name": "off",
+                    "count": 1
+                }
+            ],
+            "precipitation": [
+                {
+                    "name": "none",
+                    "count": 1
+                },
+                {
+                    "name": "rain",
+                    "count": 1
+                }
+            ],
+            "assets": [
+                {
+                    "name": "rib",
+                    "count": 1
+                },
+                {
+                    "name": "police_boat",
+                    "count": 1
+                },
+                {
+                    "name": "motor_yacht",
+                    "count": 1
+                },
+                {
+                    "name": "sar_boat",
+                    "count": 1
+                },
+                {
+                    "name": "sailing_yacht",
+                    "count": 1
+                },
+                {
+                    "name": "kayak",
+                    "count": 3
+                },
+                {
+                    "name": "canoe",
+                    "count": 1
+                },
+                {
+                    "name": "sailing_dinghy",
+                    "count": 1
+                }
+            ],
+            "cameras": [
+                {
+                    "name": "container_terminal_01/ct_B_breakwater_head",
+                    "count": 1
+                },
+                {
+                    "name": "marina_01/mr_C_breakwater",
+                    "count": 1
+                }
+            ],
+            "negative_status": [
+                {
+                    "name": "not_negative",
+                    "count": 2
+                }
+            ],
+            "planning_failure_reasons": []
+        },
+        {
+            "mode": "NEG",
+            "jobs": 2,
+            "planned": 2,
+            "planning_failed": 0,
+            "rendered": 2,
+            "render_failed": 0,
+            "hash_mismatch": 0,
+            "not_rendered": 0,
+            "targets_requested": 0,
+            "targets_unmet_in_planning": 0,
+            "targets_rendered": 0,
+            "size_met": 0,
+            "size_missed": 0,
+            "occlusion_met": 0,
+            "occlusion_missed": 0,
+            "occlusion_unknown": 0,
+            "truncation_met": 0,
+            "truncation_missed": 0,
+            "occluders": 0,
+            "background_vessels": 0,
+            "position_adjusted_targets": 0,
+            "mean_abs_position_dv": 0.0,
+            "positive_frames": 0,
+            "negative_frames": 2,
+            "frames_with_ignore": 0,
+            "detect_label": 0,
+            "detect_ignore": 0,
+            "detect_absent": 0,
+            "planning_ms": 0.0,
+            "render_ms_total": 130.4942,
+            "capture_ms_total": 1692.2876,
+            "reference_ms_total": 433.84130000000007,
+            "disk_mb": 15.04988956451416,
+            "planning_attempts": 0,
+            "histograms": [
+                {
+                    "name": "visible_height_px_at_1080",
+                    "note": "requested = target height x 1080; achieved = rendered visible-mask bbox height",
+                    "bins": [
+                        "<8px",
+                        "8-16px",
+                        "16-32px",
+                        "32-64px",
+                        "64-128px",
+                        ">=128px"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "center_u",
+                    "note": "",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "bottom_v",
+                    "note": "requested bottom_v vs achieved; rows moved by the size-primary rule: see position_adjusted_targets / mean_abs_position_dv",
+                    "bins": [
+                        "0.0-0.2",
+                        "0.2-0.4",
+                        "0.4-0.6",
+                        "0.6-0.8",
+                        "0.8-1.0"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "occlusion",
+                    "note": "requested none/partial; achieved = geometric occlusion bins (reference pass)",
+                    "bins": [
+                        "none",
+                        "partial",
+                        "occ<0.1",
+                        "occ0.1-0.5",
+                        "occ0.5-0.9",
+                        "occ>=0.9",
+                        "unknown"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "name": "truncation",
+                    "note": "requested none/left/right; achieved = above-water box area outside the image",
+                    "bins": [
+                        "none",
+                        "left",
+                        "right",
+                        "partial",
+                        "heavy",
+                        "unknown"
+                    ],
+                    "requested": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "achieved": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "lighting": [
+                {
+                    "name": "night_overcast",
+                    "count": 1
+                },
+                {
+                    "name": "day_clear",
+                    "count": 1
+                }
+            ],
+            "water": [
+                {
+                    "name": "light_chop",
+                    "count": 2
+                }
+            ],
+            "fog": [
+                {
+                    "name": "0.6",
+                    "count": 1
+                },
+                {
+                    "name": "1",
+                    "count": 1
+                }
+            ],
+            "sensor": [
+                {
+                    "name": "hd_ip",
+                    "count": 2
+                }
+            ],
+            "precipitation": [
+                {
+                    "name": "rain",
+                    "count": 1
+                },
+                {
+                    "name": "none",
+                    "count": 1
+                }
+            ],
+            "assets": [],
+            "cameras": [
+                {
+                    "name": "container_terminal_01/ct_B_breakwater_head",
+                    "count": 1
+                },
+                {
+                    "name": "marina_01/mr_C_breakwater",
+                    "count": 1
+                }
+            ],
+            "negative_status": [
+                {
+                    "name": "hard_negative_candidate",
+                    "count": 2
+                }
+            ],
+            "planning_failure_reasons": []
+        }
+    ],
+    "distances": [
+        {
+            "name": "TVDx1000(G requested, G achieved) visible_height_px_at_1080",
+            "count": 567
+        },
+        {
+            "name": "TVDx1000(G requested, G achieved) center_u",
+            "count": 64
+        },
+        {
+            "name": "TVDx1000(G requested, G achieved) bottom_v",
+            "count": 340
+        },
+        {
+            "name": "TVDx1000(C_U requested, C_U achieved) visible_height_px_at_1080",
+            "count": 143
+        },
+        {
+            "name": "TVDx1000(C_U requested, C_U achieved) center_u",
+            "count": 0
+        },
+        {
+            "name": "TVDx1000(C_U requested, C_U achieved) bottom_v",
+            "count": 286
+        },
+        {
+            "name": "TVDx1000(NEG requested, NEG achieved) visible_height_px_at_1080",
+            "count": -1000
+        },
+        {
+            "name": "TVDx1000(NEG requested, NEG achieved) center_u",
+            "count": -1000
+        },
+        {
+            "name": "TVDx1000(NEG requested, NEG achieved) bottom_v",
+            "count": -1000
+        }
+    ],
+    "distance_definitions": [
+        "TVD = 0.5 * sum |p_i - q_i| over normalised bin counts, reported x1000 as an integer; small samples (pilot) make it very noisy"
+    ],
+    "notes": [
+        "C was sampled from a FIXTURE profile (not real statistics)"
+    ]
+}

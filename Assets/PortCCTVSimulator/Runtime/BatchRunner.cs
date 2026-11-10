@@ -18,6 +18,10 @@ namespace PortCCTV
         public ScenarioConfig inline_scenario;
         /// <summary>Expected outcome; empty means "done". A regression case may expect "placement_rejected".</summary>
         public string expected_status = "";
+        /// <summary>Research job (empty for ordinary jobs): contract / scenario / build hashes checked on resume, requested conditions.</summary>
+        public Research.ResearchJobInfo research = new Research.ResearchJobInfo();
+        /// <summary>Maximum render attempts over all runs of this jobs file (failed attempts counted from batch_log.jsonl); 0 = unlimited.</summary>
+        public int max_attempts = 0;
     }
 
     [Serializable]
@@ -28,6 +32,10 @@ namespace PortCCTV
         /// <summary>Output directory; relative paths resolve against the app root (project root or exe folder).</summary>
         public string output_dir = "Captures/batch";
         public List<BatchJob> jobs = new List<BatchJob>();
+        /// <summary>Research job list (frozen by JobFreezer): the runner enforces the hash checks and the render cap.</summary>
+        public bool research_batch = false;
+        /// <summary>Refuse the whole run when more captures would be rendered (0 = no cap).</summary>
+        public int max_captures_this_run = 0;
     }
 
     [Serializable]
@@ -41,6 +49,8 @@ namespace PortCCTV
         public double ms;
         public string expected_status;
         public bool as_expected;
+        public int attempt;
+        public string contract_sha256;
     }
 
     [Serializable]
@@ -51,6 +61,9 @@ namespace PortCCTV
         public string jobs_file_sha256;
         public string started_utc, finished_utc;
         public int total, done, skipped_existing, failed, unexpected;
+        public int planning_failed, hash_mismatch, retry_limit_reached, not_started;
+        public bool cancelled;
+        public string refused;
         public List<BatchLogEntry> entries = new List<BatchLogEntry>();
     }
 
@@ -74,6 +87,48 @@ namespace PortCCTV
 
         /// <summary>Player frames between applying a scenario and capturing it (HDRP sky / ambient-probe readback).</summary>
         public const int SettleFrames = 8;
+
+        /// <summary>Set by the UI "stop" button: the run ends after the current job (resume = run the same jobs file again).</summary>
+        public static bool CancelRequested;
+        /// <summary>Stop after this many renders in this run (CLI -batch-stop-after, used to test interruption); 0 = off.</summary>
+        public static int StopAfterRendered;
+
+        /// <summary>Research resume check: a finished capture counts as done only if it was made from the same contract, the same
+        /// frozen scenario file and (when required) the same build. Anything else is a mismatch, never a skip, never overwritten.</summary>
+        public static bool VerifyResearchOutput(string dir, BatchJob job, string currentBuildSha, out string reason)
+        {
+            if (!CaptureService.VerifyExistingOutput(dir, null, out reason)) return false;
+            var rp = Path.Combine(dir, "research.json");
+            if (!File.Exists(rp)) { reason = "research.json missing (capture made without the research contract)"; return false; }
+            var meta = JsonUtility.FromJson<CaptureMetadata>(File.ReadAllText(Path.Combine(dir, "metadata.json"), Encoding.UTF8));
+            if (!meta.files.Contains("research.json")) { reason = "research.json not covered by the metadata file hashes"; return false; }
+            Research.ResearchCaptureRecord rec;
+            try { rec = JsonUtility.FromJson<Research.ResearchCaptureRecord>(File.ReadAllText(rp, Encoding.UTF8)); }
+            catch (Exception ex) { reason = "research.json unreadable: " + ex.Message; return false; }
+            var r = job.research;
+            if (rec.contract_sha256 != r.contract_sha256) { reason = $"contract hash {Short(rec.contract_sha256)} != job {Short(r.contract_sha256)}"; return false; }
+            if (rec.job_scenario_sha256 != r.job_scenario_sha256) { reason = $"scenario hash {Short(rec.job_scenario_sha256)} != job {Short(r.job_scenario_sha256)}"; return false; }
+            if (!string.IsNullOrEmpty(r.required_build_content_sha256) && rec.build_content_sha256 != r.required_build_content_sha256)
+            { reason = $"build {Short(rec.build_content_sha256)} != required {Short(r.required_build_content_sha256)}"; return false; }
+            reason = "";
+            return true;
+        }
+
+        static string Short(string h) => string.IsNullOrEmpty(h) ? "(none)" : h.Length > 12 ? h.Substring(0, 12) : h;
+
+        /// <summary>Failed attempts of a job in earlier runs (batch_log.jsonl lines with status failed).</summary>
+        public static int PreviousFailures(string logPath, string jobId)
+        {
+            if (!File.Exists(logPath)) return 0;
+            int n = 0;
+            foreach (var line in File.ReadAllLines(logPath, Encoding.UTF8))
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                try { var e = JsonUtility.FromJson<BatchLogEntry>(line); if (e != null && e.job_id == jobId && e.status == "failed") n++; }
+                catch { /* a torn last line from a killed run is not an attempt */ }
+            }
+            return n;
+        }
 
         public static IEnumerator Run(SimWorld world, string jobsPath, Action<string> log, Action<BatchSummary> done)
         {
@@ -99,14 +154,74 @@ namespace PortCCTV
                 started_utc = DateTime.UtcNow.ToString("o"), total = batch.jobs.Count
             };
             var logPath = Path.Combine(outDir, "batch_log.jsonl");
+            string currentBuild = BuildManifestInfo.Record().content_sha256;
+            if (batch.research_batch || batch.jobs.Any(j => j.research != null && j.research.IsResearch))
+            {
+                int toRender = batch.jobs.Count(j => j.research.plan_status != "planning_failed" && !Directory.Exists(Path.Combine(outDir, j.job_id)));
+                var tooLong = batch.jobs.FirstOrDefault(j => Research.JobFreezer.LongestCapturePath(outDir, j.job_id) > Research.JobFreezer.MaxCapturePath);
+                if (tooLong != null)
+                {
+                    summary.refused = $"capture path of {tooLong.job_id} would be {Research.JobFreezer.LongestCapturePath(outDir, tooLong.job_id)} characters (max {Research.JobFreezer.MaxCapturePath}); nothing rendered";
+                    log?.Invoke("ERROR " + summary.refused);
+                    summary.finished_utc = DateTime.UtcNow.ToString("o"); summary.not_started = batch.jobs.Count; summary.unexpected = 1;
+                    File.WriteAllText(Path.Combine(outDir, "batch_summary_" + DateTime.UtcNow.ToString("yyyyMMddTHHmmssfff") + ".json"), JsonUtility.ToJson(summary, true), new UTF8Encoding(false));
+                    done?.Invoke(summary);
+                    yield break;
+                }
+                log?.Invoke($"research batch: {batch.jobs.Count} jobs, {toRender} to render (cap {batch.max_captures_this_run})");
+                if (batch.max_captures_this_run > 0 && toRender > batch.max_captures_this_run)
+                {
+                    summary.refused = $"{toRender} renders exceed max_captures_this_run {batch.max_captures_this_run}; nothing rendered";
+                    log?.Invoke("ERROR " + summary.refused);
+                    summary.finished_utc = DateTime.UtcNow.ToString("o");
+                    summary.not_started = batch.jobs.Count;
+                    summary.unexpected = 1;
+                    File.WriteAllText(Path.Combine(outDir, "batch_summary_" + DateTime.UtcNow.ToString("yyyyMMddTHHmmssfff") + ".json"), JsonUtility.ToJson(summary, true), new UTF8Encoding(false));
+                    done?.Invoke(summary);
+                    yield break;
+                }
+            }
+            CancelRequested = false;
+            int rendered = 0;
             int i = 0;
             foreach (var job in batch.jobs)
             {
                 i++;
+                if (CancelRequested || (StopAfterRendered > 0 && rendered >= StopAfterRendered))
+                {
+                    summary.cancelled = true;
+                    summary.not_started = batch.jobs.Count - i + 1;
+                    log?.Invoke($"batch stopped before job {i}/{batch.jobs.Count} (resume: run the same jobs file again)");
+                    break;
+                }
+                bool isResearch = job.research != null && job.research.IsResearch;
                 var entry = new BatchLogEntry { utc = DateTime.UtcNow.ToString("o"), job_id = job.job_id };
                 var final = Path.Combine(outDir, job.job_id);
                 var sw = System.Diagnostics.Stopwatch.StartNew();
-                if (Directory.Exists(final))
+                if (isResearch) entry.contract_sha256 = job.research.contract_sha256;
+                int prevFails = job.max_attempts > 0 ? PreviousFailures(logPath, job.job_id) : 0;
+                entry.attempt = prevFails + 1;
+                if (isResearch && job.research.plan_status == "planning_failed")
+                {
+                    entry.status = "planning_failed"; summary.planning_failed++;
+                    entry.message = string.Join(" | ", job.research.plan_failure_reasons);
+                }
+                else if (isResearch && Directory.Exists(final))
+                {
+                    entry.output = final;
+                    if (VerifyResearchOutput(final, job, currentBuild, out var why)) { entry.status = "skipped_existing"; summary.skipped_existing++; }
+                    else
+                    {
+                        entry.status = "hash_mismatch"; summary.hash_mismatch++; summary.failed++;
+                        entry.message = "existing output is not a finished capture of this contract / scenario / build (left untouched): " + why;
+                    }
+                }
+                else if (job.max_attempts > 0 && prevFails >= job.max_attempts)
+                {
+                    entry.status = "retry_limit_reached"; summary.retry_limit_reached++; summary.failed++;
+                    entry.message = $"{prevFails} failed attempts recorded (max {job.max_attempts}); failure folders kept";
+                }
+                else if (Directory.Exists(final))
                 {
                     // Resume: only a verified, finished capture of the same scenario counts as done. An empty or partial
                     // folder (copied, interrupted, hand-made) is reported as failed and left untouched for inspection.
@@ -137,6 +252,15 @@ namespace PortCCTV
                             ? job.inline_scenario
                             : ScenarioIO.Load(Path.Combine(Path.GetDirectoryName(jobsPath), job.scenario_path));
                         if (cfg == null) throw new InvalidDataException("No scenario for job " + job.job_id);
+                        if (isResearch)
+                        {
+                            var fileSha = job.use_inline ? ScenarioIO.Sha256Hex(ScenarioIO.ToJson(cfg))
+                                : ScenarioIO.Sha256Hex(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(jobsPath), job.scenario_path)));
+                            if (fileSha != job.research.job_scenario_sha256)
+                                throw new InvalidDataException("scenario file changed after the job list was frozen (sha " + Short(fileSha) + " != " + Short(job.research.job_scenario_sha256) + ")");
+                            if (!string.IsNullOrEmpty(job.research.required_build_content_sha256) && currentBuild != job.research.required_build_content_sha256)
+                                throw new InvalidOperationException("this build (" + Short(currentBuild) + ") is not the build the job list requires (" + Short(job.research.required_build_content_sha256) + ")");
+                        }
                         var reports = world.Apply(cfg);
                         var bad = reports.Where(r => !r.ok).ToList();
                         if (cfg.capture.strict_placement && bad.Count > 0)
@@ -169,7 +293,8 @@ namespace PortCCTV
                         UnityEngine.Rendering.AsyncGPUReadback.WaitAllRequests();
                         try
                         {
-                            var res = CaptureService.Capture(world, final, "batch");
+                            var res = isResearch ? CaptureService.Capture(world, final, "batch", job.research, job.job_id) : CaptureService.Capture(world, final, "batch");
+                            rendered++;
                             entry.output = res.output_dir;
                             if (res.success) { entry.status = "done"; summary.done++; }
                             else { entry.status = "failed"; entry.message = res.error; summary.failed++; }
@@ -192,7 +317,7 @@ namespace PortCCTV
             summary.finished_utc = DateTime.UtcNow.ToString("o");
             var sumPath = Path.Combine(outDir, "batch_summary_" + DateTime.UtcNow.ToString("yyyyMMddTHHmmssfff") + ".json");
             File.WriteAllText(sumPath, JsonUtility.ToJson(summary, true), new UTF8Encoding(false));
-            log?.Invoke($"Batch '{batch.batch_id}' finished: done={summary.done} skipped={summary.skipped_existing} failed={summary.failed} unexpected={summary.unexpected} -> {outDir}");
+            log?.Invoke($"Batch '{batch.batch_id}' {(summary.cancelled ? "STOPPED" : "finished")}: done={summary.done} skipped={summary.skipped_existing} failed={summary.failed} planning_failed={summary.planning_failed} hash_mismatch={summary.hash_mismatch} retry_limit={summary.retry_limit_reached} not_started={summary.not_started} unexpected={summary.unexpected} -> {outDir}");
             done?.Invoke(summary);
         }
     }

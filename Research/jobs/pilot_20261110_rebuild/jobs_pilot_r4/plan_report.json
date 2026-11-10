@@ -1,0 +1,29 @@
+{
+    "report_schema": "portcctv.research.planreport.v1",
+    "experiment_id": "pilot_20261110",
+    "contract_sha256": "623e1445e26911cd3e6167c46c9551e5257ae875e2ab2563a431eea7e9d962c2",
+    "created_utc": "2026-11-10T03:26:53.2191150Z",
+    "jobs_file": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Research\\jobs\\pilot_20261110_rebuild\\jobs_pilot_r4\\jobs.json",
+    "profile_id": "profile_fixture_v1",
+    "profile_kind": "fixture_not_real_data",
+    "jobs_total": 24,
+    "jobs_planned": 19,
+    "jobs_planning_failed": 5,
+    "objects_requested": 65,
+    "objects_unmet": 9,
+    "render_jobs": 19,
+    "estimated_mb": 266.0,
+    "estimated_minutes": 3.799999952316284,
+    "render_cap": 24,
+    "failures": [
+        "G_fp_C_breakwater_s2000: t00: occluder_unplaceable: no_candidate_gives_30_70pct_box_overlap | t01: size_unreachable_on_column: closest rib |log ratio| 0.53 at v 0.525 (tol 0.30; truncation rejects 0, overlap rejects 0) | t00_occ: no_candidate_gives_30_70pct_box_overlap",
+        "C_fp_C_breakwater_s1000: t00: size_unreachable_on_column: closest rib |log ratio| 0.25 at v 0.565 (tol 0.30; truncation rejects 0, overlap rejects 0)",
+        "C_fp_C_breakwater_s2000: t01: occluder_unplaceable: no_candidate_gives_30_70pct_box_overlap | t01_occ: no_candidate_gives_30_70pct_box_overlap",
+        "G_mr_A_promenade_s1000: t03: occluder_unplaceable: overlaps_vessel_or_structure | t03_occ: overlaps_vessel_or_structure",
+        "C_mr_A_promenade_s1000: t01: size_unreachable_on_column: closest rib |log ratio| 0.00 at v 0.770 (tol 0.30; truncation rejects 134, overlap rejects 0)"
+    ],
+    "notes": [
+        "C uses a FIXTURE profile: not real-data statistics",
+        "jobs require build de02b4d307cbc513c1e95f46877cae88cec3fd828b68c100b325f26cba620ba9"
+    ]
+}

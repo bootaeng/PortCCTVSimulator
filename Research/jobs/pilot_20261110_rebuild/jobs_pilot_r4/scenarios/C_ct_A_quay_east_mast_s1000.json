@@ -1,0 +1,176 @@
+{
+    "schema_version": 1,
+    "scenario_id": "C_ct_A_quay_east_mast_s1000",
+    "harbor_id": "container_terminal_01",
+    "camera_preset_id": "ct_A_quay_east_mast",
+    "camera_override": {
+        "enabled": false,
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "euler_deg": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "vertical_fov_deg": 40.0
+    },
+    "environment": {
+        "preset_id": "day_clear",
+        "water_preset_id": "light_chop",
+        "water_time_s": 36.561920166015628,
+        "weather": {
+            "precipitation": "none",
+            "intensity": 0.0,
+            "overcast": false,
+            "visibility_scale": 0.6000000238418579,
+            "wetness": -1.0,
+            "snow_cover": -1.0,
+            "seed": 133574224
+        },
+        "lights": "auto",
+        "vessel_wave_motion": true
+    },
+    "vessels": [
+        {
+            "object_id": "t03",
+            "asset_id": "police_boat",
+            "x": -32.62334442138672,
+            "z": -103.02789306640625,
+            "heading_deg": 254.4888458251953,
+            "immersion_m": 0.6000000238418579,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t02",
+            "asset_id": "motorboat",
+            "x": -15.889190673828125,
+            "z": 2.7167816162109377,
+            "heading_deg": 349.34429931640627,
+            "immersion_m": 0.10000000149011612,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t02_occ",
+            "asset_id": "police_boat",
+            "x": -23.157543182373048,
+            "z": 10.337848663330079,
+            "heading_deg": 349.34429931640627,
+            "immersion_m": 0.6000000238418579,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t01",
+            "asset_id": "rib",
+            "x": -11.437114715576172,
+            "z": 7.155445098876953,
+            "heading_deg": 223.89939880371095,
+            "immersion_m": 0.10000000149011612,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t00",
+            "asset_id": "rib",
+            "x": 89.32283020019531,
+            "z": -58.52763366699219,
+            "heading_deg": 78.84329986572266,
+            "immersion_m": 0.10000000149011612,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        }
+    ],
+    "capture": {
+        "width": 1920,
+        "height": 1080,
+        "warmup_frames": 6,
+        "write_mask": true,
+        "mask_source": "gpu",
+        "compare_cpu_mask": false,
+        "mask_stride": 1,
+        "strict_placement": true,
+        "label_policy": {
+            "version": "visibility_rule_v2_uncalibrated",
+            "enabled": true,
+            "min_visible_px": 30,
+            "min_box_height_px": 4.0,
+            "min_fog_transmittance": 0.0,
+            "min_luma_contrast": 0.019999999552965165,
+            "max_lens_drop_cover": 0.6000000238418579
+        }
+    },
+    "navigation": {
+        "sim_time_s": 0.0,
+        "dt_s": 0.25,
+        "collision_avoidance": true,
+        "wind_from_deg": 300.0,
+        "wind_speed_kn": 8.0,
+        "current_set_deg": 60.0,
+        "current_drift_kn": 0.4000000059604645
+    },
+    "sensor": {
+        "enabled": true,
+        "preset": "hd_ip",
+        "distortion_k1": 0.03999999910593033,
+        "distortion_k2": 0.0,
+        "distortion_fill": true,
+        "blur_sigma_px": 0.5,
+        "motion_blur_px": 0.0,
+        "motion_blur_angle_deg": 0.0,
+        "noise_read_dn": 0.5,
+        "noise_shot": 0.03999999910593033,
+        "noise_chroma": 0.30000001192092898,
+        "gain": -1.0,
+        "vignette": 0.11999999731779099,
+        "monochrome": false,
+        "jpeg_quality": 85,
+        "lens_drops": -1.0,
+        "seed": 1310184638,
+        "save_clean": true
+    },
+    "appearance": {
+        "paint": "original",
+        "paint_seed": 1
+    },
+    "notes": "research job pilot_20261110 / C"
+}

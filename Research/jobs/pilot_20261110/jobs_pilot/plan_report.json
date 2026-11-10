@@ -1,0 +1,42 @@
+{
+    "report_schema": "portcctv.research.planreport.v1",
+    "experiment_id": "pilot_20261110",
+    "contract_sha256": "532c7322c621e7c7c6aa5977915dfb62cefff07a3893a01e2749250ef5e1b8d1",
+    "created_utc": "2026-11-10T02:54:10.5415086Z",
+    "jobs_file": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Research\\jobs\\pilot_20261110\\jobs_pilot\\jobs.json",
+    "profile_id": "profile_fixture_v1",
+    "profile_kind": "fixture_not_real_data",
+    "jobs_total": 24,
+    "jobs_planned": 5,
+    "jobs_planning_failed": 19,
+    "objects_requested": 65,
+    "objects_unmet": 31,
+    "render_jobs": 5,
+    "estimated_mb": 70.0,
+    "estimated_minutes": 1.0,
+    "render_cap": 24,
+    "failures": [
+        "G_ct_A_quay_east_mast_s2000: t04: size_unreachable: best rib predicts h 0.0249 vs target 0.0168 (|log ratio| 0.39 > 0.30)",
+        "C_ct_A_quay_east_mast_s1000: t00: size_unreachable: best rib predicts h 0.0235 vs target 0.0092 (|log ratio| 0.93 > 0.30) | t01: size_unreachable: best rib predicts h 0.0636 vs target 0.0330 (|log ratio| 0.66 > 0.30)",
+        "C_ct_A_quay_east_mast_s2000: t00: size_unreachable: best rib predicts h 0.0250 vs target 0.0127 (|log ratio| 0.68 > 0.30)",
+        "G_ct_B_breakwater_head_s1000: t00: size_unreachable: best rib predicts h 0.1254 vs target 0.0350 (|log ratio| 1.27 > 0.30)",
+        "G_ct_B_breakwater_head_s2000: t00: size_unreachable: best rib predicts h 0.0798 vs target 0.0362 (|log ratio| 0.79 > 0.30) | t01: size_unreachable: best rib predicts h 0.0638 vs target 0.0146 (|log ratio| 1.47 > 0.30)",
+        "C_ct_B_breakwater_head_s1000: t03: size_unreachable: best rib predicts h 0.0304 vs target 0.0073 (|log ratio| 1.42 > 0.30) | t04: size_unreachable: best rib predicts h 0.0504 vs target 0.0075 (|log ratio| 1.91 > 0.30)",
+        "C_ct_B_breakwater_head_s2000: t00: size_unreachable: best rib predicts h 0.0573 vs target 0.0207 (|log ratio| 1.02 > 0.30)",
+        "G_fp_A_market_roof_s1000: t00: size_unreachable: best rib predicts h 0.1310 vs target 0.0100 (|log ratio| 2.57 > 0.30)",
+        "G_fp_A_market_roof_s2000: t01: size_unreachable: best rib predicts h 0.0773 vs target 0.0117 (|log ratio| 1.89 > 0.30) | t02: size_unreachable: best rib predicts h 0.1227 vs target 0.0506 (|log ratio| 0.89 > 0.30)",
+        "C_fp_A_market_roof_s1000: t00: size_unreachable: best korean_fishing_boat predicts h 0.0824 vs target 0.2422 (|log ratio| 1.08 > 0.30)",
+        "C_fp_A_market_roof_s2000: t00: size_unreachable: best rib predicts h 0.0880 vs target 0.0275 (|log ratio| 1.16 > 0.30)",
+        "G_fp_C_breakwater_s2000: t00: size_unreachable: best barge predicts h 0.4366 vs target 0.0337 (|log ratio| 2.56 > 0.30) | t01: size_unreachable: best rib predicts h 0.0788 vs target 0.0114 (|log ratio| 1.93 > 0.30) | t04: size_unreachable: best rib predicts h 0.0619 vs target 0.0277 (|log ratio| 0.80 > 0.30)",
+        "C_fp_C_breakwater_s1000: t00: size_unreachable: best rib predicts h 0.0396 vs target 0.0118 (|log ratio| 1.21 > 0.30)",
+        "C_fp_C_breakwater_s2000: t01: size_unreachable: best rib predicts h 0.0554 vs target 0.0381 (|log ratio| 0.38 > 0.30) | t02: size_unreachable: best rib predicts h 0.0299 vs target 0.0165 (|log ratio| 0.59 > 0.30) | t04: size_unreachable: best rib predicts h 0.0108 vs target 0.0069 (|log ratio| 0.46 > 0.30)",
+        "G_mr_A_promenade_s1000: t00: size_unreachable: best kayak predicts h 0.0154 vs target 0.0095 (|log ratio| 0.48 > 0.30) | t02: size_unreachable: best kayak predicts h 0.0772 vs target 0.0159 (|log ratio| 1.58 > 0.30) | t03: size_unreachable: best kayak predicts h 0.1003 vs target 0.0297 (|log ratio| 1.22 > 0.30)",
+        "G_mr_A_promenade_s2000: t01: size_unreachable: best kayak predicts h 0.0944 vs target 0.0124 (|log ratio| 2.03 > 0.30) | t02: size_unreachable: best kayak predicts h 0.0398 vs target 0.0132 (|log ratio| 1.11 > 0.30) | t04: overlaps_vessel_or_structure",
+        "C_mr_A_promenade_s1000: t00: placement_rule: intersects_structure:pontoon_3017",
+        "G_mr_C_breakwater_s1000: t01: size_unreachable: best kayak predicts h 0.0352 vs target 0.0159 (|log ratio| 0.79 > 0.30)",
+        "C_mr_C_breakwater_s1000: t01: size_unreachable: best kayak predicts h 0.0209 vs target 0.0135 (|log ratio| 0.44 > 0.30)"
+    ],
+    "notes": [
+        "C uses a FIXTURE profile: not real-data statistics"
+    ]
+}

@@ -1,0 +1,125 @@
+{
+    "profile_schema": "portcctv.research.profile.v1",
+    "profile_kind": "real_train_subset",
+    "profile_id": "profile_f1_p100_s17",
+    "created_utc": "2026-11-10T04:19:36.0047777Z",
+    "statement": "Statistics of one real TRAIN subset only; no inner-val / calibration / test / held-out item was read.",
+    "source_manifest_sha256": [
+        "c0336132d4c299b605b711f0ce5973b97459d0197d552ed0ccf09a02983a8571",
+        "d0e816e009870993cd4ce579b8d0afa37eb194dbd83dca6ad635a8c0ec528744"
+    ],
+    "subset_id": "f1_p100_s17",
+    "subset_items_sha256": "08abc3d86de295b949f1e78738142860af86354bcf9f5bd28b18e97f62a70036",
+    "fold": 1,
+    "roles_used": [
+        "train"
+    ],
+    "n_frames": 354,
+    "n_boxes": 2344,
+    "label_review_status": "source labels not human reviewed in this project (provisional)",
+    "coordinate_note": "height_frac = box height / image height; center_u = box centre x / width; bottom_v = box bottom y / height (top-left origin)",
+    "height_frac": {
+        "name": "height_frac",
+        "edges": [
+            0.004000000189989805,
+            0.00800000037997961,
+            0.014999999664723874,
+            0.029999999329447748,
+            0.05999999865889549,
+            0.11999999731779099,
+            0.25
+        ],
+        "weights": [
+            0.0,
+            16.0,
+            524.0,
+            952.0,
+            495.0,
+            357.0
+        ],
+        "within_bin": "log_uniform"
+    },
+    "center_u": {
+        "name": "center_u",
+        "edges": [
+            0.0,
+            0.10000000149011612,
+            0.20000000298023225,
+            0.30000001192092898,
+            0.4000000059604645,
+            0.5,
+            0.6000000238418579,
+            0.699999988079071,
+            0.800000011920929,
+            0.8999999761581421,
+            1.0
+        ],
+        "weights": [
+            321.0,
+            314.0,
+            202.0,
+            271.0,
+            238.0,
+            149.0,
+            218.0,
+            217.0,
+            190.0,
+            224.0
+        ],
+        "within_bin": "uniform"
+    },
+    "bottom_v": {
+        "name": "bottom_v",
+        "edges": [
+            0.0,
+            0.10000000149011612,
+            0.20000000298023225,
+            0.30000001192092898,
+            0.4000000059604645,
+            0.5,
+            0.6000000238418579,
+            0.699999988079071,
+            0.800000011920929,
+            0.8999999761581421,
+            1.0
+        ],
+        "weights": [
+            0.0,
+            0.0,
+            0.0,
+            171.0,
+            948.0,
+            944.0,
+            257.0,
+            23.0,
+            1.0,
+            0.0
+        ],
+        "within_bin": "uniform"
+    },
+    "count_per_frame": {
+        "name": "count_per_frame",
+        "edges": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            9.0,
+            13.0,
+            21.0
+        ],
+        "weights": [
+            0.0,
+            4.0,
+            23.0,
+            124.0,
+            134.0,
+            52.0,
+            17.0
+        ],
+        "within_bin": "integer"
+    },
+    "truncated_fraction": 0.046501707285642627,
+    "environment_source": "none: no environment labels in the real data; C uses the same environment prior as G"
+}

@@ -37,6 +37,18 @@ namespace PortCCTV.EditorTools
                 var t = Path.Combine(dst, Path.GetFileName(f));
                 if (!File.Exists(t)) File.Copy(f, t);
             }
+            // Research inputs next to the exe (the player resolves contract paths against its own folder); never overwrite.
+            foreach (var sub in new[] { "data", "freeze", "profiles", "configs" })
+            {
+                var src = Path.Combine("Research", sub);
+                if (!Directory.Exists(src)) continue;
+                foreach (var f in Directory.GetFiles(src, "*", SearchOption.AllDirectories))
+                {
+                    var t = Path.Combine(Path.GetDirectoryName(OutputExe), f);
+                    Directory.CreateDirectory(Path.GetDirectoryName(t));
+                    if (!File.Exists(t)) File.Copy(f, t);
+                }
+            }
         }
 
         public static void BuildWindowsBatch()

@@ -1,0 +1,182 @@
+{
+ "batch_schema": "portcctv.batch.v1",
+ "batch_id": "pilot_20261110_jobs_pilot_r4_tamperC",
+ "output_dir": "Captures/research/pilot_20261110/jobs_pilot_r4/captures_tamperC",
+ "research_batch": true,
+ "max_captures_this_run": 24,
+ "jobs": [
+  {
+   "job_id": "G_ct_A_quay_east_mast_s1000",
+   "scenario_path": "scenarios/G_ct_A_quay_east_mast_s1000.json",
+   "use_inline": false,
+   "inline_scenario": {
+    "schema_version": 1,
+    "scenario_id": "untitled",
+    "harbor_id": "generic_harbor_02",
+    "camera_preset_id": "cam_A_quay_mast",
+    "camera_override": {
+     "enabled": false,
+     "position": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "euler_deg": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+     },
+     "vertical_fov_deg": 40.0
+    },
+    "environment": {
+     "preset_id": "day_clear",
+     "water_preset_id": "calm",
+     "water_time_s": 12.0,
+     "weather": {
+      "precipitation": "none",
+      "intensity": 0.5,
+      "overcast": false,
+      "visibility_scale": 1.0,
+      "wetness": -1.0,
+      "snow_cover": -1.0,
+      "seed": 0
+     },
+     "lights": "auto",
+     "vessel_wave_motion": false
+    },
+    "vessels": [],
+    "capture": {
+     "width": 1920,
+     "height": 1080,
+     "warmup_frames": 6,
+     "write_mask": true,
+     "mask_source": "gpu",
+     "compare_cpu_mask": false,
+     "mask_stride": 1,
+     "strict_placement": false,
+     "label_policy": {
+      "version": "visibility_rule_v2_uncalibrated",
+      "enabled": true,
+      "min_visible_px": 30,
+      "min_box_height_px": 4.0,
+      "min_fog_transmittance": 0.0,
+      "min_luma_contrast": 0.019999999552965164,
+      "max_lens_drop_cover": 0.6000000238418579
+     }
+    },
+    "navigation": {
+     "sim_time_s": 0.0,
+     "dt_s": 0.25,
+     "collision_avoidance": true,
+     "wind_from_deg": 300.0,
+     "wind_speed_kn": 8.0,
+     "current_set_deg": 60.0,
+     "current_drift_kn": 0.4000000059604645
+    },
+    "sensor": {
+     "enabled": false,
+     "preset": "off",
+     "distortion_k1": 0.0,
+     "distortion_k2": 0.0,
+     "distortion_fill": true,
+     "blur_sigma_px": 0.0,
+     "motion_blur_px": 0.0,
+     "motion_blur_angle_deg": 0.0,
+     "noise_read_dn": 0.0,
+     "noise_shot": 0.0,
+     "noise_chroma": 0.30000001192092896,
+     "gain": -1.0,
+     "vignette": 0.0,
+     "monochrome": false,
+     "jpeg_quality": 0,
+     "lens_drops": -1.0,
+     "seed": 7,
+     "save_clean": true
+    },
+    "appearance": {
+     "paint": "original",
+     "paint_seed": 1
+    },
+    "notes": ""
+   },
+   "expected_status": "done",
+   "research": {
+    "experiment_id": "pilot_20261110",
+    "contract_sha256": "623e1445e26911cd3e6167c46c9551e5257ae875e2ab2563a431eea7e9d962c2",
+    "freeze_id": "freeze_20261110",
+    "mode": "G",
+    "sampler_version": "sampler_G_v1_fixed_prior",
+    "scene_kind": "planned",
+    "harbor_id": "container_terminal_01",
+    "camera_preset_id": "ct_A_quay_east_mast",
+    "generation_seed": 1000,
+    "layout_seed": 86807446,
+    "env_seed": 911185926,
+    "sensor_seed": 154463880,
+    "profile_id": "",
+    "profile_kind": "",
+    "profile_sha256": "",
+    "job_scenario_sha256": "3093f51fead77ff32fe2922af001e43a73f5243aada7594f1a12e3b98899607c",
+    "required_build_content_sha256": "51fd67203d163bb1258aedb0f4a2bd05365f765b9f1f02b77ef52e90a9c5f790",
+    "plan_status": "planned",
+    "plan_failure_reasons": [],
+    "planning_attempts": 1,
+    "planning_ms": 178.4872,
+    "objects": [
+     {
+      "object_id": "t00",
+      "role": "target",
+      "occludes": "",
+      "target_height_frac": 0.012123395688831806,
+      "target_center_u": 0.7504832148551941,
+      "target_bottom_v": 0.5397641658782959,
+      "heading_deg": 327.46240234375,
+      "occlusion_target": "none",
+      "truncation_target": "none",
+      "plan_status": "planned",
+      "unmet_reason": "",
+      "attempts": 1,
+      "asset_id": "rib",
+      "x": -32.270729064941406,
+      "z": -57.23725128173828,
+      "immersion_m": 0.10000000149011612,
+      "water_region": "terminal_basin",
+      "predicted_height_frac": 0.014814701862633228,
+      "predicted_center_u": 0.7502663731575012,
+      "predicted_bottom_v": 0.5406278371810913,
+      "predicted_truncation_fraction": -4.801201924919951e-08,
+      "predicted_box_overlap_fraction": -1.0,
+      "position_adjusted_dv": 0.0,
+      "rows_tried": 1,
+      "attempt_log": [
+       "a0: planned rib at 126 m, row v 0.540 (requested 0.540, dv +0.000), predicted h 0.0148"
+      ]
+     }
+    ],
+    "environment": {
+     "lighting": "dusk_low_light",
+     "water": "calm",
+     "precipitation": "none",
+     "sensor": "low_quality",
+     "fog_visibility_scale": 0.6000000238418579,
+     "precipitation_intensity": 0.0,
+     "water_time_s": 27.5849552154541
+    },
+    "pair_group_id": "",
+    "changed_factor": "",
+    "changed_value": "",
+    "episode_id": "",
+    "frame_index": -1,
+    "sim_time_s": 0.0,
+    "split": "pretrain",
+    "occlusion_reference": "per_object_water_only",
+    "size_tolerance_rel": 0.3499999940395355,
+    "retry_limit": 6,
+    "label_policy_version": "visibility_rule_v2_uncalibrated",
+    "class_map_version": "class_map_v1",
+    "primary_bbox_policy": "visible_mask_bbox/primary_bbox_v1"
+   },
+   "max_attempts": 2
+  }
+ ]
+}

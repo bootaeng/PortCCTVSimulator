@@ -1,0 +1,27 @@
+{
+    "check_schema": "portcctv.research.freezecheck.runtime.v1",
+    "freeze_id": "freeze_20261110",
+    "checked_utc": "2026-11-10T02:52:12.1617861Z",
+    "build_content_sha256": "627e5bf7385baef80945230c08d31e0868930315278f6d2678f3c795bfa0f3da",
+    "results": [
+        "container_terminal_01: harbor definition UNCHANGED (93393204b7ec0d80 vs 93393204b7ec0d80)",
+        "  camera ct_A_quay_east_mast: UNCHANGED (dpos 0.0E+000 m, deuler 0.0E+000 deg, dfov 0.0E+000)",
+        "  camera ct_B_breakwater_head: UNCHANGED (dpos 0.0E+000 m, deuler 2.2E-007 deg, dfov 0.0E+000)",
+        "  camera ct_C_admin_roof: UNCHANGED (dpos 0.0E+000 m, deuler 0.0E+000 deg, dfov 0.0E+000)",
+        "  camera ct_D_hill_tower: UNCHANGED (dpos 0.0E+000 m, deuler 4.3E-007 deg, dfov 0.0E+000)",
+        "  camera ct_E_basin_breakwater: UNCHANGED (dpos 0.0E+000 m, deuler 4.8E-007 deg, dfov 0.0E+000)",
+        "fishing_port_01: harbor definition UNCHANGED (7477375425862b34 vs 7477375425862b34)",
+        "  camera fp_A_market_roof: UNCHANGED (dpos 0.0E+000 m, deuler 0.0E+000 deg, dfov 0.0E+000)",
+        "  camera fp_B_hillside: UNCHANGED (dpos 0.0E+000 m, deuler 7.7E-006 deg, dfov 0.0E+000)",
+        "  camera fp_C_breakwater: UNCHANGED (dpos 0.0E+000 m, deuler 9.5E-007 deg, dfov 0.0E+000)",
+        "marina_01: harbor definition UNCHANGED (26797181460d1562 vs 26797181460d1562)",
+        "  camera mr_A_promenade: UNCHANGED (dpos 0.0E+000 m, deuler 0.0E+000 deg, dfov 0.0E+000)",
+        "  camera mr_B_tower: UNCHANGED (dpos 0.0E+000 m, deuler 1.0E-006 deg, dfov 0.0E+000)",
+        "  camera mr_C_breakwater: UNCHANGED (dpos 0.0E+000 m, deuler 0.0E+000 deg, dfov 0.0E+000)"
+    ],
+    "maps_checked": 3,
+    "maps_changed": 0,
+    "cameras_checked": 11,
+    "cameras_changed": 0,
+    "runtime_unchanged": true
+}

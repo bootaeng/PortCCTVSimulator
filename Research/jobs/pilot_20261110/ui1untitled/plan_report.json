@@ -1,0 +1,26 @@
+{
+    "report_schema": "portcctv.research.planreport.v1",
+    "experiment_id": "pilot_20261110",
+    "contract_sha256": "b9b0f53559e833d73f0d5a88cb781eeb582a8964e6cfd1643ee7f43942021129",
+    "created_utc": "2026-11-10T04:02:47.3883626Z",
+    "jobs_file": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Research\\jobs\\pilot_20261110\\ui1untitled\\jobs.json",
+    "profile_id": "profile_fixture_v1",
+    "profile_kind": "fixture_not_real_data",
+    "jobs_total": 6,
+    "jobs_planned": 4,
+    "jobs_planning_failed": 2,
+    "objects_requested": 18,
+    "objects_unmet": 4,
+    "render_jobs": 4,
+    "estimated_mb": 56.0,
+    "estimated_minutes": 0.800000011920929,
+    "render_cap": 24,
+    "failures": [
+        "G_fp_C_breakwater_s3000: t01: occluder_unplaceable: overlaps_vessel_or_structure | t01_occ: overlaps_vessel_or_structure",
+        "G_mr_A_promenade_s3000: t02: occluder_unplaceable: overlaps_vessel_or_structure | t02_occ: overlaps_vessel_or_structure"
+    ],
+    "notes": [
+        "C uses a FIXTURE profile: not real-data statistics",
+        "jobs require build e4f4be0ec23141844f18b2ace981c4181a49f079f32079febcfbf1d2af709ebb"
+    ]
+}

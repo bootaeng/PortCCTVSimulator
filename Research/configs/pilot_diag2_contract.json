@@ -1,0 +1,357 @@
+{
+    "contract_schema": "portcctv.research.contract.v1",
+    "contract_version": 1,
+    "experiment_id": "pdiag2",
+    "status": "draft",
+    "created_utc": "2026-11-10T02:52:40.5154795Z",
+    "notes": "Re-run of the paired-factor diagnostics after the MAX_PATH fix (diag r3 failed one paired job on a 260-character path).",
+    "protocol": {
+        "protocol_id": "adaptation_seen_camera",
+        "status": "draft",
+        "target_sites": [],
+        "note": ""
+    },
+    "freeze": {
+        "freeze_id": "freeze_20261110",
+        "freeze_manifest_path": "Research/freeze/freeze_20261110.json",
+        "freeze_manifest_sha256": "",
+        "freeze_git_commit": ""
+    },
+    "data": {
+        "real_manifest_paths": [
+            "Research/data/real_manifest_v1.json",
+            "Research/data/external_inventory_v1.json"
+        ],
+        "real_manifest_sha256": [],
+        "fold": 1,
+        "fraction_denominator": "annotated_frames",
+        "fractions": [
+            0.10000000149011612,
+            0.25,
+            0.5,
+            1.0
+        ],
+        "subset_seeds": [
+            17,
+            42,
+            73
+        ],
+        "subset_method": "nested_prefix_of_splitmix64_permutation_v1 (denominator: annotated frames; ceil(f*N))",
+        "inner_val_use": "declared_in_advance: model selection / early-stop only",
+        "calibration_source": "pending",
+        "sealed_test_source": "pending",
+        "unlabelled_train_video_use": "not_used",
+        "role_overrides": []
+    },
+    "arms": [
+        {
+            "arm_id": "R",
+            "meaning": "real only, basic augmentation",
+            "stages": [
+                {
+                    "stage_id": "real",
+                    "data": "real_subset",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                }
+            ]
+        },
+        {
+            "arm_id": "A",
+            "meaning": "same real data + strong 2D augmentation",
+            "stages": [
+                {
+                    "stage_id": "real",
+                    "data": "real_subset",
+                    "augmentation": "strong_2d",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                }
+            ]
+        },
+        {
+            "arm_id": "RR",
+            "meaning": "real for B_s updates, then the same real for B_r updates (compute control)",
+            "stages": [
+                {
+                    "stage_id": "pretrain",
+                    "data": "real_subset",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                },
+                {
+                    "stage_id": "finetune",
+                    "data": "real_subset",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                }
+            ]
+        },
+        {
+            "arm_id": "SR_G",
+            "meaning": "generic synthetic (G) for B_s, then the same real for B_r",
+            "stages": [
+                {
+                    "stage_id": "pretrain",
+                    "data": "synthetic_G",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                },
+                {
+                    "stage_id": "finetune",
+                    "data": "real_subset",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                }
+            ]
+        },
+        {
+            "arm_id": "SR_C",
+            "meaning": "CCTV-matched synthetic (C) for B_s, then the same real for B_r",
+            "stages": [
+                {
+                    "stage_id": "pretrain",
+                    "data": "synthetic_C",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                },
+                {
+                    "stage_id": "finetune",
+                    "data": "real_subset",
+                    "augmentation": "basic",
+                    "optimizer_updates": 3000,
+                    "optimizer": "SGD",
+                    "lr0": 0.009999999776482582,
+                    "lr_schedule": "linear_to_0.01",
+                    "warmup_updates": 100,
+                    "reset_optimizer": true,
+                    "reset_lr_schedule": true,
+                    "weight_selection": "last"
+                }
+            ]
+        }
+    ],
+    "training": {
+        "status": "planned_not_run",
+        "B_s": 3000,
+        "B_r": 3000,
+        "batch_size": 16,
+        "imgsz": 640,
+        "detector": "yolov8n (not run here)",
+        "base_weights": "COCO-pretrained yolov8n.pt (not fetched here)",
+        "augmentation_basic": "ultralytics defaults: hsv, fliplr 0.5, mosaic 1.0, scale 0.5",
+        "augmentation_strong_2d": "basic + blur / jpeg / noise / random fog-contrast / colour jitter (exact list pending)",
+        "record_fields": [
+            "optimizer_updates_per_stage",
+            "real_frame_exposures",
+            "real_box_exposures",
+            "synthetic_images_seen",
+            "class_ratio",
+            "size_bin_ratio",
+            "positive_frame_ratio",
+            "gpu_hours",
+            "wall_hours"
+        ],
+        "note": "RR / SR_G / SR_C share B_s + B_r and every stage setting except the stage-1 data; R and A run B_r only, so their total compute is NOT equal to the two-stage arms."
+    },
+    "generation": {
+        "modes": [
+            "G"
+        ],
+        "maps": [
+            {
+                "harbor_id": "container_terminal_01",
+                "camera_preset_ids": [
+                    "ct_B_breakwater_head"
+                ]
+            }
+        ],
+        "seeds": [
+            5
+        ],
+        "captures_per_cell": 1,
+        "width": 1920,
+        "height": 1080,
+        "retry_limit": 6,
+        "max_vessels": 6,
+        "asset_candidates": "harbor_vessel_rules",
+        "size_tolerance_rel": 0.3499999940395355,
+        "sampler_G_version": "sampler_G_v1_fixed_prior",
+        "sampler_C_version": "sampler_C_v1_train_profile_match",
+        "c_variant": "train_distribution_match",
+        "c_profile_path": "Research/profiles/profile_fixture_v1.json",
+        "c_profile_sha256": "efbcbcb9d543f87790e7e6202c567c32ba6e02c146d36eebc9f79f3cd0b8487f",
+        "factors": {
+            "lighting": [],
+            "water": [],
+            "fog_visibility_scale": [],
+            "precipitation": [],
+            "sensor": [],
+            "count_min": -1,
+            "count_max": -1,
+            "height_frac_min": -1.0,
+            "height_frac_max": -1.0,
+            "heading_deg": -1.0,
+            "occlusion": [],
+            "truncation": []
+        },
+        "occlusion_reference": "per_object_water_only",
+        "empty_negatives_per_camera": 0,
+        "boundary_unreachable_cases": 0,
+        "paired": [
+            {
+                "factor": "lighting",
+                "values": [
+                    "night_clear"
+                ]
+            },
+            {
+                "factor": "sensor",
+                "values": [
+                    "low_quality"
+                ]
+            },
+            {
+                "factor": "fog_visibility_scale",
+                "values": [
+                    "0.3"
+                ]
+            }
+        ],
+        "sequence": {
+            "episodes": 0,
+            "frames_per_episode": 3,
+            "interval_s": 4.0,
+            "vessel_motion": "auto",
+            "val_fraction": 0.20000000298023224
+        },
+        "render_budget": {
+            "max_captures_this_run": 4,
+            "estimated_mb_per_capture": 14.0,
+            "estimated_s_per_capture": 12.0
+        }
+    },
+    "labels": {
+        "class_map_version": "class_map_v1",
+        "primary_bbox_policy": "visible_mask_bbox",
+        "primary_bbox_policy_version": "primary_bbox_v1",
+        "visibility_policy_version": "visibility_rule_v2_uncalibrated",
+        "trainer_adapter": "ultralytics_yolo_txt",
+        "adapter_supports_ignore": false,
+        "export_formats": [
+            "yolo",
+            "coco"
+        ],
+        "letterbox_check_size": 640
+    },
+    "evaluation": {
+        "schema": "portcctv.research.eval.v1",
+        "metrics": [
+            "AP50_95",
+            "AP50",
+            "recall_by_size_bin",
+            "recall_at_fp_threshold",
+            "fp_per_1000_frames"
+        ],
+        "threshold_rule": "confidence threshold fixed on the calibration split, then applied unchanged to the test split",
+        "grouping_keys": [
+            "seed",
+            "fold",
+            "site",
+            "clip_id",
+            "episode_id"
+        ],
+        "fa_per_hour": "not computed from short clips",
+        "results": "none (no evaluation has been run)"
+    },
+    "output_dir": "Captures/research/pdiag2",
+    "pending_human_decisions": [
+        "protocol: adaptation_seen_camera vs unseen_generalization and the target CCTV site(s)",
+        "calibration split source (no independent calibration data assigned)",
+        "sealed test source (the v2 test 139 frames are exposed and cannot be sealed)",
+        "human label policy: primary bbox (visible / above-water / full), minimum size, fog / night identifiability, SMD Other, dry-storage boats",
+        "human review of the provisional synthetic labels (training_ready stays false)",
+        "C profile approval: which real train subset may shape the C sampler (fixture used until then)",
+        "strong 2D augmentation list for arm A and the training budget B_s / B_r"
+    ],
+    "legacy_names": [
+        {
+            "arm_id": "R",
+            "legacy": "R (real only)",
+            "source_document": "docs/RESEARCH_EXPERIMENT_DESIGN_20261106.md"
+        },
+        {
+            "arm_id": "A",
+            "legacy": "R+A (real + 2D augmentation)",
+            "source_document": "docs/RESEARCH_EXPERIMENT_DESIGN_20261106.md"
+        },
+        {
+            "arm_id": "A",
+            "legacy": "B (strong 2D) in earlier A/B naming",
+            "source_document": "paper/oceans plans (A=real, B=2D)"
+        },
+        {
+            "arm_id": "R",
+            "legacy": "A (real resampling) in earlier A/B naming",
+            "source_document": "paper/oceans plans (A=real, B=2D)"
+        },
+        {
+            "arm_id": "SR_G",
+            "legacy": "S->R with R+S-U style uniform synthetic",
+            "source_document": "docs/RESEARCH_EXPERIMENT_DESIGN_20261106.md"
+        },
+        {
+            "arm_id": "SR_C",
+            "legacy": "S->R with R+S-C condition-coverage synthetic",
+            "source_document": "docs/RESEARCH_EXPERIMENT_DESIGN_20261106.md"
+        }
+    ]
+}

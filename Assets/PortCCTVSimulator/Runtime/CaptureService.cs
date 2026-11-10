@@ -132,7 +132,8 @@ namespace PortCCTV
                 {
                     var f = Path.Combine(dir, meta.files[k]);
                     if (!File.Exists(f)) { reason = meta.files[k] + " missing"; return false; }
-                    if (new FileInfo(f).Length == 0) { reason = meta.files[k] + " is empty"; return false; }
+                    // YOLO text files are legitimately empty (no vessel / no ignore region); every other file must have content
+                    if (new FileInfo(f).Length == 0 && !meta.files[k].EndsWith(".txt", StringComparison.Ordinal)) { reason = meta.files[k] + " is empty"; return false; }
                     if (ScenarioIO.Sha256Hex(File.ReadAllBytes(f)) != meta.file_sha256[k]) { reason = meta.files[k] + " SHA-256 differs from metadata"; return false; }
                 }
                 if (!string.IsNullOrEmpty(expectedScenarioId) && meta.scenario_id != expectedScenarioId)
@@ -147,7 +148,14 @@ namespace PortCCTV
         /// scenario.json, yolo_visible_bbox_provisional.txt into <paramref name="finalDir"/>.
         /// Writes into "<finalDir>.partial_<ts>" first and renames only on success; never overwrites an existing finalDir.
         /// </summary>
-        public static CaptureResult Capture(SimWorld world, string finalDir, string runMode)
+        public static CaptureResult Capture(SimWorld world, string finalDir, string runMode) => Capture(world, finalDir, runMode, null, null);
+
+        /// <summary>Instance ids are 8-bit (0 = background); more vessels are refused instead of wrapping ids.</summary>
+        public const int MaxMaskInstances = 254;
+
+        /// <summary>Research capture: additionally measures the achieved conditions (incl. per-vessel reference passes for the
+        /// geometric occlusion) and writes research.json before the file list is hashed. RGB / masks / labels are unchanged.</summary>
+        public static CaptureResult Capture(SimWorld world, string finalDir, string runMode, Research.ResearchJobInfo research, string jobId)
         {
             var res = new CaptureResult { output_dir = finalDir };
             if (Directory.Exists(finalDir) || File.Exists(finalDir))
@@ -167,6 +175,8 @@ namespace PortCCTV
             try
             {
                 int W = cfg.capture.width, H = cfg.capture.height;
+                if (world.Vessels.Count > MaxMaskInstances)
+                    throw new InvalidOperationException($"{world.Vessels.Count} vessels exceed the 8-bit instance mask limit of {MaxMaskInstances}");
                 world.ApplyCamera(cfg);
                 world.Weather?.ResetDeterministic(cam);
                 world.Lights?.UpdateForCamera(cam, H);
@@ -400,6 +410,15 @@ namespace PortCCTV
                 WriteFile(partial, "yolo_ignore_regions_provisional.txt", Encoding.UTF8.GetBytes(ignore.ToString()));
 
                 string scenarioJson = ScenarioIO.ToJson(cfg);
+                if (research != null && research.IsResearch)
+                {
+                    var refSw = Stopwatch.StartNew();
+                    bool doRef = research.occlusion_reference == "per_object_water_only" && mask != null && gpu;
+                    var refPx = doRef ? Research.ResearchMeasure.ReferencePixels(world, cam, W, H, lens) : new Dictionary<int, int>();
+                    var rrec = Research.ResearchMeasure.Build(world, cfg, labels, research, jobId ?? Path.GetFileName(finalDir), refPx, doRef, ScenarioIO.Sha256Hex(scenarioJson));
+                    rrec.reference_ms = refSw.Elapsed.TotalMilliseconds;
+                    WriteFile(partial, "research.json", new UTF8Encoding(false).GetBytes(JsonUtility.ToJson(rrec, true)));
+                }
                 WriteFile(partial, "scenario.json", new UTF8Encoding(false).GetBytes(scenarioJson));
                 WriteFile(partial, "labels.json", new UTF8Encoding(false).GetBytes(JsonUtility.ToJson(labels, true)));
 

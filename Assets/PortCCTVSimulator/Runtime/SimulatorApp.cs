@@ -28,7 +28,7 @@ namespace PortCCTV
     ///   -write-sequence <dir> [-frames N] [-interval s] [-sequence-out <dir>]   write a time sequence (scenario files + jobs.json)
     ///   -quit                          exit after the command(s) (exit code 0 ok, 1 failure)
     /// </summary>
-    public class SimulatorApp : MonoBehaviour
+    public partial class SimulatorApp : MonoBehaviour
     {
         SimWorld _world;
         ScenarioConfig _cfg;
@@ -148,6 +148,7 @@ namespace PortCCTV
                 }
                 catch (Exception ex) { Log("ERROR writing map suite: " + ex.Message); failed = true; }
             }
+            yield return RunResearchCommandLine(f => failed |= f);
             var sc = ArgValue("-scenario");
             if (sc != null)
             {
@@ -208,6 +209,7 @@ namespace PortCCTV
                 failed |= summary == null || summary.unexpected > 0;
                 ApplyScenario();
             }
+            failed |= RunResearchPostBatch();
             if (HasArg("-ui-dev-view")) { SetDevView(true); Log("QA: dev free view on"); }
             var tab = ArgValue("-ui-tab");
             if (tab != null) { int ti = Array.IndexOf(Tabs, tab); _tab = ti >= 0 ? ti : int.TryParse(tab, out var tn) ? Mathf.Clamp(tn, 0, Tabs.Length - 1) : 0; Log("QA: tab " + Tabs[_tab]); }
@@ -561,7 +563,7 @@ namespace PortCCTV
         }
 
         // ---------------- panel: five tabs, rare settings folded away ----------------
-        static readonly string[] Tabs = { "장면", "날씨", "선박", "항해", "캡처" };
+        static readonly string[] Tabs = { "장면", "날씨", "선박", "항해", "캡처", "연구" };
         int _tab;
         bool _foldMaps, _foldDev, _foldFiles, _foldWx, _foldVessel, _foldNav, _foldCap, _pickType, _pickTypeEdit, _foldSensor;
         RenderTexture _previewFx;
@@ -595,7 +597,8 @@ namespace PortCCTV
                 case 1: TabWeather(); break;
                 case 2: TabVessels(); break;
                 case 3: TabNavigation(); break;
-                default: TabCapture(); break;
+                case 4: TabCapture(); break;
+                default: TabResearch(); break;
             }
             GUI.enabled = true;
             if (_busy) GUILayout.Label("일괄 실행 중 ...", _warn);

@@ -1,0 +1,211 @@
+{
+    "batch_schema": "portcctv.batch.v1",
+    "batch_id": "pign_j1",
+    "output_dir": "Captures/research/pign/j1/captures",
+    "jobs": [
+        {
+            "job_id": "G_ct_B_breakwater_head_s7000",
+            "scenario_path": "scenarios/G_ct_B_breakwater_head_s7000.json",
+            "use_inline": false,
+            "inline_scenario": {
+                "schema_version": 1,
+                "scenario_id": "untitled",
+                "harbor_id": "generic_harbor_02",
+                "camera_preset_id": "cam_A_quay_mast",
+                "camera_override": {
+                    "enabled": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "euler_deg": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "vertical_fov_deg": 40.0
+                },
+                "environment": {
+                    "preset_id": "day_clear",
+                    "water_preset_id": "calm",
+                    "water_time_s": 12.0,
+                    "weather": {
+                        "precipitation": "none",
+                        "intensity": 0.5,
+                        "overcast": false,
+                        "visibility_scale": 1.0,
+                        "wetness": -1.0,
+                        "snow_cover": -1.0,
+                        "seed": 0
+                    },
+                    "lights": "auto",
+                    "vessel_wave_motion": false
+                },
+                "vessels": [],
+                "capture": {
+                    "width": 1920,
+                    "height": 1080,
+                    "warmup_frames": 6,
+                    "write_mask": true,
+                    "mask_source": "gpu",
+                    "compare_cpu_mask": false,
+                    "mask_stride": 1,
+                    "strict_placement": false,
+                    "label_policy": {
+                        "version": "visibility_rule_v2_uncalibrated",
+                        "enabled": true,
+                        "min_visible_px": 30,
+                        "min_box_height_px": 4.0,
+                        "min_fog_transmittance": 0.0,
+                        "min_luma_contrast": 0.019999999552965165,
+                        "max_lens_drop_cover": 0.6000000238418579
+                    }
+                },
+                "navigation": {
+                    "sim_time_s": 0.0,
+                    "dt_s": 0.25,
+                    "collision_avoidance": true,
+                    "wind_from_deg": 300.0,
+                    "wind_speed_kn": 8.0,
+                    "current_set_deg": 60.0,
+                    "current_drift_kn": 0.4000000059604645
+                },
+                "sensor": {
+                    "enabled": false,
+                    "preset": "off",
+                    "distortion_k1": 0.0,
+                    "distortion_k2": 0.0,
+                    "distortion_fill": true,
+                    "blur_sigma_px": 0.0,
+                    "motion_blur_px": 0.0,
+                    "motion_blur_angle_deg": 0.0,
+                    "noise_read_dn": 0.0,
+                    "noise_shot": 0.0,
+                    "noise_chroma": 0.30000001192092898,
+                    "gain": -1.0,
+                    "vignette": 0.0,
+                    "monochrome": false,
+                    "jpeg_quality": 0,
+                    "lens_drops": -1.0,
+                    "seed": 7,
+                    "save_clean": true
+                },
+                "appearance": {
+                    "paint": "original",
+                    "paint_seed": 1
+                },
+                "notes": ""
+            },
+            "expected_status": "done",
+            "research": {
+                "experiment_id": "pign",
+                "contract_sha256": "d652f3226e2ce0374ac5fa3407077d41a2bf978c9d3e0eebe04b1770cb273c89",
+                "freeze_id": "freeze_20261110",
+                "mode": "G",
+                "sampler_version": "sampler_G_v1_fixed_prior",
+                "scene_kind": "planned",
+                "harbor_id": "container_terminal_01",
+                "camera_preset_id": "ct_B_breakwater_head",
+                "generation_seed": 7000,
+                "layout_seed": 1969871609,
+                "env_seed": 2088112043,
+                "sensor_seed": 1678449959,
+                "profile_id": "",
+                "profile_kind": "",
+                "profile_sha256": "",
+                "job_scenario_sha256": "eb49877f82ff21761f67a1ca486a60d1816c1bd03ae30e938cd1636f02670a7c",
+                "required_build_content_sha256": "e3788ddf6fb06dd976dbf534fcdd463de7de8fefc849e141bf89803c8438d1fd",
+                "plan_status": "planned",
+                "plan_failure_reasons": [],
+                "planning_attempts": 2,
+                "planning_ms": 363.42940000000007,
+                "objects": [
+                    {
+                        "object_id": "t00",
+                        "role": "target",
+                        "occludes": "",
+                        "target_height_frac": 0.004768287762999535,
+                        "target_center_u": 0.8136626482009888,
+                        "target_bottom_v": 0.5530257821083069,
+                        "heading_deg": 87.19813537597656,
+                        "occlusion_target": "none",
+                        "truncation_target": "none",
+                        "plan_status": "planned",
+                        "unmet_reason": "",
+                        "attempts": 1,
+                        "asset_id": "rib",
+                        "x": 382.174072265625,
+                        "z": -704.4921875,
+                        "immersion_m": 0.10000000149011612,
+                        "water_region": "outer_sea",
+                        "predicted_height_frac": 0.00631620641797781,
+                        "predicted_center_u": 0.8134183287620544,
+                        "predicted_bottom_v": 0.3854241967201233,
+                        "predicted_truncation_fraction": 2.1210455614095737e-8,
+                        "predicted_box_overlap_fraction": -1.0,
+                        "position_adjusted_dv": -0.16802600026130677,
+                        "rows_tried": 69,
+                        "attempt_log": [
+                            "a0: planned rib at 284 m, row v 0.385 (requested 0.553, dv -0.168), predicted h 0.0063"
+                        ]
+                    },
+                    {
+                        "object_id": "t01",
+                        "role": "target",
+                        "occludes": "",
+                        "target_height_frac": 0.0055070724338293079,
+                        "target_center_u": 0.5136651396751404,
+                        "target_bottom_v": 0.6524866223335266,
+                        "heading_deg": 311.1447448730469,
+                        "occlusion_target": "none",
+                        "truncation_target": "none",
+                        "plan_status": "planned",
+                        "unmet_reason": "",
+                        "attempts": 1,
+                        "asset_id": "rib",
+                        "x": 404.9798889160156,
+                        "z": -588.99365234375,
+                        "immersion_m": 0.10000000149011612,
+                        "water_region": "outer_sea",
+                        "predicted_height_frac": 0.007350102066993713,
+                        "predicted_center_u": 0.5135217905044556,
+                        "predicted_bottom_v": 0.4001995921134949,
+                        "predicted_truncation_fraction": -4.993917279705329e-9,
+                        "predicted_box_overlap_fraction": -1.0,
+                        "position_adjusted_dv": -0.25248685479164126,
+                        "rows_tried": 102,
+                        "attempt_log": [
+                            "a0: planned rib at 214 m, row v 0.400 (requested 0.652, dv -0.252), predicted h 0.0074"
+                        ]
+                    }
+                ],
+                "environment": {
+                    "lighting": "day_clear",
+                    "water": "light_chop",
+                    "precipitation": "none",
+                    "sensor": "off",
+                    "fog_visibility_scale": 1.0,
+                    "precipitation_intensity": 0.0,
+                    "water_time_s": 38.21383285522461
+                },
+                "pair_group_id": "",
+                "changed_factor": "",
+                "changed_value": "",
+                "episode_id": "",
+                "frame_index": -1,
+                "sim_time_s": 0.0,
+                "split": "pretrain",
+                "occlusion_reference": "per_object_water_only",
+                "size_tolerance_rel": 0.3499999940395355,
+                "retry_limit": 6,
+                "label_policy_version": "visibility_rule_v2_uncalibrated",
+                "class_map_version": "class_map_v1",
+                "primary_bbox_policy": "visible_mask_bbox/primary_bbox_v1"
+            },
+            "max_attempts": 2
+        }
+    ],
+    "research_batch": true,
+    "max_captures_this_run": 1
+}

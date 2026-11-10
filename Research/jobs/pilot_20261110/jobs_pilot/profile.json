@@ -1,0 +1,120 @@
+{
+    "profile_schema": "portcctv.research.profile.v1",
+    "profile_kind": "fixture_not_real_data",
+    "profile_id": "profile_fixture_v1",
+    "created_utc": "2026-11-10T02:52:40.9473703Z",
+    "statement": "FIXTURE: hand-set numbers to exercise the C sampler. Not statistics of any real dataset; results made with it say nothing about real CCTV.",
+    "source_manifest_sha256": [],
+    "subset_id": "",
+    "subset_items_sha256": "",
+    "fold": -1,
+    "roles_used": [],
+    "n_frames": 0,
+    "n_boxes": 0,
+    "label_review_status": "not applicable (fixture)",
+    "coordinate_note": "height_frac = box height / image height; center_u = box centre x / width; bottom_v = box bottom y / height (top-left origin)",
+    "height_frac": {
+        "name": "height_frac",
+        "edges": [
+            0.004000000189989805,
+            0.00800000037997961,
+            0.014999999664723874,
+            0.029999999329447748,
+            0.05999999865889549,
+            0.11999999731779099,
+            0.25
+        ],
+        "weights": [
+            3.0,
+            6.0,
+            8.0,
+            6.0,
+            3.0,
+            1.0
+        ],
+        "within_bin": "log_uniform"
+    },
+    "center_u": {
+        "name": "center_u",
+        "edges": [
+            0.0,
+            0.10000000149011612,
+            0.20000000298023225,
+            0.30000001192092898,
+            0.4000000059604645,
+            0.5,
+            0.6000000238418579,
+            0.699999988079071,
+            0.800000011920929,
+            0.8999999761581421,
+            1.0
+        ],
+        "weights": [
+            2.0,
+            4.0,
+            6.0,
+            8.0,
+            9.0,
+            9.0,
+            8.0,
+            6.0,
+            4.0,
+            2.0
+        ],
+        "within_bin": "uniform"
+    },
+    "bottom_v": {
+        "name": "bottom_v",
+        "edges": [
+            0.0,
+            0.10000000149011612,
+            0.20000000298023225,
+            0.30000001192092898,
+            0.4000000059604645,
+            0.5,
+            0.6000000238418579,
+            0.699999988079071,
+            0.800000011920929,
+            0.8999999761581421,
+            1.0
+        ],
+        "weights": [
+            0.0,
+            0.0,
+            0.0,
+            2.0,
+            6.0,
+            9.0,
+            8.0,
+            5.0,
+            3.0,
+            1.0
+        ],
+        "within_bin": "uniform"
+    },
+    "count_per_frame": {
+        "name": "count_per_frame",
+        "edges": [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            6.0,
+            9.0,
+            13.0,
+            21.0
+        ],
+        "weights": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            2.0,
+            0.0,
+            0.0
+        ],
+        "within_bin": "integer"
+    },
+    "truncated_fraction": 0.07999999821186066,
+    "environment_source": "none: no environment labels in the real data; C uses the same environment prior as G"
+}

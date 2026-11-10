@@ -1,0 +1,24 @@
+{
+    "report_schema": "portcctv.research.planreport.v1",
+    "experiment_id": "pilot_20261110_diag",
+    "contract_sha256": "a5e81c4a7217a92cb220b7806568f1754372e6130fabc41157d32d58ce05dd79",
+    "created_utc": "2026-11-10T03:04:12.1323067Z",
+    "jobs_file": "C:\\Users\\USER\\Desktop\\DronePerception\\simulator\\PortCCTVSimulator\\Builds\\Windows\\Research\\jobs\\pilot_20261110_diag\\jobs_diag_r2\\jobs.json",
+    "profile_id": "profile_fixture_v1",
+    "profile_kind": "fixture_not_real_data",
+    "jobs_total": 13,
+    "jobs_planned": 12,
+    "jobs_planning_failed": 1,
+    "objects_requested": 34,
+    "objects_unmet": 1,
+    "render_jobs": 12,
+    "estimated_mb": 168.0,
+    "estimated_minutes": 2.4000000953674318,
+    "render_cap": 12,
+    "failures": [
+        "BND_G_ct_B_breakwater_head_s0800: t00: size_unreachable_on_column: closest lng_carrier |log ratio| 0.00 at v 0.525 (tol 0.30; truncation rejects 102, overlap rejects 0)"
+    ],
+    "notes": [
+        "C uses a FIXTURE profile: not real-data statistics"
+    ]
+}

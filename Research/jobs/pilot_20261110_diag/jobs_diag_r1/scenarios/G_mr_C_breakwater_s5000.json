@@ -1,0 +1,159 @@
+{
+    "schema_version": 1,
+    "scenario_id": "G_mr_C_breakwater_s5000",
+    "harbor_id": "marina_01",
+    "camera_preset_id": "mr_C_breakwater",
+    "camera_override": {
+        "enabled": false,
+        "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "euler_deg": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "vertical_fov_deg": 40.0
+    },
+    "environment": {
+        "preset_id": "night_overcast",
+        "water_preset_id": "light_chop",
+        "water_time_s": 9.59514331817627,
+        "weather": {
+            "precipitation": "rain",
+            "intensity": 0.38982346653938296,
+            "overcast": false,
+            "visibility_scale": 0.30000001192092898,
+            "wetness": -1.0,
+            "snow_cover": -1.0,
+            "seed": 626130370
+        },
+        "lights": "auto",
+        "vessel_wave_motion": true
+    },
+    "vessels": [
+        {
+            "object_id": "t03",
+            "asset_id": "motor_yacht",
+            "x": 210.85317993164063,
+            "z": -280.3168029785156,
+            "heading_deg": 175.02427673339845,
+            "immersion_m": 1.600000023841858,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t02",
+            "asset_id": "cabin_cruiser",
+            "x": 119.76166534423828,
+            "z": -252.06544494628907,
+            "heading_deg": 142.2708740234375,
+            "immersion_m": 0.30000001192092898,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t01",
+            "asset_id": "canoe",
+            "x": 113.24884033203125,
+            "z": -243.99221801757813,
+            "heading_deg": 104.56201171875,
+            "immersion_m": 0.10000000149011612,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        },
+        {
+            "object_id": "t00",
+            "asset_id": "kayak",
+            "x": 135.84219360351563,
+            "z": -272.0421447753906,
+            "heading_deg": 161.79925537109376,
+            "immersion_m": 0.10000000149011612,
+            "motion": {
+                "mode": "none",
+                "speed_kn": 0.0,
+                "route": [],
+                "loop": true,
+                "keep_in_view": true,
+                "seed": 0
+            },
+            "paint": ""
+        }
+    ],
+    "capture": {
+        "width": 1920,
+        "height": 1080,
+        "warmup_frames": 6,
+        "write_mask": true,
+        "mask_source": "gpu",
+        "compare_cpu_mask": false,
+        "mask_stride": 1,
+        "strict_placement": true,
+        "label_policy": {
+            "version": "visibility_rule_v2_uncalibrated",
+            "enabled": true,
+            "min_visible_px": 30,
+            "min_box_height_px": 4.0,
+            "min_fog_transmittance": 0.0,
+            "min_luma_contrast": 0.019999999552965165,
+            "max_lens_drop_cover": 0.6000000238418579
+        }
+    },
+    "navigation": {
+        "sim_time_s": 0.0,
+        "dt_s": 0.25,
+        "collision_avoidance": true,
+        "wind_from_deg": 300.0,
+        "wind_speed_kn": 8.0,
+        "current_set_deg": 60.0,
+        "current_drift_kn": 0.4000000059604645
+    },
+    "sensor": {
+        "enabled": true,
+        "preset": "low_quality",
+        "distortion_k1": 0.20000000298023225,
+        "distortion_k2": 0.03999999910593033,
+        "distortion_fill": true,
+        "blur_sigma_px": 1.600000023841858,
+        "motion_blur_px": 2.0,
+        "motion_blur_angle_deg": 10.0,
+        "noise_read_dn": 2.0,
+        "noise_shot": 0.30000001192092898,
+        "noise_chroma": 0.5,
+        "gain": -1.0,
+        "vignette": 0.3499999940395355,
+        "monochrome": false,
+        "jpeg_quality": 25,
+        "lens_drops": -1.0,
+        "seed": 636260167,
+        "save_clean": true
+    },
+    "appearance": {
+        "paint": "original",
+        "paint_seed": 1
+    },
+    "notes": "research job pilot_20261110_diag / G"
+}
