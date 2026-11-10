@@ -415,8 +415,13 @@ namespace PortCCTV.EditorTools
         }
 
         /// <summary>Stockpile height field on a length x width deck patch: three cones (angle of repose ~33 deg), crest noise, a
-        /// scooped face at +x (where the excavator works), rubble-scale noise; edges come down to the deck.</summary>
-        static Mesh AggregatePile(float len, float wid, float peak, int seed)
+        /// scooped face at +x (where the excavator works), rubble-scale noise; edges come down to the deck.
+        /// The flat floor sits PileSink below the pile's origin (= deck plate top) so the heap crosses the deck at an angle: until
+        /// 2026-11-10 the floor was 0.02 m above the origin, i.e. coplanar with the deck plate top, and flickered (z-fighting)
+        /// in a camouflage pattern in front of the heap.</summary>
+        internal const float PileSink = 0.15f;
+
+        internal static Mesh AggregatePile(float len, float wid, float peak, int seed)
         {
             const int nx = 72, nz = 28;
             var rnd = new System.Random(seed);
@@ -436,11 +441,11 @@ namespace PortCCTV.EditorTools
                         h = Mathf.Max(h, c.h - d * 0.65f);                          // ~33 deg repose
                     }
                     h += 0.35f * (ProcNoise.Fbm(x / len + 0.5f, z / wid + 0.5f, 4, 4, seed) - 0.5f);   // uneven crest / ridges
-                    h += 0.12f * (ProcNoise.Hash(i, j, seed + 7) - 0.5f);                                // rubble
+                    h += 0.05f * (ProcNoise.Hash(i, j, seed + 7) - 0.5f);                                // rubble (0.12 sparkled at distance)
                     if (x > len * 0.28f) h -= Mathf.Clamp01((x - len * 0.28f) / 3f) * 1.4f * (0.6f + 0.4f * Mathf.Sin(z * 1.3f));   // dug face
                     float edge = Mathf.Min(Mathf.Min(x + len / 2f, len / 2f - x), Mathf.Min(z + wid / 2f, wid / 2f - z));
                     h = Mathf.Min(h, edge * 0.9f);
-                    v[j * (nx + 1) + i] = new Vector3(x, Mathf.Max(h, 0.02f), z);
+                    v[j * (nx + 1) + i] = new Vector3(x, Mathf.Max(h, 0f) - PileSink, z);
                     uv[j * (nx + 1) + i] = new Vector2(x / 3f, z / 3f);
                 }
             var tri = new int[nx * nz * 6]; int k = 0;
@@ -480,7 +485,7 @@ namespace PortCCTV.EditorTools
             // face towards the excavator and a fine rubble surface, instead of one smooth half-ellipsoid
             var heap = new GameObject("aggregate_heap");
             heap.transform.SetParent(t, false);
-            heap.transform.localPosition = new Vector3(-4f, 3.28f, 0f);
+            heap.transform.localPosition = new Vector3(-4f, 3.30f, 0f);   // = deck plate top; the pile floor sinks PileSink below it
             heap.AddComponent<MeshFilter>().sharedMesh = SaveMeshAsset(AggregatePile(30f, 11.4f, 4.2f, 9071), "barge_aggregate_pile");
             heap.AddComponent<MeshRenderer>().sharedMaterial = aggregate;
             VesselDetails.Barge(t);

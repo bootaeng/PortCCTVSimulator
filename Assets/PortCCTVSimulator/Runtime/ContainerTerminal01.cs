@@ -70,7 +70,7 @@ namespace PortCCTV
             // routed over the headland from the breakwater root (marker: Vegetation.LighthouseAccess, A* over the real ground).
             Box("breakwater", 420f, 432.6f, 1.6f, Deck + 0.04f, -36f, 130f, "concrete", id: "bw_east_walk");
             QuayRailing(420.35f, -34f, 128f, Deck + 0.04f, false);              // pedestrian railing along the walk's water edge (not barriers)
-            E.Add(new HarborElement { id = "foot_access_bw_east", kind = "foot_access", shape = "marker", center = new Vector3(427.5f, Crest, -151.5f), size = Vector3.one });
+            EastShoreWalk();
             MultipurposeBerth(-420f, -235f, 40f, 1f);     // west quay: multipurpose berth (portal + mobile harbour cranes)
 
             // --- cranes, yard, buildings
@@ -215,6 +215,68 @@ namespace PortCCTV
         /// <summary>Terminal gate after common gate designs: lanes under the canopy (in = -x half towards the yard, out = +x
         /// half), gate booths between lane pairs, OCR / radiation portals and weigh-in-motion plates on the landside approach,
         /// lane markings, trucks queued in some lanes.</summary>
+        /// <summary>
+        /// East shore walk (2026-11-10, user: the path to the east breakwater light looked crude). Until now a 2.4 m A* ribbon wound
+        /// over the camera-D headland's toe (217 m, 34 steps, grades up to 0.84). The hill covers the east quay from z -150 to -40,
+        /// but its toe stays below 2.3 m west of x 417 (surface audit), so a flat seawall walk fits along the shore there:
+        /// a 4.7 m paved walk at quay level on a concrete seawall (x 412.5 .. 417.2) with a kerb and pedestrian railing on the sea
+        /// side, a retaining wall against the hill, lamps and benches, an apron joining the existing walk at z -36 and a six-step
+        /// stair up to the breakwater crest (+1 m) at the root. Quay furniture buried under the hill (fenders, bollards) and the
+        /// breakwater rocks under the stair are removed. Draws no random numbers, so every other element keeps its place.
+        /// </summary>
+        static void EastShoreWalk()
+        {
+            const float x0 = 412.5f, x1 = 417.2f, zS = -150f, zN = -46f, top = Deck + 0.1f;   // walk surface 2.6 m
+            const float kerb = 0.35f, kerbTop = top + 0.12f;
+            E.RemoveAll(e => (e.kind == "fender" || e.kind == "bollard") && e.center.x > 418f && e.center.x < 422.5f && e.center.z > -152f && e.center.z < -38f);
+            E.RemoveAll(e => e.kind == "rock" && e.center.x > 414f && e.center.x < 421f && e.center.z > -161f && e.center.z < -144f);
+
+            // seawall + paving along the hill toe
+            Box("seawall", x0, x1, Bottom, Deck + 0.04f, zS, zN, "quay_wet", id: "east_shore_seawall");
+            Box("promenade", x0 + kerb, x1, Deck + 0.04f, top, zS, zN, "sidewalk_paving", id: "east_shore_walk");
+            // retaining wall against the hill (top 1.3 m above the walk; the toe behind it is 2.5 .. 4.2 m)
+            Box("retaining", x1, x1 + 0.6f, Deck + 0.04f, top + 1.3f, zS, zN - 0.6f, "breakwater", id: "east_shore_retaining");
+            // north apron: joins the existing walk (x 420 .. 432.6 from z -36) and the quay edge
+            Box("seawall", x0, 426f, Bottom, Deck + 0.04f, zN, -36f, "quay_wet", id: "east_shore_apron_seawall");
+            Box("promenade", x0 + kerb, 426f, Deck + 0.04f, top, zN, -36.35f, "sidewalk_paving", id: "east_shore_apron");
+            Box("retaining", x1 + 0.6f, 426f, Deck + 0.04f, top + 1.3f, zN - 0.6f, zN, "breakwater", id: "east_shore_apron_retaining");
+            // south landing at the breakwater root (over the water on the harbour side of the root)
+            const float zL = -156f;
+            Box("seawall", x0, 416f, Bottom, Deck + 0.04f, zL, zS, "quay_wet", id: "east_shore_landing_seawall");
+            Box("promenade", x0 + kerb, 416f, Deck + 0.04f, top, zL + kerb, zS, "sidewalk_paving", id: "east_shore_landing");
+            // stair from the landing (2.6 m) up to the breakwater crest road (3.5 m): six risers of 0.15 m, treads 0.667 m, rising +x
+            const float sx0 = 416f, sx1 = 420f, sz0 = zL + kerb, sz1 = zS - 0.5f;
+            Box("seawall", sx0, sx1, Bottom, Deck + 0.04f, zL, sz1, "quay_wet", id: "east_shore_stair_base");
+            for (int k = 0; k < 6; k++)
+            {
+                float a = sx0 + (sx1 - sx0) * k / 6f, b = sx0 + (sx1 - sx0) * (k + 1) / 6f;
+                Box("stairs", a, b, Deck + 0.04f, top + 0.15f * (k + 1), sz0, sz1, "concrete", id: $"east_shore_stair_{k}");
+            }
+            // sea-side kerb (railing base) on the west edge, the north edge of the apron (west of the walk) and the south landing
+            Box("kerb", x0, x0 + kerb, Deck + 0.04f, kerbTop, zL, -36f, "concrete", id: "east_shore_kerb_w");
+            Box("kerb", x0 + kerb, 420f, Deck + 0.04f, kerbTop, -36.35f, -36f, "concrete", id: "east_shore_kerb_n");
+            Box("kerb", x0 + kerb, sx0, Deck + 0.04f, kerbTop, zL, zL + kerb, "concrete", id: "east_shore_kerb_s");
+            QuayRailing(x0 + kerb / 2f, zL + 0.2f, -36.2f, kerbTop, false);
+            QuayRailing(-36.18f, x0 + 0.2f, 420.3f, kerbTop, true);
+            QuayRailing(zL + kerb / 2f, x0 + 0.2f, sx0, kerbTop, true);
+            // stair handrails on both sides, sloped with the flight (posts every 1.33 m)
+            foreach (var zr in new[] { sz0 + 0.1f, sz1 - 0.1f })
+            {
+                for (int k = 0; k <= 3; k++)
+                {
+                    float x = sx0 + (sx1 - sx0) * k / 3f, y = top + 0.9f * k / 3f;
+                    Box("railing", x - 0.04f, x + 0.04f, y, y + 1.0f, zr - 0.04f, zr + 0.04f, "steel_galv");
+                }
+                Beam("railing", new Vector3(sx0, top + 1.0f, zr), new Vector3(sx1, top + 1.9f, zr), 0.06f, 0.06f, "steel_galv");
+                Beam("railing", new Vector3(sx0, top + 0.5f, zr), new Vector3(sx1, top + 1.4f, zr), 0.04f, 0.04f, "steel_galv");
+            }
+            // lamps and benches along the wall side (lamp arm over the walk, benches facing the harbour)
+            foreach (var z in new[] { -140f, -110f, -80f, -52f })
+                Prefab("street_light", "street_lamp", new Vector3(x1 - 0.5f, top, z), 90f, Vector3.one, id: $"east_shore_lamp_{-z:000}");
+            foreach (var z in new[] { -125f, -95f, -66f })
+                Prefab("bench", "bench", new Vector3(x1 - 0.9f, top, z), 90f, Vector3.one, id: $"east_shore_bench_{-z:000}");
+        }
+
         static void GateComplex(float x0, float x1, float zCanopy)
         {
             const float lane = 4.6f;
