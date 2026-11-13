@@ -31,10 +31,10 @@ FROZEN_CODE = [A + "Runtime/" + f for f in (
     "Marina01.cs", "RoadNetwork.cs", "Roads.cs", "Parking.cs", "Vegetation.cs", "HillFeatures.cs", "GroundWear.cs",
     "NightLights.cs", "Presets.cs", "VesselCatalog.cs", "VesselGeometry.cs", "VesselPaint.cs", "CarPaint.cs",
     "Replacements.cs", "ProcNoise.cs", "Weather.cs", "SkyLibrary.cs", "SimWorld.cs", "Navigation.cs", "SensorModel.cs",
-    "GpuInstanceMask.cs")] + [A + "Editor/" + f for f in (
+    "GpuInstanceMask.cs", "TownParts.cs", "LensRain.cs", "IrIlluminator.cs", "HarborWaterMask.cs")] + [A + "Editor/" + f for f in (
     "ProceduralAssets.cs", "ProceduralVessels.cs", "VesselDetails.cs", "VillageAssets.cs", "VillageAssets.Vehicles.cs",
     "WeatherAssets.cs", "PhotoAssets.cs", "HillBaker.cs", "ReplacementAssets.cs", "TreeImpostors.cs", "TextureDiet.cs",
-    "ColliderRepair.cs", "ProjectBootstrap.cs")]
+    "ColliderRepair.cs", "ProjectBootstrap.cs", "TownAssets.cs")]
 FROZEN_SETTINGS = ["ProjectSettings/GraphicsSettings.asset", "ProjectSettings/QualitySettings.asset",
                    "ProjectSettings/ProjectSettings.asset", "ProjectSettings/TagManager.asset",
                    "ProjectSettings/HDRPProjectSettings.asset", "ProjectSettings/ShaderGraphSettings.asset",

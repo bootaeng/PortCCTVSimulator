@@ -188,6 +188,20 @@ namespace PortCCTV
             Prefab("buoy", "lateral_marker", new Vector3(-10, -1.0f, -190), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(70, -1.0f, -150), 0, Vector3.one * 0.7f, id: "buoy_green_1", nonVessel: true);
 
+            // --- town batch 2026-11-10 (user photo: crude shop row and an empty grey strip in the backland). The two shop rows
+            // are now harbour shop streets (ShopRow); here: a direct-sale fish market hall in the 60 m gap between them, gear /
+            // ice sheds in the gaps at the ends, a front parking row along the shop streets, speed-limit and no-parking signs.
+            FishMarketHall(-17f, 37f, 137.4f, 20f, 26111001);
+            GearSheds(193f, 253f, 137.4f, 16f, 26111002);
+            GearSheds(-236f, -184f, 137.4f, 16f, 26111003);
+            ServiceRow(-178f, -22f, 136.4f, -1f, 0.55f, "car", "fp_shop_front_w");
+            ServiceRow(42f, 188f, 136.4f, -1f, 0.55f, "car", "fp_shop_front_e");
+            KrSign("kr_sign_sl30", new Vector3(-262f, Deck + 0.16f, 112.6f), new Vector2(-1f, 0f));        // eastbound (south side)
+            KrSign("kr_sign_sl30", new Vector3(262f, Deck + 0.16f, 123.4f), new Vector2(1f, 0f));          // westbound (north side)
+            KrSign("kr_sign_no_parking", new Vector3(-20f, Deck + 0.16f, 112.6f), new Vector2(-1f, 0f));   // in front of the market
+            KrSign("kr_sign_slow", new Vector3(40f, Deck + 0.16f, 123.4f), new Vector2(1f, 0f));
+            DistantTowers(-1400f, 1400f, 480f, 700f, 6, 26111005, new[] { Cameras[0].position, Cameras[1].position, Cameras[2].position }, 700f);
+
             CameraMasts(Cameras, MastBases);
 
             h.water_regions.Add(Region("inner_harbor", -170, 58, 170, 58, 170, -60, 40, -60, -30, -120, -170, -120));
@@ -198,6 +212,9 @@ namespace PortCCTV
             foreach (var a in new[] { "trawler", "fishing_vessel", "inshore_fishing_boat", "patrol_boat", "police_boat", "sar_boat", "speedboat" })
                 h.vessel_rules.Add(Rule(a, "fishing port traffic"));
             h.vessel_rules.Add(Rule("fishing_boat", "small fishing / leisure fishing boat"));
+            h.vessel_rules.Add(Rule("fishing_boat_iii", "coastal fishing boat (근해 어선)"));
+            h.vessel_rules.Add(Rule("small_motorboat", "small fishing / leisure motorboat"));
+            h.vessel_rules.Add(Rule("crrc", "rubber boat (조업 보조 / 구조 / 경비)"));
             h.vessel_rules.Add(Rule("cabin_cruiser", "leisure fishing boat (낚싯배)"));
             h.vessel_rules.Add(Rule("motorboat", "small craft"));
             h.vessel_rules.Add(Rule("rib", "patrol / rescue"));

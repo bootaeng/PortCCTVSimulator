@@ -56,3 +56,15 @@ Downloaded with curl from https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/<
 | asset | authors | use | files (MD5 from the API matched / SHA-256) |
 |---|---|---|---|
 | aerial_asphalt_01 (2k JPG: diff, nor_gl, rough) | Rob Tuytel | material `asphalt` (terminal yards, aprons, car parks, truck lots), world-mapped at 30 m per tile | diff 4cb311fc… / a85ce28b…, nor_gl 2b2d543f… / cb7e5b75…, rough f46f34b5… / 20fdcdc9… |
+
+## textures_20261110 (CC0)
+Poly Haven `concrete_wall_001`, `concrete_wall_004`, `corrugated_iron_04` (CC0, https://polyhaven.com/a/<name>), 2k JPG maps downloaded
+2026-11-10, MD5 checked against the Poly Haven API; diffuse and OpenGL normal maps resized to 1024 px in the project
+(`*_1k.jpg`). Used by the materials `wall_conc_*` (five paint tints) and `corrugated_*` (five colours) (`Editor/TownAssets.cs`).
+SHA256 2k originals -> 1k project files:
+- concrete_wall_001_diff 6a96c2babde7b65aa11a72e06ea3cc37a76cecc274dfef1125ba33e41d13dd9f -> 6b0831b7abac84002c12e983aa508894b82a125a8317bab1b22b069e0d6f7e62
+- concrete_wall_001_nor_gl 75346f4a19c1cd08f2d4ba02843d325b4c6e6dfa9acc9c022273cba72b7ba124 -> b4c8af3d0e9519f930b21aab988a59d55e5a0f9cfef93b5dc9bb0cbfed9fb45c
+- concrete_wall_004_diff f0d2060e3ef503a6458ed94c92d059d794be38b56b3a3965e113922a5947ee39 -> c9b9d09fe4fa557d3d0e9d0443e8d78815180bf221543cab4a696d4559ef2d9a
+- concrete_wall_004_nor_gl c8df927b4923dabd7ea243f0bd497713ceefd43b8820ee0c2da05b8951e4ca80 -> 773eef8c439ee03f01e199986a5557fe7bd017986dd5c2591daca5277ba2737c
+- corrugated_iron_04_diff 98bddfd0c584e70033e770c0421c02bfc610b2c34ac80a861b6e229eb5de010f -> 3a3eafec20034082a4752f1a6607e4614aa8a9a85752397a74b8c4900ace505d
+- corrugated_iron_04_nor_gl d9c53f5ae304c9d50b471b2a0706cef7ab877641b0698b03f21045706420e867 -> 73a6da84ef94a910feaad08918f7f4bae531bc8e6f0a6f87655c71e51b875bb4

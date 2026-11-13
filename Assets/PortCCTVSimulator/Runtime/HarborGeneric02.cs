@@ -107,6 +107,7 @@ namespace PortCCTV
                 RoadNetwork.OpenJunctionMouths(h);
                 RoadNetwork.ConnectDeadEnds(h);
                 RoadNetwork.TerminateStubs(h);
+                RoadNetwork.ClearStreetFurniture(h);                 // poles / lamps / signals off the carriageways and house plots
                 HarborParts.DetailNearContainers(h);
             }
             End();

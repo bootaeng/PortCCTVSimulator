@@ -530,7 +530,8 @@ namespace PortCCTV
         }
 
         static readonly System.Collections.Generic.Dictionary<string, Vector2> BuildingFootprint = new System.Collections.Generic.Dictionary<string, Vector2>
-        { { "bld_apt_complex", new Vector2(26f, 60f) }, { "bld_apt_slab", new Vector2(17.9f, 43.4f) }, { "bld_hirise", new Vector2(38f, 38f) }, { "bld_officetel", new Vector2(33f, 26f) } };
+        { { "bld_apt_complex", new Vector2(26f, 60f) }, { "bld_apt_slab", new Vector2(17.9f, 43.4f) }, { "bld_hirise", new Vector2(38f, 38f) }, { "bld_officetel", new Vector2(33f, 26f) },
+          { "bld_urban_office_tower", new Vector2(32.61f, 23.17f) }, { "bld_urban_midrise", new Vector2(32.03f, 33.32f) }, { "bld_urban_ny_hirise", new Vector2(44.05f, 44.05f) } };
 
         static Rect RectFrom(Vector2 a, Vector2 b) => Rect.MinMaxRect(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y));
         static Rect Expand(Rect r, float m) => Rect.MinMaxRect(r.xMin - m, r.yMin - m, r.xMax + m, r.yMax + m);

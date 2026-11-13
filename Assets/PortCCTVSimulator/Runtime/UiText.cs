@@ -50,7 +50,7 @@ namespace PortCCTV
         static readonly Dictionary<string, string> Waters = new Dictionary<string, string>
         {
             { "calm", "잔잔한 항내" },
-            { "light_chop", "약한 파랑" },
+            { "light_chop", "약한 파랑" }, { "moderate", "보통 파랑" }, { "rough", "거친 파랑" },
         };
 
         static readonly Dictionary<string, string> Vessels = new Dictionary<string, string>
@@ -63,6 +63,7 @@ namespace PortCCTV
             { "lng_carrier", "LNG 운반선" }, { "trawler", "트롤 어선" }, { "fishing_vessel", "어선 12 m" }, { "inshore_fishing_boat", "소형 연안 어선" },
             { "sar_boat", "구조정" }, { "pilot_boat", "도선선" }, { "patrol_boat", "경비정" }, { "police_boat", "경찰정" },
             { "speedboat", "스피드보트" }, { "motor_yacht", "모터 요트" },
+            { "fishing_boat_iii", "연안 어선 23 m" }, { "small_motorboat", "소형 모터보트" }, { "crrc", "고무 단정(CRRC)" },
         };
 
         public static readonly string[] MotionModes = { "none", "anchor", "roam", "auto" };
@@ -80,13 +81,14 @@ namespace PortCCTV
 
         public static string Harbor(string id) => Harbors.TryGetValue(id, out var s) ? s : (id == HarborLibrary.LegacyHarborId ? "구형 단순 항만" : HarborLibrary.DisplayName(id));
         public static string Camera(CameraPreset p) => Cameras.TryGetValue(p.id, out var s) ? s : p.display_name;
-        public static readonly string[] SensorPresetNames = { "끔", "HD IP", "일반 CCTV", "저화질", "야간 IR 흑백" };
+        public static readonly string[] SensorPresetNames = { "끔", "HD IP", "일반 CCTV", "저화질", "야간 IR 흑백", "야간 IR 조명" };
         public static string SensorPresetNote(string id) => id switch
         {
             "hd_ip" => "최신 HD IP 카메라: 약한 왜곡·잡음, JPEG 85",
             "typical" => "일반 항만 CCTV: 술통형 왜곡, 약한 흐림, 잡음, JPEG 55",
             "low_quality" => "오래된 저화질: 강한 왜곡·흐림·흔들림·잡음, JPEG 25",
             "night_ir" => "야간 적외선 모드: 흑백, 잡음 많음, 흐림",
+            "night_ir_illum" => "야간 적외선 모드 + 카메라 자체 850 nm IR 조명 (가까운 부두·선박이 밝아짐)",
             "custom" => "사용자 지정",
             _ => "열화 없음: 렌더 화면 그대로 저장",
         };

@@ -1020,6 +1020,79 @@ namespace PortCCTV.Tests
         }
 
         [Test]
+        public void LensRain_IsAFunctionOfTime_AndMovesSmoothly()
+        {
+            const int W = 1920, H = 1080;
+            foreach (float density in new[] { 0.26f, 0.7f })
+            {
+                var a = LensRain.Make(7, density, 123.4f, W, H);
+                var b = LensRain.Make(7, density, 123.4f, W, H);
+                Assert.AreEqual(JsonUtility.ToJson(new SensorRecord { lens_drops = a.drops, lens_trails = a.trails }),
+                                JsonUtility.ToJson(new SensorRecord { lens_drops = b.drops, lens_trails = b.trails }), "same seed / density / time -> same water state");
+                Assert.Greater(a.drops.Count, 10, $"density {density}: drops present");
+                // 2 s at 0.1 s steps: every drop of a frame has a counterpart within a few pixels in the next frame, except drops
+                // that appear (fade in from opacity ~0) or vanish (absorbed / evaporated); running drops move at most vmax * dt
+                for (int k = 0; k < 20; k++)
+                {
+                    float t = 300f + k * 0.1f;
+                    var s0 = LensRain.Make(7, density, t, W, H); var s1 = LensRain.Make(7, density, t + 0.1f, W, H);
+                    foreach (var d in s0.drops)
+                    {
+                        float best = float.MaxValue;
+                        foreach (var e in s1.drops) best = Mathf.Min(best, new Vector2(e.x - d.x, e.y - d.y).magnitude);
+                        bool fading = d.opacity < 0.25f;
+                        // a static drop never moves; it may vanish only while fading or when a running drop reaches it (absorbed)
+                        bool runnerHere = s1.drops.Any(e => (e.kind == "running" || e.kind == "stopped") && new Vector2(e.x - d.x, e.y - d.y).magnitude < 0.06f * H);
+                        if (d.kind == "static") Assert.IsTrue(best < 0.01f || fading || runnerHere, $"t={t}: a static drop jumped (nearest {best:F1} px, opacity {d.opacity:F2})");
+                        else if (d.kind == "running") Assert.Less(best, 0.26f * H * 0.1f + 3f, $"t={t}: running drop moved more than vmax*dt");
+                        else Assert.IsTrue(best < 6f || fading || d.kind == "merging", $"t={t}: {d.kind} drop jumped {best:F1} px");
+                    }
+                    // image coverage changes slowly
+                    Assert.Less(Mathf.Abs(s0.ImageCoverFraction(W, H, 8) - s1.ImageCoverFraction(W, H, 8)), 0.02f, $"t={t}: coverage jumps");
+                }
+                // over a minute of heavy rain some drops merge, run down and leave trails
+                if (density > 0.5f)
+                {
+                    bool run = false, trail = false, merge = false;
+                    for (float t = 300f; t < 360f; t += 1f)
+                    {
+                        var st = LensRain.Make(7, density, t, W, H);
+                        run |= st.drops.Any(d => d.kind == "running"); merge |= st.drops.Any(d => d.kind == "merging"); trail |= st.trails.Count > 0;
+                    }
+                    Assert.IsTrue(run && trail && merge, $"heavy rain over 60 s: running {run}, trails {trail}, merging {merge}");
+                }
+            }
+        }
+
+        [Test]
+        public void LensRain_GpuCoverageMatchesTheLabelStatistic()
+        {
+            var s = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
+            s.environment.water_preset_id = "calm";
+            _w.Apply(s);
+            const int W = 960, H = 540;
+            var rt = Clean(W, H);
+            int cmp = 0, agree = 0, inter = 0, uni = 0;
+            foreach (float t in new[] { 50f, 137.5f, 412f })
+            {
+                var rain = LensRain.Make(11, 0.7f, t, W, H);
+                Assert.Greater(rain.trails.Count + rain.drops.Count, 20);
+                var gpu = _w.Sensor.Process(rt, new SensorConfig { enabled = true, noise_chroma = 0f }, 1f, rain, 1f, true);
+                for (int y = 1; y < H; y += 3)
+                    for (int x = 1; x < W; x += 3)
+                    {
+                        bool g = gpu[(H - 1 - y) * W + x].r >= 128;          // readback rows are bottom-up
+                        bool c = rain.Covered(new Vector2(x + 0.5f, y + 0.5f));
+                        cmp++; if (g == c) agree++; if (g && c) inter++; if (g || c) uni++;
+                    }
+            }
+            float iou = uni > 0 ? (float)inter / uni : 1f;
+            Assert.Greater((float)agree / cmp, 0.998f, $"pixel agreement {(float)agree / cmp:F4}");
+            Assert.Greater(iou, 0.97f, $"coverage IoU {iou:F4} (GPU alpha >= 0.5 vs LensRainState.Covered)");
+            rt.Release(); Object.DestroyImmediate(rt);
+        }
+
+        [Test]
         public void DistortedCapture_KeepsMaskAndBoxesTogether_AndWritesTheCleanImage()
         {
             var s = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);

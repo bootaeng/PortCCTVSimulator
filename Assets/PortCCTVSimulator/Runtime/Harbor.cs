@@ -12,7 +12,7 @@ namespace PortCCTV
     {
         public string id;
         public string kind;      // land, quay, pier, breakwater, warehouse, container, crane, bollard, light_pole, buoy, mast, fender, rock, ...
-        public string shape;     // box | cylinder | sphere | prefab
+        public string shape;     // box | cylinder | sphere | prefab | beach_surface
         public Vector3 center;   // box/cylinder: centre; prefab: pivot position
         public Vector3 size;     // box: full size; cylinder: (diameter, height, diameter); prefab: local scale
         public float yaw_deg;
@@ -325,7 +325,12 @@ namespace PortCCTV
                     groups[kind] = parent;
                 }
                 GameObject go;
-                if (el.shape == "prefab")
+                if (el.shape == "beach_surface")
+                {
+                    go = BeachSurface.Create(el, theme != null ? theme.Get(el.material) : null, parent, out var beachCollider);
+                    colliders.Add(beachCollider);
+                }
+                else if (el.shape == "prefab")
                 {
                     var pf = theme != null ? theme.GetPrefab(el.prefab) : null;
                     if (pf == null) { Debug.LogWarning("[PortCCTV] missing harbor prefab " + el.prefab); continue; }

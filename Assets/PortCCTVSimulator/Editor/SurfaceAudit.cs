@@ -108,7 +108,7 @@ namespace PortCCTV.EditorTools
             public List<string> floating = new List<string>();
             public List<string> steps = new List<string>();
             public List<string> road_obstructions = new List<string>();
-            public int strips_checked, strip_ends_joined, t_junctions;
+            public int strips_checked, strip_ends_joined, t_junctions, corners;
             public List<string> kinds = new List<string>();
         }
 
@@ -328,6 +328,12 @@ namespace PortCCTV.EditorTools
                     var inner = end - ax * sg * 0.5f;
                     if (OnCarriageway(inner + perp * (wdt / 2f + 0.6f), e, top) && OnCarriageway(inner - perp * (wdt / 2f + 0.6f), e, top))
                     { rep.strip_ends_joined++; rep.t_junctions++; continue; }
+                    // L corner (2026-11-10): another carriageway at the same height covers one side of the strip's last
+                    // width-length, from the end line back (the strip turns into it; nothing lies straight beyond the end)
+                    bool corner = false;
+                    foreach (float side in new[] { -1f, 1f })
+                        if (OnCarriageway(inner + perp * side * (wdt / 2f + 0.6f), e, top) && OnCarriageway(end - ax * sg * (wdt - 0.5f) + perp * side * (wdt / 2f + 0.6f), e, top)) corner = true;
+                    if (corner) { rep.strip_ends_joined++; rep.corners++; continue; }
                     // something drivable a little further on but not joined -> a step / gap
                     string beyond = What(qOut) + " / " + What(qOut2);
                     // deliberate terminus: a turning head / gate / barrier element at the end
@@ -445,7 +451,7 @@ namespace PortCCTV.EditorTools
             rep.kinds = kinds;
             File.WriteAllLines(Path.Combine(dir, mapId + "_roadnetwork_trace.txt"), RoadNetwork.Trace);
             File.WriteAllText(Path.Combine(dir, mapId + ".json"), JsonUtility.ToJson(rep, true));
-            return $"{mapId}: strips {rep.strips_checked}, off-network {rep.strips_off_network.Count}, ends joined {rep.strip_ends_joined} (T-junctions {rep.t_junctions}), dead ends {rep.dead_ends.Count}, termini {rep.termini.Count}, alley/footpath ends {rep.footpath_ends.Count}, map-edge {rep.map_edge_ends.Count}, parking off {rep.parking_off_network.Count}, floating {rep.floating.Count}, road steps {rep.steps.Count}, road obstructions {rep.road_obstructions.Count}; lighthouses: " +
+            return $"{mapId}: strips {rep.strips_checked}, off-network {rep.strips_off_network.Count}, ends joined {rep.strip_ends_joined} (T-junctions {rep.t_junctions}, corners {rep.corners}), dead ends {rep.dead_ends.Count}, termini {rep.termini.Count}, alley/footpath ends {rep.footpath_ends.Count}, map-edge {rep.map_edge_ends.Count}, parking off {rep.parking_off_network.Count}, floating {rep.floating.Count}, road steps {rep.steps.Count}, road obstructions {rep.road_obstructions.Count}; lighthouses: " +
                    string.Join(" | ", rep.lighthouses.Select(l => l.Split(';')[0]));
         }
 
