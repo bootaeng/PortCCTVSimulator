@@ -125,13 +125,10 @@ namespace PortCCTV
             if (Buildings) for (float x = -110; x < 130; x += 20) Box("cafe", x, x + 16, Deck, Deck + R(5, 9), 85, 100, Rng.NextDouble() < 0.5 ? "wall_white" : "wall_cream");
 
             // --- beach east of the marina
-            for (int beachSegment = 0; beachSegment < 32; beachSegment++)
-            {
-                float x = 260f + beachSegment * 20f;
-                float curve = -10f - 34f * Mathf.Sin((beachSegment + 0.5f) / 32f * Mathf.PI);
-                Box("beach", x, x + 20.15f, Bottom, 0.7f, curve, 60f, "sand", id: "beach_" + beachSegment);
-                BoxC("beach", new Vector3(x + 10f, -0.3f, curve - 6f), new Vector3(20.15f, 0.6f, 14f), "sand", 0, new Vector3(-6, 0, 0));
-            }
+            // A single continuous sand surface replaces the overlapping 20 m boxes. Its shore profile
+            // crosses the water plane gradually; the submerged toe has no exposed rectangular end faces.
+            E.Add(new HarborElement { id = "beach_surface", kind = "beach", shape = "beach_surface",
+                center = new Vector3(580f, 0f, 0f), size = new Vector3(640f, 0f, 60f), material = "sand" });
             Box("land", 260, 900, Bottom, Deck, 60, 110, "concrete", id: "beach_promenade");
             BeachFurniture(300f, 880f, 5f, 40f, 0.7f);
             PromenadeFurniture(270f, 890f, 64f, -1f);
@@ -145,18 +142,26 @@ namespace PortCCTV
 
             // --- dense high-rise apartments (Haeundae-like); camera B stands on the first one
             CameraHill(Cameras[1], 240f, 240f, 3, new Vector2(972f, -237f));
-            // Detailed imported towers along the coastal road; no random box towers intersecting the city blocks.
+            // Distinct silhouettes along the coastal road. The narrow 29 m strip limits the
+            // footprint: 38 m apartment towers at 0.62-0.71, 26 m-deep officetels at 0.84-0.9.
             Boulevard(260f, 900f, 112f, true, 4, true);
-            // The towers stand in the 29 m band between the boulevard's north sidewalk (z 122) and the city street's south
-            // sidewalk (z 151). 2026-11-10 surface audit: at z 142 and scale 0.95-1.35 (36-51 m deep) they reached 9-19 m into
-            // that street. Now centred in the band with the 38 m footprint scaled to 24-27 m (69-78 m tall), and the beach scrub
-            // under each footprint removed (Tree calls kept so the random layout after this point does not shift).
-            foreach (var (tx, scale) in new[] { (320f, 0.95f), (450f, 1.2f), (580f, 1.05f), (710f, 1.35f), (840f, 1.15f) })
+            // The buildings stand in the 29 m band between the boulevard's north sidewalk (z 122)
+            // and the city street's south sidewalk (z 151), centred at z 136.5. The deepest tower
+            // footprint is 27 m. Remove beach scrub within each actual footprint.
+            foreach (var (tx, key, scale, yaw, footprintX, footprintZ) in new[]
             {
-                float s = Mathf.Min(scale * 0.66f, 0.71f);
-                Prefab("building", "bld_hirise", new Vector3(tx, Deck, 136.5f), 0f, Vector3.one * s);
-                float hw = 38f * s / 2f + 1.5f;
-                E.RemoveAll(t => t.kind == "tree" && Mathf.Abs(t.center.x - tx) < hw && Mathf.Abs(t.center.z - 136.5f) < hw);
+                // Sketchfab "Urban" collection (SOURCE_urban.md): mid-rise office blocks with a street-front podium at
+                // x 320 / 710 (37 m), the 105 m office tower at x 450; one apartment tower and one officetel stay for variety.
+                (320f, "bld_urban_midrise", 0.75f, 180f, 32.03f, 33.32f),
+                (450f, "bld_urban_office_tower", 1.0f, 0f, 32.61f, 23.17f),
+                (580f, "bld_hirise", 0.62f, 90f, 38f, 38f),
+                (710f, "bld_urban_midrise", 0.74f, 0f, 32.03f, 33.32f),
+                (840f, "bld_officetel", 0.84f, 180f, 33f, 26f),
+            })
+            {
+                Prefab("building", key, new Vector3(tx, Deck, 136.5f), yaw, Vector3.one * scale);
+                float halfX = footprintX * scale / 2f + 1.5f, halfZ = footprintZ * scale / 2f + 1.5f;
+                E.RemoveAll(t => t.kind == "tree" && Mathf.Abs(t.center.x - tx) < halfX && Mathf.Abs(t.center.z - 136.5f) < halfZ);
             }
 
             // --- west city shore: coastal road (joined by the bridge ramp at x = -330), beach car parks, shops, towers, a park
@@ -171,7 +176,10 @@ namespace PortCCTV
             CityBlocks(-1340f, -372f, -88f, 100f, 100f, 12f, "highrise");                             // promenade tower strip
             for (int i = 0; i < 45; i++) Tree(R(-1495f, -1350f), R(-170f, 100f), Deck, R(6f, 11f));          // park at the west end
             CityBlocks(-1500f, -720f, 100f, 450f, 112f);                                                      // city west of the hill
-            CityBlocks(290f, 910f, 158f, 360f, 103f, 12f, "highrise");                                                         // city behind the beach
+            UrbanCollectionMix = true;     // part of the beach-city tower cells use the Urban collection towers
+            UrbanOfficeTowers.Clear(); UrbanOfficeTowers.Add(new Vector2(450f, 136.5f));     // the front-row office tower
+            CityBlocks(290f, 910f, 158f, 360f, 103f, 12f, "highrise");                                      // city behind the beach
+            UrbanCollectionMix = false;
             CityBlocks(-100f, 290f, 232f, 560f, 110f, 12f, "residential");                                                        // central city between the hills
             CityBlocks(290f, 470f, 360f, 560f, 100f, 12f, "residential");                                                         // (was one grid overlapping the beach city's plots)
             CityBlocks(1050f, 1500f, 120f, 560f, 110f);                                                       // east city
@@ -240,13 +248,14 @@ namespace PortCCTV
             Prefab("buoy", "ocean_buoy", new Vector3(180, -0.6f, -300), 0, Vector3.one * 1.6f, id: "buoy_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(160, -1.0f, -235), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
 
+            DistantTowers(-1500f, 1500f, 905f, 1450f, 10, 26111011, new[] { Cameras[0].position, Cameras[1].position, Cameras[2].position }, 900f);   // 2026-11-10
             CameraMasts(Cameras, MastBases);
 
             h.water_regions.Add(Region("marina_basin", -250, 58, 250, 58, 250, -200, -250, -200));
             h.water_regions.Add(Region("bay", -2440, -215, 120, -215, 120, -200, 250, -200, 278, -200, 278, -22, 900, -22, 900, -400, 3000, -400, 3000, -4000, -2440, -4000));
             h.water_regions.Add(Region("beach_shallows", 250, 58, 254, 58, 254, -200, 250, -200));   // narrowed by the groyne (x 255..269 + tetrapods to 277)
 
-            foreach (var a in new[] { "sailing_yacht", "sailing_dinghy", "kayak", "canoe", "cabin_cruiser", "motorboat", "rib", "speedboat", "motor_yacht", "police_boat", "sar_boat", "patrol_boat" })
+            foreach (var a in new[] { "sailing_yacht", "sailing_dinghy", "kayak", "canoe", "cabin_cruiser", "motorboat", "rib", "speedboat", "motor_yacht", "police_boat", "sar_boat", "patrol_boat", "small_motorboat", "crrc", "fishing_boat_iii" })
                 h.vessel_rules.Add(Rule(a, "leisure craft"));
             // the beach boulevard continues to the east city grid (2026-11-09 surface audit: the east city was a road island 140 m
             // from the nearest street). Laid last so the earlier random layout is unchanged.

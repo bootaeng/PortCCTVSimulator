@@ -263,6 +263,18 @@ namespace PortCCTV
             {
                 float a0 = Mathf.Min(end, end - sg * d), a1 = Mathf.Max(end, end - sg * d);
                 var rr = alongX ? UnityEngine.Rect.MinMaxRect(a0, c - hw, a1, c + hw) : UnityEngine.Rect.MinMaxRect(c - hw, a0, c + hw, a1);
+                // one head per street end (2026-11-10: the marina west coastal road got two identical heads from two passes)
+                if (E.Any(o => o.kind == "turning_head" && Mathf.Abs(o.center.x - rr.center.x) < 1.5f && Mathf.Abs(o.center.z - rr.center.y) < 1.5f)) continue;
+                // lane / centre / edge paint stops at the head; a transverse white end line marks the end of the carriageway
+                CutPaint(alongX ? UnityEngine.Rect.MinMaxRect(a0 - 0.05f, c - hw - 0.5f, a1 + 0.05f, c + hw + 0.5f) : UnityEngine.Rect.MinMaxRect(c - hw - 0.5f, a0 - 0.05f, c + hw + 0.5f, a1 + 0.05f), alongX);
+                float wHalf = alongX ? src.size.z / 2f : src.size.x / 2f, la = end - sg * d - sg * 0.2f;
+                if (alongX) Box("marking", la - 0.2f, la + 0.2f, y1, y1 + 0.015f, c - wHalf + 0.2f, c + wHalf - 0.2f, "paint_white");
+                else Box("marking", c - wHalf + 0.2f, c + wHalf - 0.2f, y1, y1 + 0.015f, la - 0.2f, la + 0.2f, "paint_white");
+                E[E.Count - 1].id = Uid("road_end_line");
+                // worn yellow hatching over the head (RoadLines026B, alpha-tested): marks the end zone as no-stopping
+                if (alongX) Box("marking", a0 + 0.3f, a1 - 0.3f, y1, y1 + 0.012f, c - hw + 0.3f, c + hw - 0.3f, "paint_hatch_yellow");
+                else Box("marking", c - hw + 0.3f, c + hw - 0.3f, y1, y1 + 0.012f, a0 + 0.3f, a1 - 0.3f, "paint_hatch_yellow");
+                E[E.Count - 1].id = Uid("road_end_hatch");
                 HarborParts.CutAndPave(rr, alongX ? new Vector2(0f, 1f) : new Vector2(1f, 0f), "head_" + src.id, false, false);
                 if (alongX) Box("turning_head", a0, a1, y0, y1 - 0.005f, c - hw, c + hw, src.material);
                 else Box("turning_head", c - hw, c + hw, y0, y1 - 0.005f, a0, a1, src.material);
@@ -275,6 +287,32 @@ namespace PortCCTV
                 }
             }
             _heads.Clear();
+        }
+
+        /// <summary>Removes the parts of thin paint strips (road edge / centre lines: kind road or marking with a paint material,
+        /// at most 0.3 m wide) running along `alongX` that lie inside `r`; the pieces outside are kept.</summary>
+        static void CutPaint(UnityEngine.Rect r, bool alongX)
+        {
+            var keep = new List<HarborElement>(E.Count);
+            foreach (var e in E)
+            {
+                if (e.shape != "box" || !(e.kind == "road" || e.kind == "marking") || e.material == null || !e.material.StartsWith("paint") || !Axis(e)) { keep.Add(e); continue; }
+                var q = RectOf(e, -1); bool ex = q.x1 - q.x0 >= q.z1 - q.z0;
+                if (ex != alongX || Mathf.Min(q.x1 - q.x0, q.z1 - q.z0) > 0.31f || !q.Overlaps(r.xMin, r.xMax, r.yMin, r.yMax)) { keep.Add(e); continue; }
+                float u0 = ex ? q.x0 : q.z0, u1 = ex ? q.x1 : q.z1, c0 = ex ? r.xMin : r.yMin, c1 = ex ? r.xMax : r.yMax;
+                void Piece(float p0, float p1, int k)
+                {
+                    if (p1 - p0 < 0.5f) return;
+                    keep.Add(new HarborElement
+                    {
+                        id = e.id + "_e" + k, kind = e.kind, shape = "box", material = e.material,
+                        center = ex ? new Vector3((p0 + p1) / 2f, e.center.y, e.center.z) : new Vector3(e.center.x, e.center.y, (p0 + p1) / 2f),
+                        size = ex ? new Vector3(p1 - p0, e.size.y, q.z1 - q.z0) : new Vector3(q.x1 - q.x0, e.size.y, p1 - p0),
+                    });
+                }
+                Piece(u0, Mathf.Min(u1, c0), 0); Piece(Mathf.Max(u0, c1), u1, 1);
+            }
+            E.Clear(); E.AddRange(keep);
         }
 
         static readonly HashSet<string> StubTargets = new HashSet<string>
@@ -292,6 +330,7 @@ namespace PortCCTV
         public static int TerminateStubs(HarborDefinition h)
         {
             var els = h.elements; int n = 0;
+            var corners = new List<(UnityEngine.Rect r, bool alongX)>();
             var tg = new List<Rect>(); var tgTop = new List<float>(); var bl = new List<Rect>();
             for (int i = 0; i < els.Count; i++)
             {
@@ -304,6 +343,14 @@ namespace PortCCTV
                     else if (e.shape == "box" || e.shape == "cylinder") bl.Add(RectOf(e, -1));
                 }
             }
+            // W-beam guardrails (4 m segments, ~0.5 m deep): a head must not be paved through the rail onto the slope beyond
+            foreach (var e in els)
+                if (e.shape == "prefab" && e.kind == "guard_rail")
+                {
+                    bool sw = Mathf.Abs(Mathf.Repeat(e.yaw_deg, 180f) - 90f) < 45f;
+                    float gx = sw ? 0.3f : 2f, gz = sw ? 2f : 0.3f;
+                    bl.Add(new Rect { x0 = e.center.x - gx, x1 = e.center.x + gx, z0 = e.center.z - gz, z1 = e.center.z + gz });
+                }
             var tgGrid = Grid(tg); var blGrid = Grid(bl);
             var ground = els.Where(e => e.shape == "box" && Axis(e) && (e.kind == "land" || e.kind == "quay" || e.kind == "terrace" || e.kind == "promenade")
                                         && e.center.y + e.size.y / 2f > Deck - 0.2f).Select(e => RectOf(e, -1)).ToList();
@@ -334,6 +381,14 @@ namespace PortCCTV
                         if (ov && !self) { joined = true; break; }
                     }
                     if (!joined && EndsInCrossing(els, i, alongX, end, sg, c, w, top)) joined = true;       // T-junction stem
+                    if (!joined && EndsInCorner(els, i, alongX, end, sg, c, w, top, out var corner))
+                    {
+                        // L corner (2026-11-10: the fishing-port east coast road turns north into the access road at the breakwater
+                        // root; it was read as a stub and got a head + posts against the crown wall). Paint stops at the corner.
+                        corners.Add((corner, alongX));                                 // applied after the walk (E is els)
+                        Trace.Add($"corner at {e.id} end ({(alongX ? end : c):F0},{(alongX ? c : end):F0})");
+                        continue;
+                    }
                     if (joined) continue;
                     if (_heads.Any(hd => ((hd.alongX ? new Vector2(hd.end, hd.c) : new Vector2(hd.c, hd.end)) - (alongX ? new Vector2(end, c) : new Vector2(c, end))).sqrMagnitude < 9f)) continue;
                     float hw = w / 2f + (w >= 6f ? 6f : 2.5f), d = w >= 6f ? 9f : 6f;
@@ -359,8 +414,9 @@ namespace PortCCTV
                     n++;
                 }
             }
+            foreach (var (cr, ax) in corners) CutPaint(cr, ax);
             ApplyHeads();
-            Debug.Log($"[RoadNetwork] {h.harbor_id}: {n} street ends finished with a turning head (deliberate termini)");
+            Debug.Log($"[RoadNetwork] {h.harbor_id}: {n} street ends finished with a turning head (deliberate termini), {corners.Count} corners");
             return n;
         }
 
@@ -571,6 +627,140 @@ namespace PortCCTV
         /// the carriageway edges, and street furniture / trees standing on the carriageway are removed. A road on a different
         /// level (bridge, ramp) is left alone. Returns the number of footway boxes cut.
         /// </summary>
+        static readonly HashSet<string> FurnitureKinds = new HashSet<string>
+        { "power_pole", "street_light", "signal", "street", "bench", "bin", "hydrant", "planter", "road_sign" };
+        static readonly HashSet<string> FurnitureMovable = new HashSet<string> { "signal", "street", "road_sign" };
+
+        /// <summary>
+        /// Street furniture off carriageways and house plots (2026-11-10 photo: utility poles standing in village lanes and a
+        /// pole / lamp inside a house plot). Runs after every pass that adds carriageway (dead-end links, turning heads):
+        /// a pole, lamp, signal, sign, bench or bin whose base lies inside a road / lane / driveway / turning head at its level
+        /// is moved sideways to just outside the nearest long edge (signals and signs, which belong to the street) or removed
+        /// (the rest); a pole or lamp inside a house plot pad or a house footprint is removed. Returns the number changed.
+        /// </summary>
+        public static int ClearStreetFurniture(HarborDefinition h)
+        {
+            var els = h.elements;
+            var cw = new List<Rect>(); var cwTop = new List<float>();
+            var plots = new List<(Vector2 c, Vector2 half, float yaw)>();
+            foreach (var e in els)
+            {
+                if (e.shape == "box" && Axis(e) && (e.kind == "road" || e.kind == "lane" || e.kind == "driveway" || e.kind == "turning_head")
+                    && (e.material == "road_asphalt" || e.material == "lane_concrete" || e.material == "paving" || e.material == "asphalt"))
+                { cw.Add(RectOf(e, cw.Count)); cwTop.Add(e.center.y + e.size.y / 2f); }
+                else if (e.shape == "box" && e.kind == "pad")
+                    plots.Add((new Vector2(e.center.x, e.center.z), new Vector2(e.size.x / 2f, e.size.z / 2f), e.yaw_deg + e.euler_deg.y));
+                else if (e.shape == "prefab" && e.kind == "house" && e.prefab != null)
+                {
+                    Vector2 fp = Vector2.zero;
+                    foreach (var k in HillFeatures.HouseKinds) if (k.key == e.prefab) fp = new Vector2(k.w, k.d);
+                    if (e.prefab == "bld_villa_kr") fp = new Vector2(27f, 25f);
+                    if (fp != Vector2.zero) plots.Add((new Vector2(e.center.x, e.center.z), new Vector2(fp.x * Mathf.Abs(e.size.x) / 2f, fp.y * Mathf.Abs(e.size.z) / 2f), e.yaw_deg));
+                }
+            }
+            var g = Grid(cw);
+            int OnCw(float x, float z, float y, float margin)
+            {
+                foreach (var rr in Query(g, cw, x, x, z, z))
+                    if (x > rr.x0 + margin && x < rr.x1 - margin && z > rr.z0 + margin && z < rr.z1 - margin && Mathf.Abs(y - cwTop[rr.idx]) < 0.6f) return rr.idx;
+                return -1;
+            }
+            bool InPlot(float x, float z)
+            {
+                foreach (var (c, half, yaw) in plots)
+                {
+                    if (Mathf.Abs(x - c.x) > half.x + half.y || Mathf.Abs(z - c.y) > half.x + half.y) continue;
+                    var l = Quaternion.Euler(0f, -yaw, 0f) * new Vector3(x - c.x, 0f, z - c.y);
+                    if (Mathf.Abs(l.x) < half.x + 0.2f && Mathf.Abs(l.z) < half.y + 0.2f) return true;
+                }
+                return false;
+            }
+            // shop-street lots touching a carriageway are dropped whole; village / town house models whose footprint (+0.5 m
+            // eaves) reaches into a carriageway are pushed back off it (<= 3 m, onto free ground) or dropped
+            var badLots = new HashSet<string>(); int lotsDropped = 0, housesMoved = 0, housesDropped = 0;
+            bool Overlaps(UnityEngine.Rect f, float y, float margin)
+            {
+                foreach (var rr in Query(g, cw, f.xMin, f.xMax, f.yMin, f.yMax))
+                    if (rr.Overlaps(f.xMin + margin, f.xMax - margin, f.yMin + margin, f.yMax - margin) && y > cwTop[rr.idx] - 0.6f && y < cwTop[rr.idx] + 0.6f) return true;
+                return false;
+            }
+            foreach (var e in els)
+            {
+                if (e.id == null || !e.id.StartsWith(HarborParts.LotPrefix) || !(e.kind == "building" || e.kind == "facade_detail" || e.kind == "awning" || e.kind == "market")) continue;
+                int us = e.id.IndexOf('_'); if (us < 0) continue;
+                var f = e.shape == "prefab" ? HarborParts.RectXZ(e) : HarborParts.RectXZ(e);
+                if (e.shape == "prefab" && e.kind == "facade_detail") f = UnityEngine.Rect.MinMaxRect(e.center.x - 1.5f, e.center.z - 1.5f, e.center.x + 1.5f, e.center.z + 1.5f);
+                float yb = e.shape == "prefab" ? e.center.y : e.center.y - e.size.y / 2f;
+                if (yb < Deck + 1.0f && Overlaps(f, yb, 0.3f)) badLots.Add(e.id.Substring(0, us + 1));
+            }
+            if (badLots.Count > 0)
+            {
+                int before = els.Count;
+                els.RemoveAll(e => e.id != null && e.id.StartsWith(HarborParts.LotPrefix) && badLots.Contains(e.id.Substring(0, e.id.IndexOf('_') + 1)));
+                lotsDropped = badLots.Count;
+            }
+            foreach (var e in els.ToList())
+            {
+                if (e.shape != "prefab" || !(e.kind == "house" || e.kind == "building") || e.prefab == null) continue;
+                Vector2 fp = Vector2.zero;
+                foreach (var k in HillFeatures.HouseKinds) if (k.key == e.prefab) fp = new Vector2(k.w, k.d);
+                if (e.prefab == "bld_villa_kr") fp = new Vector2(27f, 25f);
+                if (e.prefab == "house_jp03") fp = new Vector2(11.84f, 11.48f);
+                if (fp == Vector2.zero) continue;
+                bool sw = Mathf.Abs(Mathf.Repeat(e.yaw_deg, 180f) - 90f) < 45f;
+                // + roof eaves: the hip-roof models are ~3 m wider than their table width (house_hip_blue 8 m -> 11 m rendered)
+                float eave = e.prefab.StartsWith("house_hip") ? 3.0f : 1.5f;
+                float hx = (sw ? fp.y : fp.x) * Mathf.Abs(e.size.x) / 2f + eave, hz = (sw ? fp.x : fp.y) * Mathf.Abs(e.size.z) / 2f + eave;
+                var f = UnityEngine.Rect.MinMaxRect(e.center.x - hx, e.center.z - hz, e.center.x + hx, e.center.z + hz);
+                if (!Overlaps(f, e.center.y, 0.2f)) continue;
+                bool done = false;
+                foreach (var d in new[] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) })
+                {
+                    for (float step = 0.5f; step <= 3.01f && !done; step += 0.5f)
+                    {
+                        var g2 = new UnityEngine.Rect(f.position + d * step, f.size);
+                        if (Overlaps(g2, e.center.y, 0.0f)) continue;
+                        if (els.Any(o => o != e && o.shape == "prefab" && (o.kind == "house" || o.kind == "building") && HarborParts.RectXZ(o).Overlaps(UnityEngine.Rect.MinMaxRect(g2.xMin + 2f, g2.yMin + 2f, g2.xMax - 2f, g2.yMax - 2f)))) break;
+                        e.center += new Vector3(d.x * step, 0f, d.y * step); done = true;
+                    }
+                    if (done) break;
+                }
+                if (done) housesMoved++; else { els.Remove(e); housesDropped++; }
+            }
+            Debug.Log($"[RoadNetwork] {h.harbor_id}: buildings off carriageways: {lotsDropped} shop lots dropped, {housesMoved} houses moved, {housesDropped} dropped");
+            var keep = new List<HarborElement>(els.Count); int moved = 0, removed = 0;
+            foreach (var e in els)
+            {
+                // trees on a carriageway laid after ClearCarriageways (dead-end link lanes) are removed too
+                if (e.kind == "tree" && (e.shape == "prefab" || e.shape == "billboard_tree") && OnCw(e.center.x, e.center.z, e.center.y, 0.25f) >= 0) { removed++; continue; }
+                if (e.shape != "prefab" || !FurnitureKinds.Contains(e.kind ?? "")) { keep.Add(e); continue; }
+                float x = e.center.x, z = e.center.z, y = e.center.y;
+                int hit = OnCw(x, z, y, 0.25f);
+                if (hit >= 0)
+                {
+                    if (FurnitureMovable.Contains(e.kind))
+                    {
+                        var rr = cw[hit]; bool alongX = rr.x1 - rr.x0 >= rr.z1 - rr.z0;
+                        float lo = alongX ? rr.z0 - 0.7f : rr.x0 - 0.7f, hi = alongX ? rr.z1 + 0.7f : rr.x1 + 0.7f, cur = alongX ? z : x;
+                        bool placed = false;
+                        foreach (float t in Mathf.Abs(cur - lo) <= Mathf.Abs(cur - hi) ? new[] { lo, hi } : new[] { hi, lo })
+                        {
+                            float nx = alongX ? x : t, nz = alongX ? t : z;
+                            if (OnCw(nx, nz, y, -0.2f) >= 0 || InPlot(nx, nz)) continue;
+                            e.center = new Vector3(nx, y, nz); placed = true; break;
+                        }
+                        if (placed) { moved++; keep.Add(e); continue; }
+                    }
+                    removed++; continue;
+                }
+                if ((e.kind == "power_pole" || e.kind == "street_light") && InPlot(x, z)) { removed++; continue; }
+                keep.Add(e);
+            }
+            els.Clear(); els.AddRange(keep);
+            Debug.Log($"[RoadNetwork] {h.harbor_id}: street furniture off carriageways / plots: {moved} moved, {removed} removed");
+            return moved + removed;
+        }
+
         public static int ClearCarriageways(HarborDefinition h)
         {
             var els = h.elements;
@@ -829,6 +1019,37 @@ namespace PortCCTV
                 return false;
             }
             return On(c - w / 2f - 0.6f) && On(c + w / 2f + 0.6f);
+        }
+
+        /// <summary>True when another carriageway at the same level touches the strip's last `w` metres from the side (an L corner
+        /// or a street leaving sideways at the end); `corner` is the end square, for cutting the paint there.</summary>
+        static bool EndsInCorner(List<HarborElement> els, int self, bool alongX, float end, float sg, float c, float w, float top, out UnityEngine.Rect corner)
+        {
+            float a0 = Mathf.Min(end, end - sg * w), a1 = Mathf.Max(end, end - sg * w);
+            corner = alongX ? UnityEngine.Rect.MinMaxRect(a0, c - w / 2f, a1, c + w / 2f) : UnityEngine.Rect.MinMaxRect(c - w / 2f, a0, c + w / 2f, a1);
+            var probe = alongX ? UnityEngine.Rect.MinMaxRect(a0 + 0.5f, c - w / 2f - 1.0f, a1 - 0.5f, c + w / 2f + 1.0f)
+                               : UnityEngine.Rect.MinMaxRect(c - w / 2f - 1.0f, a0 + 0.5f, c + w / 2f + 1.0f, a1 - 0.5f);
+            var me = RectOf(els[self], self);
+            for (int k = 0; k < els.Count; k++)
+            {
+                var o = els[k];
+                if (k == self || o.shape != "box" || !(o.kind == "road" || o.kind == "lane") || o.material == null || !PavedMats.Contains(o.material)) continue;
+                if (Mathf.Abs(o.center.y + o.size.y / 2f - top) > 0.06f || !Axis(o)) continue;
+                var r = RectOf(o, k);
+                if (!r.Overlaps(probe.xMin, probe.xMax, probe.yMin, probe.yMax)) continue;
+                bool oAlongX = r.x1 - r.x0 >= r.z1 - r.z0;
+                if (oAlongX == alongX) continue;                                         // collinear pieces / parallel strips
+                float ow = oAlongX ? r.z1 - r.z0 : r.x1 - r.x0;
+                if (ow < 3.4f) continue;                                                 // a footpath lane is no way on
+                // the other street must leave the end square sideways (not lie across the strip's middle further back)
+                bool beyondSide = alongX ? (r.z1 > me.z1 + 0.5f || r.z0 < me.z0 - 0.5f) : (r.x1 > me.x1 + 0.5f || r.x0 < me.x0 - 0.5f);
+                // ... and it must reach the end line itself (a street joining a few metres before the end leaves a stub, which
+                // still needs a head: fishing-port village end (-980,-28), lane at -976..-972)
+                float e0 = Mathf.Min(end, end - sg * w) + 0.5f, e1 = Mathf.Max(end, end - sg * w) - 0.5f;   // whole end square side
+                bool atEnd = alongX ? (r.x0 <= e0 && r.x1 >= e1) : (r.z0 <= e0 && r.z1 >= e1);
+                if (beyondSide && atEnd) return true;
+            }
+            return false;
         }
 
         static bool IsTarget(HarborElement e)

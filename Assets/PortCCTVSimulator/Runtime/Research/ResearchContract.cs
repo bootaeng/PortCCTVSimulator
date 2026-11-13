@@ -327,7 +327,7 @@ namespace PortCCTV.Research
                 output_dir = "Captures/research/" + experimentId,
                 notes = "Technical pilot of the research tooling. No detector is trained and no test split is evaluated.",
             };
-            c.freeze = new FreezeRef { freeze_id = "freeze_20261110b", freeze_manifest_path = "Research/freeze/freeze_20261110b.json" };   // b: barge pile fix + CT east shore walk (2026-11-10)
+            c.freeze = new FreezeRef { freeze_id = "freeze_20261112b", freeze_manifest_path = "Research/freeze/freeze_20261112b.json" };   // 2026-11-12 b: IR illuminator, wave presets / harbour mask (calm / light chop / IR off unchanged); 2026-11-12: lens rain v2; c: town assets / hulls (11-10); b: barge pile + CT east walk
             c.data.real_manifest_paths.Add("Research/data/real_manifest_v1.json");
             c.data.real_manifest_paths.Add("Research/data/external_inventory_v1.json");
             c.arms = DefaultArms(c.training.B_s, c.training.B_r);

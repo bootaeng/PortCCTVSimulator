@@ -158,6 +158,23 @@ namespace PortCCTV.EditorTools
                 url = "https://sketchfab.com/3d-models/dadc775d1d044aee9f6744fa7b47648e", hullNode = RenderMinReference, immersion = 1.6f,
                 license = "CC BY 4.0 - \"Yacht II\" by agt14032013 (https://sketchfab.com/3d-models/dadc775d1d044aee9f6744fa7b47648e); x0.38 (105 units -> 40 m), rotated (bow +X), recentred",
                 pitch = -90f, scale = 0.38f, yaw = 90f, recenter = true },
+            // vessel batch 2026-11-10 (ThirdParty/SketchfabCCBY/ships/SOURCE_ships.md, section 2026-11-10): bow end found from the
+            // hull width near both ends of the length axis (narrow end = bow), checked on the preview renders
+            new HullSpec { id = "fishing_boat_iii", display = "Fishing boat 23 m (CC BY)", category = "fishing_boat_coastal", file = "fishing_boat_iii_agt14032013.glb",
+                dir = "SketchfabCCBY/ships", sha = "0f966995c983d32f81407308256195aaaa84b979214cb08132e9839e2d693cd1",
+                url = "https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63", hullNode = RenderMinReference, immersion = 1.0f,
+                license = "CC BY 4.0 - \"Fishing Boat III\" by gogiart (agt14032013) (https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63); textures 1k (glb_derive.py), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.0f, yaw = -90f, recenter = true },
+            new HullSpec { id = "small_motorboat", display = "Small motorboat 6 m (CC BY)", category = "motorboat", file = "small_motorboat_tijmenmatthys.glb",
+                dir = "SketchfabCCBY/ships", sha = "2ca7195cfac20c208cf88eb2589604a1622b1f5f1dfa9ea14c082698228b0abc",
+                url = "https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4", hullNode = RenderMinReference, immersion = 0.25f,
+                license = "CC BY 4.0 - \"Small Motorboat\" by tijmenmatthys (https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4); outboard brand lettering inpainted (glb_derive.py), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.0f, yaw = 180f, recenter = true },
+            new HullSpec { id = "crrc", display = "Rubber raiding craft 4.7 m (CC BY)", category = "rib", file = "crrc_blarg1.glb",
+                dir = "SketchfabCCBY/ships", sha = "7ea87cab0fd7801e69a3ab296bdc8423880edd4a11db5f8ecd5e19c6f96c9182",
+                url = "https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85", hullNode = RenderMinReference, immersion = 0.15f,
+                license = "CC BY 4.0 - \"CRRC (Combat Rubber Raiding Craft)\" by blarg1 (https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85); x1.05 (4.47 m -> 4.7 m), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.05f, yaw = -90f, recenter = true },
         };
 
         static readonly (string key, Color color, float smooth, float metal)[] MaterialSpecs =
@@ -201,6 +218,22 @@ namespace PortCCTV.EditorTools
         public static void RunBatch()
         {
             try { Run(); EditorApplication.Exit(0); }
+            catch (Exception ex) { Debug.LogError("[Bootstrap] FAILED: " + ex); EditorApplication.Exit(1); }
+        }
+
+        /// <summary>Rebuilds only the vessel catalog / prefabs (dev loop after a HullSpec change), splits oversized collider
+        /// triangles, writes previews of the newest hulls: -executeMethod PortCCTV.EditorTools.ProjectBootstrap.RebuildVesselsBatch</summary>
+        public static void RebuildVesselsBatch()
+        {
+            try
+            {
+                EnsureVessels();
+                AssetDatabase.SaveAssets();
+                var cr = ColliderRepair.Run(false);
+                Log($"Vessels rebuilt; collider repair: {cr.repaired} split, {cr.box_fallback} box fallback");
+                TownAssets.Preview(new[] { "vessel_fishing_boat_iii", "vessel_small_motorboat", "vessel_crrc", "vessel_motorboat", "vessel_rib" });
+                EditorApplication.Exit(0);
+            }
             catch (Exception ex) { Debug.LogError("[Bootstrap] FAILED: " + ex); EditorApplication.Exit(1); }
         }
 

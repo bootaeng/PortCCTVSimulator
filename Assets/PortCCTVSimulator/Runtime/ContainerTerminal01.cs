@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PortCCTV.HarborGeneric02;
 using static PortCCTV.HarborParts;
@@ -164,7 +165,9 @@ namespace PortCCTV
             TruckLot(-590f, -475f, -232f, -40f, 0.5f, 0.3f, "ct_tanker_lot");
             IndustrialBlocks(-1580f, -870f, -235f, 415f, 118f);
             IndustrialBlocks(-850f, -612f, -20f, 415f, 110f);                 // ends before the terminal yard (x -600); it overlapped the ARMG blocks
-            foreach (var (cx, cz) in new[] { (-1099f, -97.5f), (-1217.5f, 162.5f) }) Cyl("factory", cx, cz, Deck, Deck + R(45f, 80f), R(3.5f, 5f), "chimney");   // stacks of the plants
+            // stacks of the plants (2026-11-10: moved off the road corner / sidewalk at (-1099,-97.5) and (-1217.5,162.5) onto free
+            // spots of the plant pads; the two draws per stack are unchanged)
+            foreach (var (cx, cz) in new[] { (-1088f, -81f), (-1206f, 175f) }) Cyl("factory", cx, cz, Deck, Deck + R(45f, 80f), R(3.5f, 5f), "chimney");
 
             // --- east town with apartment towers (camera D stands on the first one); coastal road + village on the east shore below it
             CameraHill(Cameras[3], 240f, 420f, 2, new Vector2(527f, -94f));
@@ -192,6 +195,7 @@ namespace PortCCTV
             Prefab("buoy", "lateral_marker", new Vector3(390, -1.0f, -540), 0, Vector3.one * 0.8f, id: "buoy_green_1", nonVessel: true);
             Prefab("buoy", "ocean_buoy", new Vector3(380, -0.6f, -900), 0, Vector3.one * 1.8f, id: "buoy_fairway", nonVessel: true);
 
+            DistantTowers(-1500f, 1500f, 1000f, 1450f, 8, 26111021, Cameras.Select(c => c.position), 900f);   // 2026-11-10
             CameraMasts(Cameras, MastBases);
 
             h.water_regions.Add(Region("terminal_basin", -420, 60, 420, 60, 420, -400, 250, -455, -435, -455, -435, -250, -420, -250));
@@ -207,6 +211,9 @@ namespace PortCCTV
             h.vessel_rules.Add(Rule("barge", "port works / bunkering"));
             h.vessel_rules.Add(Rule("rib", "patrol / pilot transfer"));
             h.vessel_rules.Add(Rule("motorboat", "pilot launch / work boat"));
+            h.vessel_rules.Add(Rule("small_motorboat", "work boat / line handling"));
+            h.vessel_rules.Add(Rule("crrc", "rubber boat (port security / rescue)"));
+            h.vessel_rules.Add(Rule("fishing_boat_iii", "coastal fishing boat passing the terminal"));
             h.vessel_rules.Add(Rule("tanker", "tankers use the anchorage outside, not the container basin", "outer_sea"));
             End(h);
             return h;
@@ -290,6 +297,8 @@ namespace PortCCTV
                 Box("gate", bx - 0.55f, bx + 0.55f, Deck + 0.25f, Deck + 2.8f, zCanopy - 0.8f, zCanopy + 0.8f, "wall_white");  // booth
                 Box("gate", bx - 0.58f, bx + 0.58f, Deck + 1.4f, Deck + 2.3f, zCanopy - 0.83f, zCanopy + 0.83f, "glass_dark");
                 foreach (var pz in new[] { zCanopy - 4.5f, zCanopy + 4.5f }) Box("gate", bx - 0.3f, bx + 0.3f, Deck, Deck + 7f, pz - 0.3f, pz + 0.3f, "steel_galv");   // canopy columns on the islands
+                // 2026-11-10: a guard on the first and last island (security post), facing the trucks coming from the landside
+                if (k == 1 || k + 2 >= n) Guard(new Vector3(bx, Deck + 0.25f, zCanopy + 2.6f), new Vector2(0f, 1f), $"gate_guard_{k}");
             }
             foreach (var pz in new[] { zCanopy + 16f, zCanopy + 26f })                                              // OCR and radiation portals
             {

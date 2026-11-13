@@ -135,7 +135,7 @@ namespace PortCCTV
         public static float DefaultSpeedKn(string assetId, float lengthM) => assetId switch
         {
             "kayak" => 2.5f, "canoe" => 2.5f, "sailing_dinghy" => 4f, "sailing_yacht" => 5f,
-            "rib" => 12f, "motorboat" => 10f, "cabin_cruiser" => 8f,
+            "rib" => 12f, "motorboat" => 10f, "cabin_cruiser" => 8f, "small_motorboat" => 9f, "crrc" => 10f, "fishing_boat_iii" => 8f,
             "fishing_boat" => 7f, "korean_fishing_boat" => 8f, "ferry" => 10f, "tugboat" => 7f, "barge" => 5f,
             "container_ship" => 7f, "tanker" => 6f,
             _ => lengthM < 6f ? 3f : lengthM < 30f ? 8f : 6f,
@@ -147,7 +147,7 @@ namespace PortCCTV
         public static float LeewayFactor(string assetId) => assetId switch
         {
             "sailing_yacht" => 0.05f, "sailing_dinghy" => 0.06f, "kayak" => 0.04f, "canoe" => 0.04f,
-            "rib" => 0.035f, "motorboat" => 0.03f, "cabin_cruiser" => 0.03f, "ferry" => 0.025f,
+            "rib" => 0.035f, "motorboat" => 0.03f, "cabin_cruiser" => 0.03f, "ferry" => 0.025f, "crrc" => 0.035f, "small_motorboat" => 0.03f,
             "fishing_boat" => 0.03f, "korean_fishing_boat" => 0.025f, "tugboat" => 0.02f, "barge" => 0.03f,
             "container_ship" => 0.02f, "tanker" => 0.015f,
             _ => 0.025f,
