@@ -135,45 +135,6 @@ namespace PortCCTV.EditorTools
             c.Flush(t, "tug");
         }
 
-        // ------------------------------------------------------------------ container feeder 172 m
-        public static void ContainerShip(Transform t, Material deckGrey, Material white)
-        {
-            const float L = 172f, B = 27f, D = 14.5f, bowF = 2.4f, sternF = 1.5f, sheer = 0.12f;
-            var c = new Combiner();
-            foreach (var s in new[] { 1f, -1f })
-            {
-                c.Rail(DeckEdge(L, B, D, bowF, sternF, sheer, s, 0.10f, 0.92f, 0.5f, 24), 1.1f, Grey, 2.0f);
-                // anchor in its hawse pipe, bow fairleads
-                float halfBow = ProceduralVessels.HalfBreadth(0.955f, B, bowF, sternF);
-                c.Box(new Vector3(78.5f, D - 3.2f, s * (halfBow + 0.35f)), new Vector3(1.3f, 2.0f, 0.6f), Black);
-                c.Sphere(new Vector3(78.5f, D - 2.0f, s * (halfBow + 0.4f)), 1.1f, Black);
-                c.BittPair(new Vector3(70f, D + 2.5f, s * 4.5f), 1.6f, 0.5f, 1.3f, Black);
-                c.BittPair(new Vector3(-80f, D + 0.1f, s * 5.5f), 1.6f, 0.5f, 1.3f, Black);
-                // nav lights on the bridge wings
-                c.Sphere(new Vector3(-62f, D + 20.6f, s * 14.6f), 0.5f, s > 0 ? Red : Green);
-            }
-
-            c.Rail(Rect(-67f, -57f, -14.8f, 14.8f, D + 20.22f), 1.1f, Grey, 2.0f, true);
-            c.Rail(Rect(-71.8f, -56.2f, -10.3f, 10.3f, D + 17.02f), 1.1f, Grey, 2.0f, true);
-            // lashing bridges between bays (same bay layout as BuildContainerShip)
-            for (int b = 0; b < 8; b++)
-            {
-                float bx = -45f + b * 13.2f + 6.6f;
-                float u = (bx + L / 2) / L;
-                float half = ProceduralVessels.HalfBreadth(u, B, bowF, sternF);
-                int rows = Mathf.Clamp(Mathf.FloorToInt((half * 2 - 1.5f) / 2.5f), 1, 9);
-                c.Box(new Vector3(bx, D + 1.0f + 2.8f, 0), new Vector3(0.5f, 5.6f, rows * 2.5f + 0.4f), deckGrey);
-            }
-            // Gearless feeder: cargo is handled by the terminal STS cranes.
-            // free-fall lifeboat on the stern, radar/satcom domes, masthead light
-            c.Add(Combiner.Capsule, new Vector3(-82.5f, D + 9.5f, 0), new Vector3(2.6f, 3.6f, 2.6f), Orange, new Vector3(0, 0, 55f));
-            c.Box(new Vector3(-81f, D + 7.0f, 0), new Vector3(6f, 0.6f, 3.4f), Grey, new Vector3(0, 0, 35f));
-            c.Sphere(new Vector3(-63f, D + 26.6f, 2.5f), 2.0f, White);
-            c.Sphere(new Vector3(-63f, D + 27.8f, 0), 0.5f, White);
-            c.Sphere(new Vector3(80f, D + 12.2f, 0), 0.5f, White);
-            c.Flush(t, "container_ship");
-        }
-
         // ------------------------------------------------------------------ Korean coastal fishing boat 19 m
         public static void KoreanFishingBoat(Transform t, Material blue)
         {

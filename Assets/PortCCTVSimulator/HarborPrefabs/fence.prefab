@@ -40,6 +40,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5483250579936327349}
     m_Modifications:
+    - target: {fileID: -4203376922744236677, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
     - target: {fileID: -3910990755373119420, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.9825039
@@ -80,6 +84,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1124465304139831719, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
+    - target: {fileID: 2264717248265980506, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
+    - target: {fileID: 2308016899740879749, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
+    - target: {fileID: 2732221569844710584, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
+    - target: {fileID: 5073103213057348872, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3abd50a2ad521e4eb2745e6abc7fce7, type: 2}
     - target: {fileID: 8771091787928289351, guid: 1842e6be044dc9547b590d9e02161f3e, type: 3}
       propertyPath: m_Name
       value: modular_chainlink_fence_1k

@@ -99,7 +99,7 @@ namespace PortCCTV
                 _ => DefaultScenario(),
             };
             s.environment.vessel_wave_motion = true;   // new scenes follow the waves; files without the field keep the mean plane
-            return s;
+            return DefaultSceneLayout.Diversify(s, VesselCatalog.Load());   // 2026-11-16: no repeated hull among neighbours
         }
 
         /// <summary>Legacy mixed-harbor scene (generic_harbor_02) used by the tests.</summary>
@@ -195,7 +195,9 @@ namespace PortCCTV
             if (cap != null && !failed)
             {
                 for (int i = 0; i < 5; i++) yield return null;
-                var res = CaptureService.Capture(_world, AppPaths.ResolveUnderRoot(cap), "cli");
+                var diag = ArgValue("-diag-material");
+                if (diag != null) { Log("RENDER DIAGNOSTIC (not a research capture): " + RenderDiagnostics.Apply(_world.CctvCamera, diag, _world.Theme != null ? _world.Theme.Get("glass_dark") : null)); yield return null; }
+                var res = CaptureService.Capture(_world, AppPaths.ResolveUnderRoot(cap), diag != null ? "cli_diag_" + diag.Replace(':', '_').Replace(',', '+') : "cli");
                 Log(res.success ? "Captured -> " + res.output_dir : "Capture FAILED: " + res.error);
                 failed |= !res.success;
             }

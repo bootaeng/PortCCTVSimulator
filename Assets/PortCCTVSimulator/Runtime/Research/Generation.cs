@@ -19,9 +19,9 @@ namespace PortCCTV.Research
     {
         public const string G = "G", C = "C", CU = "C_U";
         public static readonly string[] Modes = { G, C, CU };
-        public const string GVersion = "sampler_G_v1_fixed_prior";
-        public const string CVersion = "sampler_C_v1_train_profile_match";
-        public const string CUVersion = "sampler_CU_v1_rare_condition_uniform";
+        public const string GVersion = "sampler_G_v1_fixed_prior+placement_v2_screen_layout";
+        public const string CVersion = "sampler_C_v1_train_profile_match+placement_v2_screen_layout";
+        public const string CUVersion = "sampler_CU_v1_rare_condition_uniform+placement_v2_screen_layout";
 
         public static readonly string[] Lighting = { "day_clear", "day_backlit", "dusk_low_light", "light_haze", "night_clear", "night_overcast" };
         public static readonly string[] Water = { "calm", "light_chop" };
@@ -273,6 +273,25 @@ namespace PortCCTV.Research
             };
         }
 
+        /// <summary>Predicted above-water image box of a hull (reduced vertex set; for layout checks, not labels).</summary>
+        public static bool PredictBox(SimWorld w, LabelComputer.Projection proj, VesselAssetEntry e, float x, float z, float heading, float immersion, int W, int H, out Rect box)
+        {
+            var p = Predict(w, proj, e, x, z, heading, immersion, W, H, Reduced(e));
+            box = p.box;
+            return p.ok;
+        }
+
+        static bool IsOccluderPair(string a, string b) => a == b + "_occ";
+
+        /// <summary>Screen-layout issues (PlacementQuality) a candidate would create with the already placed objects.</summary>
+        static List<PlacementQuality.Issue> LayoutIssues(SimWorld w, List<(ObjectRequest o, VesselAssetEntry e)> placed, ObjectRequest cand, VesselAssetEntry ce, float x, float z, float immersion, int W, int H)
+        {
+            var list = placed.Select(p => new VesselPlacement { object_id = p.o.object_id, asset_id = p.e.asset_id, x = p.o.x, z = p.o.z, heading_deg = p.o.heading_deg, immersion_m = p.o.immersion_m }).ToList();
+            list.Add(new VesselPlacement { object_id = cand.object_id, asset_id = ce.asset_id, x = x, z = z, heading_deg = cand.heading_deg, immersion_m = immersion });
+            var rep = PlacementQuality.Evaluate(w, list, W, H, IsOccluderPair);
+            return rep.issues.Where(i => i.a == cand.object_id || i.b == cand.object_id || (i.rule == "same_asset_count" && i.a == ce.asset_id)).ToList();
+        }
+
         static bool WaterHit(Camera cam, float u, float v, float waterY, out Vector2 xz, out float dist)
         {
             xz = default; dist = 0;
@@ -395,7 +414,7 @@ namespace PortCCTV.Research
                     for (float v = 0.01f; v < 0.996f; v += 0.005f) if (Mathf.Abs(v - vReq) > 1e-4f) rows.Add(v);
                 rows = rows.OrderBy(v => Mathf.Abs(v - vReq)).ToList();
                 float closestErr = float.MaxValue, closestV = -1f; string closestAsset = "";
-                int water = 0, overl = 0, trunc = 0;
+                int water = 0, overl = 0, trunc = 0, layout = 0;
                 foreach (var v in rows)
                 {
                     o.rows_tried++;
@@ -405,23 +424,33 @@ namespace PortCCTV.Research
                     var cands = Candidates(w, region);
                     if (cands.Count == 0) continue;
                     water++;
-                    VesselAssetEntry best = null; float bestErr = float.MaxValue;
+                    // placement_v2: every asset that meets the size within tolerance is a candidate; the order is a weighted random
+                    // draw (assets already in the scene get weight 0.15), so the same hull is not chosen by default every time.
+                    var feasible = new List<(VesselAssetEntry e, float key)>();
                     foreach (var e in cands)
                     {
                         var p = Predict(w, proj, e, xz.x, xz.y, o.heading_deg, e.default_immersion_m, W, H, Reduced(e));
                         if (!p.ok) continue;
                         float err = Mathf.Abs(Mathf.Log(Mathf.Max(1e-6f, p.h) / o.target_height_frac));
-                        if (err < bestErr - 1e-6f) { bestErr = err; best = e; }
+                        if (err < closestErr) { closestErr = err; closestV = v; closestAsset = e.asset_id; }
+                        if (err > tol * 1.15f) continue;
+                        float wgt = placed.Any(pl => pl.Item2.asset_id == e.asset_id) ? 0.15f : 1f;
+                        feasible.Add((e, -Mathf.Log(Mathf.Max(1e-9f, (float)rng.NextDouble())) / wgt));
+                    }
+                    if (feasible.Count == 0) continue;
+                    VesselAssetEntry best = null; Pred fp = default;
+                    foreach (var (e, _) in feasible.OrderBy(f => f.key))
+                    {
+                        var pp = Predict(w, proj, e, xz.x, xz.y, o.heading_deg, e.default_immersion_m, W, H);
+                        float ferr = pp.ok ? Mathf.Abs(Mathf.Log(Mathf.Max(1e-6f, pp.h) / o.target_height_frac)) : float.MaxValue;
+                        if (ferr > tol) continue;
+                        if (o.truncation_target != "none" && pp.trunc < 0.05f) { trunc++; continue; }
+                        if (o.truncation_target == "none" && pp.trunc > 0.02f) { trunc++; continue; }
+                        if (Overlaps(w, e, xz.x, xz.y, o.heading_deg, placed)) { overl++; continue; }
+                        if (LayoutIssues(w, placed, o, e, xz.x, xz.y, e.default_immersion_m, W, H).Count > 0) { layout++; continue; }
+                        best = e; fp = pp; break;
                     }
                     if (best == null) continue;
-                    if (bestErr < closestErr) { closestErr = bestErr; closestV = v; closestAsset = best.asset_id; }
-                    if (bestErr > tol * 1.15f) continue;
-                    var fp = Predict(w, proj, best, xz.x, xz.y, o.heading_deg, best.default_immersion_m, W, H);
-                    float ferr = fp.ok ? Mathf.Abs(Mathf.Log(Mathf.Max(1e-6f, fp.h) / o.target_height_frac)) : float.MaxValue;
-                    if (ferr > tol) continue;
-                    if (o.truncation_target != "none" && fp.trunc < 0.05f) { trunc++; continue; }
-                    if (o.truncation_target == "none" && fp.trunc > 0.02f) { trunc++; continue; }
-                    if (Overlaps(w, best, xz.x, xz.y, o.heading_deg, placed)) { overl++; continue; }
                     o.asset_id = best.asset_id; o.x = xz.x; o.z = xz.y; o.immersion_m = best.default_immersion_m; o.water_region = region;
                     o.predicted_height_frac = fp.h; o.predicted_center_u = fp.cu; o.predicted_bottom_v = fp.bv; o.predicted_truncation_fraction = fp.trunc;
                     o.position_adjusted_dv = v - vReq;
@@ -431,7 +460,7 @@ namespace PortCCTV.Research
                     return true;
                 }
                 last = closestV < 0f ? (water == 0 ? "column_has_no_water_region" : "no_candidate_projects_into_view")
-                    : $"size_unreachable{(strict ? "_at_requested_row" : "_on_column")}: closest {closestAsset} |log ratio| {closestErr:F2} at v {closestV:F3} (tol {tol:F2}; truncation rejects {trunc}, overlap rejects {overl})";
+                    : $"size_unreachable{(strict ? "_at_requested_row" : "_on_column")}: closest {closestAsset} |log ratio| {closestErr:F2} at v {closestV:F3} (tol {tol:F2}; truncation rejects {trunc}, overlap rejects {overl}, screen-layout rejects {layout})";
                 o.attempt_log.Add($"a{a}: u {u:F3}: {last}");
             }
             o.plan_status = "unmet"; o.unmet_reason = last;
@@ -470,6 +499,8 @@ namespace PortCCTV.Research
                 }
                 if (best == null) { last = "no_candidate_gives_30_70pct_box_overlap"; occ.attempt_log.Add($"a{a}: {last}"); continue; }
                 if (Overlaps(w, best, xz.x, xz.y, occ.heading_deg, placed)) { last = "overlaps_vessel_or_structure"; occ.attempt_log.Add($"a{a}: {last}"); continue; }
+                var li = LayoutIssues(w, placed, occ, best, xz.x, xz.y, best.default_immersion_m, W, H);
+                if (li.Count > 0) { last = "screen_layout: " + string.Join(",", li.Select(i => i.rule)); occ.attempt_log.Add($"a{a}: {last}"); continue; }
                 occ.asset_id = best.asset_id; occ.x = xz.x; occ.z = xz.y; occ.immersion_m = best.default_immersion_m; occ.water_region = region;
                 occ.predicted_height_frac = bestP.h; occ.predicted_center_u = bestP.cu; occ.predicted_bottom_v = bestP.bv;
                 occ.predicted_truncation_fraction = bestP.trunc;

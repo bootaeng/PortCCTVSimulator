@@ -31,10 +31,11 @@ FROZEN_CODE = [A + "Runtime/" + f for f in (
     "Marina01.cs", "RoadNetwork.cs", "Roads.cs", "Parking.cs", "Vegetation.cs", "HillFeatures.cs", "GroundWear.cs",
     "NightLights.cs", "Presets.cs", "VesselCatalog.cs", "VesselGeometry.cs", "VesselPaint.cs", "CarPaint.cs",
     "Replacements.cs", "ProcNoise.cs", "Weather.cs", "SkyLibrary.cs", "SimWorld.cs", "Navigation.cs", "SensorModel.cs",
-    "GpuInstanceMask.cs", "TownParts.cs", "LensRain.cs", "IrIlluminator.cs", "HarborWaterMask.cs")] + [A + "Editor/" + f for f in (
+    "GpuInstanceMask.cs", "TownParts.cs", "LensRain.cs", "IrIlluminator.cs", "HarborWaterMask.cs",
+    "PlacementQuality.cs", "Research/Episodes.cs", "Research/Generation.cs")] + [A + "Editor/" + f for f in (
     "ProceduralAssets.cs", "ProceduralVessels.cs", "VesselDetails.cs", "VillageAssets.cs", "VillageAssets.Vehicles.cs",
     "WeatherAssets.cs", "PhotoAssets.cs", "HillBaker.cs", "ReplacementAssets.cs", "TreeImpostors.cs", "TextureDiet.cs",
-    "ColliderRepair.cs", "ProjectBootstrap.cs", "TownAssets.cs")]
+    "ColliderRepair.cs", "ProjectBootstrap.cs", "TownAssets.cs", "TransparentGlassFix.cs")]   # 2026-11-16: + placement / episode / glass fix
 FROZEN_SETTINGS = ["ProjectSettings/GraphicsSettings.asset", "ProjectSettings/QualitySettings.asset",
                    "ProjectSettings/ProjectSettings.asset", "ProjectSettings/TagManager.asset",
                    "ProjectSettings/HDRPProjectSettings.asset", "ProjectSettings/ShaderGraphSettings.asset",
@@ -80,7 +81,7 @@ def runtime_baseline(captures_dir):
     base = os.path.join(ROOT, captures_dir) if not os.path.isabs(captures_dir) else captures_dir
     for name in sorted(os.listdir(base)):
         mp = os.path.join(base, name, "metadata.json")
-        if not name.startswith("cctv_") or not os.path.isfile(mp):
+        if not name.startswith(("cctv_", "default_")) or not os.path.isfile(mp):   # default_: freeze_baseline_20261116 jobs (SceneDiagnostics -write-jobs)
             continue
         m = json.load(open(mp, encoding="utf-8"))
         if not m.get("complete"):

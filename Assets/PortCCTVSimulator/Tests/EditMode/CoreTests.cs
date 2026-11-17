@@ -11,7 +11,7 @@ namespace PortCCTV.Tests
         [Test]
         public void ProceduralHulls_HaveVisibleOutwardSidesAndStern()
         {
-            foreach (string id in new[] { "barge", "container_ship", "tugboat", "korean_fishing_boat" })
+            foreach (string id in new[] { "barge", "tugboat", "korean_fishing_boat" })
             {
                 var entry = VesselCatalog.Load().Find(id);
                 Assert.IsNotNull(entry, id);
@@ -277,11 +277,12 @@ namespace PortCCTV.Tests
         [Test]
         public void RepeatedInteractiveSpawns_AreVisibleAndDoNotOverlap()
         {
+            // 2026-11-16: repeated additions use different hulls (PlacementQuality forbids the same hull close by / look-alike)
             var cases = new[]
             {
-                (ContainerTerminal01.Id, "rib"),
-                (FishingPort01.Id, "fishing_boat"),
-                (Marina01.Id, "motorboat"),
+                (ContainerTerminal01.Id, new[] { "rib", "motorboat", "pilot_boat" }),
+                (FishingPort01.Id, new[] { "fishing_boat", "small_motorboat", "crrc" }),
+                (Marina01.Id, new[] { "motorboat", "rib", "speedboat" }),
             };
             foreach (var item in cases)
             {
@@ -290,12 +291,12 @@ namespace PortCCTV.Tests
                     var s = SimulatorApp.DefaultScenarioFor(item.Id);
                     s.camera_preset_id = camera.id;
                     _w.Apply(s);
-                    var entry = _w.Catalog.Find(item.Item2);
                     var random = new System.Random(1037);
                     var added = new System.Collections.Generic.List<VesselPlacement>();
                     int repeat = camera.id == "ct_E_basin_breakwater" ? 3 : 2;
                     for (int i = 0; i < repeat; i++)
                     {
+                        var entry = _w.Catalog.Find(item.Item2[i]);
                         Assert.IsTrue(VesselSpawnPlanner.TryFind(_w, entry, s.vessels, random, out var p), $"{item.Id}/{camera.id} spawn {i}");
                         p.object_id = "added_" + i;
                         s.vessels.Add(p);
@@ -307,7 +308,9 @@ namespace PortCCTV.Tests
                         Assert.Greater(vp.y, 0.08f); Assert.Less(vp.y, 0.94f);
                     }
                     if (camera.id == "ct_E_basin_breakwater")
-                        Assert.Greater(added.Max(v => v.z) - added.Min(v => v.z), 45f, "successive boats should use different water depths");
+                        Assert.Greater(added.Max(v => v.z) - added.Min(v => v.z), 25f, "successive boats should use different water depths");   // 2026-11-16: ct_E vFOV 52 -> 32 deg narrows the visible water band (was 45 m)
+                    var lay = PlacementQuality.Evaluate(_w, s.vessels, 1920, 1080);
+                    Assert.IsFalse(added.Any(v => lay.Involves(v.object_id)), $"{item.Id}/{camera.id}: " + string.Join(";", lay.issues.Select(x => $"{x.rule} {x.a}/{x.b}")));
                 }
             }
         }
@@ -397,7 +400,8 @@ namespace PortCCTV.Tests
         {
             var s = SimulatorApp.DefaultScenarioFor(Marina01.Id);
             _w.Apply(s);
-            Assert.Greater(_w.SetAutoNavigationForUnmoored(s), 3, "offshore marina vessels switch to auto");
+            // 2026-11-16: DefaultSceneLayout.Diversify drops hulls without a distinct substitute, the default marina keeps 3 unmoored vessels
+            Assert.GreaterOrEqual(_w.SetAutoNavigationForUnmoored(s), 3, "offshore marina vessels switch to auto");
             return s;
         }
 
@@ -423,7 +427,7 @@ namespace PortCCTV.Tests
             }
             int moved = _w.Vessels.Count(v => _w.Nav.IsMoving(v.placement.object_id) && Vector2.Distance(new Vector2(v.placement.x, v.placement.z),
                 new Vector2(s.vessels.First(q => q.object_id == v.placement.object_id).x, s.vessels.First(q => q.object_id == v.placement.object_id).z)) > 20f);
-            Assert.Greater(moved, 3, "auto vessels actually move in 90 s");
+            Assert.GreaterOrEqual(moved, 3, "auto vessels actually move in 90 s");
         }
 
         [Test]
@@ -1210,6 +1214,54 @@ namespace PortCCTV.Tests
                 }
             }
             Assert.GreaterOrEqual(withHull, 20, "vessel types with a repaintable hull");
+        }
+
+        /// <summary>Deck cargo of the loaded container ships keeps its colours under random paint (the paint heuristic once took
+        /// gogiart's container slabs for superstructure and Innerscene's hatch covers under the stacks for superstructure).</summary>
+        [Test]
+        public void LoadedContainerShips_KeepTheirContainerColours()
+        {
+            var cat = VesselCatalog.Load();
+            foreach (var id in new[] { "container_ship_loaded", "container_ship_rm02", "container_ship_gogi" })
+            {
+                var e = cat.Find(id);
+                Assert.IsNotNull(e, id);
+                var cargo = e.paint_slots.Where(s =>
+                {
+                    var n = s.material_name.ToLowerInvariant();
+                    if (n.Contains("container") && !n.StartsWith("container_ship_") || n.Contains("container_atlas") || n.Contains("hatch_cover")) return true;
+                    for (int k = 40; k <= 49; k++) if (id == "container_ship_gogi" && (n == $"acmat_{k}" || n.EndsWith($"_acmat_{k}"))) return true;
+                    return false;
+                }).ToList();
+                Assert.Greater(cargo.Count, 0, id + ": no container slots found");
+                foreach (var s in cargo) Assert.AreEqual("keep", s.role, $"{id}: {s.material_name} would be repainted");
+            }
+        }
+
+        /// <summary>The procedural 172 m "container_ship" left the catalog (2026-11-16); its id still loads, as the loaded ship at that
+        /// hull's default immersion, so older scenario files keep working.</summary>
+        [Test]
+        public void RetiredContainerShipId_LoadsAsTheLoadedShip_AtItsDefaultImmersion()
+        {
+            var cat = VesselCatalog.Load();
+            Assert.Greater(VesselCatalog.Retired.Count, 0);
+            foreach (var kv in VesselCatalog.Retired)
+            {
+                var e = cat.Find(kv.Value.id);
+                Assert.IsNotNull(e, kv.Value.id);
+                Assert.IsFalse(cat.entries.Any(x => x.asset_id == kv.Key), kv.Key + " is still in the catalog");
+                Assert.AreSame(e, cat.Find(kv.Key));
+                Assert.AreEqual(e.default_immersion_m, kv.Value.immersion_m, 1e-4f, "alias immersion must equal the replacement's default");
+                var cfg = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
+                cfg.vessels.Clear();
+                cfg.vessels.Add(new VesselPlacement { object_id = "v0", asset_id = kv.Key, x = 150, z = 60 - 1.6f - 16.33f, heading_deg = 180, immersion_m = 4.2f });
+                var back = ScenarioIO.FromJson(ScenarioIO.ToJson(cfg));
+                Assert.AreEqual(kv.Value.id, back.vessels[0].asset_id);
+                Assert.AreEqual(kv.Value.immersion_m, back.vessels[0].immersion_m, 1e-4f);
+                _w.Apply(back);
+                Assert.AreEqual(1, _w.Vessels.Count);
+                Assert.AreEqual(kv.Value.id, _w.Vessels[0].entry.asset_id);
+            }
         }
 
         ScenarioConfig Scene(string paint, int seed)

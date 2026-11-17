@@ -18,11 +18,11 @@ namespace PortCCTV
         public static readonly CameraPreset[] Cameras =
         {
             new CameraPreset { id = "fp_A_market_roof", display_name = "A - fish market roof 11 m (harbour -> entrance)", position = new Vector3(-30f, 15f, 65f),
-                euler_deg = new Vector3(10f, 168f, 0f), vertical_fov_deg = 42f, mount_note = "mast on the fish market roof; across the inner harbour to the entrance between the lighthouses" },
+                euler_deg = new Vector3(5f, 170f, 0f), vertical_fov_deg = 28f, mount_note = "mast on the fish market roof; across the inner harbour to the entrance between the lighthouses" },
             new CameraPreset { id = "fp_B_hillside", display_name = "B - west headland 40 m (entrance watch)", position = new Vector3(-238f, 40f, -36f),
-                euler_deg = new Vector3(12f, 108f, 0f), vertical_fov_deg = 40f, mount_note = "mast on the headland beside the west breakwater root; looks down on the entrance and the harbour mouth" },
+                euler_deg = new Vector3(10f, 108f, 0f), vertical_fov_deg = 28f, mount_note = "mast on the headland beside the west breakwater root; looks down on the entrance and the harbour mouth" },
             new CameraPreset { id = "fp_C_breakwater", display_name = "C - east breakwater 18 m (fishing quay and town)", position = new Vector3(178f, 18f, -40f),
-                euler_deg = new Vector3(9f, 295f, 0f), vertical_fov_deg = 50f, mount_note = "elevated harbour watch across the fishing berths, waterfront town and low hills; Wando CCTV reference" },
+                euler_deg = new Vector3(6f, 295f, 0f), vertical_fov_deg = 34f, mount_note = "elevated harbour watch across the fishing berths, waterfront town and low hills; Wando CCTV reference" },
         };
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
@@ -230,7 +230,7 @@ namespace PortCCTV
             // fishing boats moored alongside the west pier and the mid pier, two under way, a leisure boat and a ferry
             float[] wz = { 47, 27, 7 };
             for (int i = 0; i < 3; i++) s.vessels.Add(new VesselPlacement { object_id = $"v{i:00}", asset_id = "korean_fishing_boat", x = -98.5f, z = wz[i], heading_deg = 270, immersion_m = 0.45f });
-            s.vessels.Add(new VesselPlacement { object_id = "v03", asset_id = "korean_fishing_boat", x = -73.5f, z = 40, heading_deg = 90, immersion_m = 0.45f });
+            s.vessels.Add(new VesselPlacement { object_id = "v03", asset_id = "korean_fishing_boat", x = -73.5f, z = 12, heading_deg = 90, immersion_m = 0.45f });   // z 40 -> 12 (2026-11-16): overlapped v00 in the fp_C view
             s.vessels.Add(new VesselPlacement { object_id = "v04", asset_id = "inshore_fishing_boat", x = 36, z = 45, heading_deg = 270, immersion_m = 0.5f });
             s.vessels.Add(new VesselPlacement { object_id = "v05", asset_id = "korean_fishing_boat", x = 10, z = -70, heading_deg = 300, immersion_m = 0.45f });
             s.vessels.Add(new VesselPlacement { object_id = "v06", asset_id = "cabin_cruiser", x = 95, z = 25, heading_deg = 0, immersion_m = 0.3f });

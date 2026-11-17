@@ -40,6 +40,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8708160232305285584}
     m_Modifications:
+    - target: {fileID: 3206924093577078176, guid: 52b7c1e5bdc609e41b0f0d1b0d8e3a9f, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4eb1780d5799d5141bbbd3ed5067c8d0, type: 2}
     - target: {fileID: 3422138766732370314, guid: 52b7c1e5bdc609e41b0f0d1b0d8e3a9f, type: 3}
       propertyPath: m_Name
       value: street_lamp_01_1k

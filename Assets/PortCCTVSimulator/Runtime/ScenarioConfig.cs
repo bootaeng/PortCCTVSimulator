@@ -164,6 +164,11 @@ namespace PortCCTV
                 if (string.IsNullOrEmpty(v.motion.mode)) v.motion.mode = "none";
                 v.motion.route ??= new List<Vector2>();
                 v.paint ??= "";
+                if (v.asset_id != null && VesselCatalog.Retired.TryGetValue(v.asset_id, out var r))
+                {
+                    Debug.Log($"[ScenarioIO] {v.object_id}: retired asset_id '{v.asset_id}' -> '{r.id}' (immersion {v.immersion_m:F2} -> {r.immersion_m:F2} m)");
+                    v.asset_id = r.id; v.immersion_m = r.immersion_m;
+                }
             }
             return cfg;
         }

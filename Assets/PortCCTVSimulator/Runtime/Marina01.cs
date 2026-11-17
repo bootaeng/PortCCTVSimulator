@@ -17,11 +17,11 @@ namespace PortCCTV
         public static readonly CameraPreset[] Cameras =
         {
             new CameraPreset { id = "mr_A_promenade", display_name = "A - promenade lamp post 7 m (berths)", position = new Vector3(-20f, 9.5f, 66f),
-                euler_deg = new Vector3(11f, 185f, 0f), vertical_fov_deg = 45f, mount_note = "lamp post on the marina promenade; pontoon berths and the basin (berth watch)" },
+                euler_deg = new Vector3(4f, 185f, 0f), vertical_fov_deg = 34f, mount_note = "lamp post on the marina promenade; pontoon berths and the basin (berth watch)" },
             new CameraPreset { id = "mr_B_tower", display_name = "B - east headland 60 m (beach and coastal city)", position = new Vector3(912f, 60f, -230f),
-                euler_deg = new Vector3(10f, 285f, 0f), vertical_fov_deg = 48f, mount_note = "mast on the headland at the east end of the beach; beachfront, high-rise shore, marina and distant bay bridge; Haeundae CCTV reference" },
+                euler_deg = new Vector3(9f, 285f, 0f), vertical_fov_deg = 26f, mount_note = "mast on the headland at the east end of the beach; beachfront, high-rise shore, marina and distant bay bridge; Haeundae CCTV reference" },
             new CameraPreset { id = "mr_C_breakwater", display_name = "C - breakwater head 12 m (entrance approach)", position = new Vector3(96f, 12.5f, -209f),
-                euler_deg = new Vector3(8f, 130f, 0f), vertical_fov_deg = 42f, mount_note = "mast on the south breakwater 18 m west of the red light; craft approaching the entrance from the bay" },
+                euler_deg = new Vector3(5f, 130f, 0f), vertical_fov_deg = 32f, mount_note = "mast on the south breakwater 18 m west of the red light; craft approaching the entrance from the bay" },
         };
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>

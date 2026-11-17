@@ -17,3 +17,16 @@ Notes carried from the research project (not re-verified here):
 - Main-hull reference node names are **name-based candidates** (`semantic_region_confirmed=false`):
   ferry `Finite lofted hull and transom`, RIB `RIB finite rigid V-round hull`, motorboat `Finite lofted hull and transom`.
 - No physical draft is known. The simulator's `immersion_m` is a geometric placement parameter, not a measured draft.
+
+## Added 2026-11-16: loaded container ship
+
+Downloaded directly from the public Innerscene library (not from the research project), unmodified. Details, licence check,
+logo check and processing: `../SketchfabCCBY/ships/SOURCE_container_ships.md`.
+
+| file | upstream page | license (source-stated) | SHA256 |
+|---|---|---|---|
+| innerscene_container_ship_loaded.glb | https://www.innerscene.com/tools/library/3d-parts/container-ship-loaded-5ee3b06d | CC0 | 95b5020347eadb53d4e3cbdbe845b7fdde718435964384954c516db05a532680 |
+
+- Bow +X in the glTF (yaw 180 in the simulator, like the other Innerscene hulls), metres as authored: 262.2 x 32.7 x 49.0 m.
+- Hull reference node `Hull` (unique; its lowest vertex is the keel at y = 0). Default `immersion_m` 11.6 m = the top of the
+  material "Antifouling red bottom paint" (a design load line, not a measured draft).

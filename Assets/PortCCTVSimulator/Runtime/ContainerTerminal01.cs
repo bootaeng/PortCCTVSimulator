@@ -18,15 +18,15 @@ namespace PortCCTV
         public static readonly CameraPreset[] Cameras =
         {
             new CameraPreset { id = "ct_A_quay_east_mast", display_name = "A - quay mast 20 m (basin -> entrance)", position = new Vector3(-60f, 22.5f, 66f),
-                euler_deg = new Vector3(9f, 150f, 0f), vertical_fov_deg = 38f, mount_note = "lighting mast at the quay edge; looks across the basin at the entrance gap 600 m away" },
+                euler_deg = new Vector3(5f, 155f, 0f), vertical_fov_deg = 24f, mount_note = "lighting mast at the quay edge; looks across the basin at the entrance gap 600 m away" },
             new CameraPreset { id = "ct_B_breakwater_head", display_name = "B - breakwater head 10 m (entrance approach)", position = new Vector3(232f, 13.5f, -463f),
-                euler_deg = new Vector3(8f, 125f, 0f), vertical_fov_deg = 42f, mount_note = "mast beside the red entrance light; the approach to the entrance gap and the anchorage ahead" },
+                euler_deg = new Vector3(5f, 125f, 0f), vertical_fov_deg = 32f, mount_note = "mast beside the red entrance light; the approach to the entrance gap and the anchorage ahead" },
             new CameraPreset { id = "ct_C_admin_roof", display_name = "C - east quay mast 30 m (entrance)", position = new Vector3(340f, 31f, 65f),
-                euler_deg = new Vector3(9f, 182f, 0f), vertical_fov_deg = 34f, mount_note = "30 m mast on the east quay; straight down the basin to the entrance gap, clear of the crane booms" },
+                euler_deg = new Vector3(7f, 182f, 0f), vertical_fov_deg = 28f, mount_note = "30 m mast on the east quay; straight down the basin to the entrance gap, clear of the crane booms" },
             new CameraPreset { id = "ct_D_hill_tower", display_name = "D - east headland 58 m (terminal panorama)", position = new Vector3(470f, 58f, -142f),
-                euler_deg = new Vector3(9f, 300f, 0f), vertical_fov_deg = 50f, mount_note = "mast on the headland at the east breakwater root; looks across the basin at the container berths and industrial waterfront" },
+                euler_deg = new Vector3(11f, 300f, 0f), vertical_fov_deg = 30f, mount_note = "mast on the headland at the east breakwater root; looks across the basin at the container berths and industrial waterfront" },
             new CameraPreset { id = "ct_E_basin_breakwater", display_name = "E - south breakwater mast 13 m (berths)", position = new Vector3(100f, 13.5f, -463f),
-                euler_deg = new Vector3(5f, 345f, 0f), vertical_fov_deg = 52f, mount_note = "mast on the detached breakwater; the berths and basin traffic ahead (terminal-side watch)" },
+                euler_deg = new Vector3(4.5f, 345f, 0f), vertical_fov_deg = 32f, mount_note = "mast on the detached breakwater; the berths and basin traffic ahead (terminal-side watch)" },
         };
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
@@ -202,7 +202,8 @@ namespace PortCCTV
             h.water_regions.Add(Region("entrance", 250, -455, 420, -400, 435, -400, 435, -480, 250, -480));
             h.water_regions.Add(Region("outer_sea", -3000, -470, 250, -470, 250, -480, 435, -480, 435, -150, 3000, -150, 3000, -4000, -3000, -4000));
 
-            h.vessel_rules.Add(Rule("container_ship", "berths at the quay or transits the entrance"));
+            foreach (var a in new[] { "container_ship_loaded", "container_ship_rm02", "container_ship_gogi" })
+                h.vessel_rules.Add(Rule(a, "berths at the quay or transits the entrance"));
             foreach (var a in new[] { "feeder_ship", "general_cargo", "tug_harbor", "pilot_boat", "patrol_boat", "police_boat", "sar_boat" })
                 h.vessel_rules.Add(Rule(a, "terminal traffic / port services"));
             h.vessel_rules.Add(Rule("bulk_carrier", "large ships anchor outside", "outer_sea"));

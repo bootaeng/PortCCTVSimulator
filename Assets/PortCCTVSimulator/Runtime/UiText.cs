@@ -58,12 +58,13 @@ namespace PortCCTV
             { "kayak", "카약" }, { "canoe", "카누" }, { "sailing_dinghy", "딩기 요트" }, { "sailing_yacht", "세일링 요트" },
             { "rib", "고무보트(RIB)" }, { "motorboat", "모터보트" }, { "cabin_cruiser", "캐빈 크루저" },
             { "fishing_boat", "소형 어선" }, { "korean_fishing_boat", "연안 어선" }, { "ferry", "여객선" },
-            { "tugboat", "예인선(구형)" }, { "barge", "바지선" }, { "container_ship", "컨테이너선(구형)" }, { "tanker", "유조선" },
+            { "tugboat", "예인선(구형)" }, { "barge", "바지선" }, { "tanker", "유조선" },
             { "tug_harbor", "항만 예인선" }, { "general_cargo", "일반 화물선" }, { "feeder_ship", "컨테이너 피더선" }, { "bulk_carrier", "벌크선" },
             { "lng_carrier", "LNG 운반선" }, { "trawler", "트롤 어선" }, { "fishing_vessel", "어선 12 m" }, { "inshore_fishing_boat", "소형 연안 어선" },
             { "sar_boat", "구조정" }, { "pilot_boat", "도선선" }, { "patrol_boat", "경비정" }, { "police_boat", "경찰정" },
             { "speedboat", "스피드보트" }, { "motor_yacht", "모터 요트" },
             { "fishing_boat_iii", "연안 어선 23 m" }, { "small_motorboat", "소형 모터보트" }, { "crrc", "고무 단정(CRRC)" },
+            { "container_ship_loaded", "만재 컨테이너선 262 m" }, { "container_ship_rm02", "컨테이너선 241 m" }, { "container_ship_gogi", "컨테이너선 146 m" },
         };
 
         public static readonly string[] MotionModes = { "none", "anchor", "roam", "auto" };

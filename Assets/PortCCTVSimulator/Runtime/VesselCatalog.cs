@@ -27,7 +27,17 @@ namespace PortCCTV
     {
         public List<VesselAssetEntry> entries = new List<VesselAssetEntry>();
 
-        public VesselAssetEntry Find(string assetId) => entries.FirstOrDefault(e => e.asset_id == assetId);
+        public VesselAssetEntry Find(string assetId) { var id = Canonical(assetId); return entries.FirstOrDefault(e => e.asset_id == id); }
+
+        /// <summary>Ids of hulls taken out of the catalog and the hull that replaces them, with that hull's default immersion
+        /// (scenario files keep loading; ScenarioIO.FromJson rewrites the id and the immersion). The procedural 172 m
+        /// "container_ship" (2026-11-16) gave way to the loaded 262 m Innerscene ship.</summary>
+        public static readonly Dictionary<string, (string id, float immersion_m)> Retired = new Dictionary<string, (string, float)>
+        {
+            { "container_ship", ("container_ship_loaded", 11.6f) },
+        };
+
+        public static string Canonical(string assetId) => assetId != null && Retired.TryGetValue(assetId, out var r) ? r.id : assetId;
 
         public const string ResourcePath = "PortCCTV/VesselCatalog";
         public static VesselCatalog Load() => Resources.Load<VesselCatalog>(ResourcePath);
