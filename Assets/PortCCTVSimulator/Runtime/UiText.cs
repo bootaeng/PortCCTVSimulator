@@ -20,16 +20,23 @@ namespace PortCCTV
 
         static readonly Dictionary<string, string> Cameras = new Dictionary<string, string>
         {
+            // framing_v2_20261119: low shore cameras (SMD VIS_Onshore type) and side views with a far shore (SeaShips type)
+            { "ct_F_south_bw_sea", "F - 남방파제 상치벽 1.5 m (외해 정박지)" },
+            { "ct_G_bw_head_approach", "G - 방파제 두부 상치벽 1.5 m (입구 접근로)" },
+            { "ct_H_east_quay_basin", "H - 동측 안벽 마스트 11.5 m (항내 → 입구)" },
+            { "ct_I_east_bw_sea", "I - 동방파제 상치벽 1.5 m (동측 접근 해역)" },
+            { "ct_J_south_bw_berths", "J - 남방파제 폴 5.5 m (항내·선석)" },
+            { "fp_D_market_entrance", "D - 위판장 지붕 끝 1 m (항내 → 입구)" },
+            { "fp_E_west_arm_sea", "E - 서방파제 상치벽 1.5 m (외해)" },
+            { "fp_F_east_arm_sea", "F - 동방파제 상치벽 1.5 m (접근 해역)" },
+            { "mr_D_west_bw_fairway", "D - 서방파제 폴 3 m (항로 → 입구)" },
+            { "mr_E_beach_bw_bay", "E - 해변 방파제 두부 상치벽 1.5 m (만)" },
+            { "mr_F_south_bw_sea", "F - 남방파제 상치벽 1.5 m (만 외해)" },
+            // elevated mast overviews kept from the 2026-11-16 set (2026-11-20)
             { "ct_A_quay_east_mast", "A - 안벽 마스트 20 m (항내 → 입구)" },
             { "ct_B_breakwater_head", "B - 방파제 두부 10 m (입구 접근로)" },
             { "ct_C_admin_roof", "C - 동측 안벽 마스트 30 m (입구)" },
-            { "ct_D_hill_tower", "D - 동측 곶 58 m (산업항 전경)" },
-            { "ct_E_basin_breakwater", "E - 남방파제 마스트 13 m (선석)" },
             { "fp_A_market_roof", "A - 위판장 지붕 11 m (항내 → 입구)" },
-            { "fp_B_hillside", "B - 서측 곶 40 m (입구 감시)" },
-            { "fp_C_breakwater", "C - 동방파제 18 m (선착장·항구 마을)" },
-            { "mr_A_promenade", "A - 산책로 가로등 7 m (계류장)" },
-            { "mr_B_tower", "B - 동측 곶 60 m (해변·해안 도시)" },
             { "mr_C_breakwater", "C - 방파제 두부 12 m (입구 접근로)" },
             { "cam_A_quay_mast", "A - 북측 안벽 마스트 (12 m)" },
             { "cam_B_breakwater_head", "B - 동방파제 두부 (8 m)" },

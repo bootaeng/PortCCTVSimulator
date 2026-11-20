@@ -299,7 +299,7 @@ namespace PortCCTV
             var root = new GameObject("Vegetation").transform; root.SetParent(parent, false);
             var hills = def.elements.Where(e => e.shape == "prefab" && e.prefab != null && e.prefab.StartsWith("hill_"))
                 .OrderBy(e => e.id, System.StringComparer.Ordinal).ToList();
-            var cams = CameraPresetLibrary.ForHarbor(def.harbor_id);
+            var cams = CameraPresetLibrary.LayoutViewsForHarbor(def.harbor_id);   // incl. the retired 2026-11-16 poses: the map stays as built
             var camView = cams.Select(c => (pos: c.position, inv: Quaternion.Inverse(Quaternion.Euler(c.euler_deg)),
                 tanV: Mathf.Tan(0.5f * Mathf.Deg2Rad * Mathf.Max(c.vertical_fov_deg, 1f)))).ToArray();
             bool InFrame(Vector3 w, (Vector3 pos, Quaternion inv, float tanV) c)

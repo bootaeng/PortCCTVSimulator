@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PortCCTV.HarborGeneric02;
 using static PortCCTV.HarborParts;
@@ -14,19 +15,48 @@ namespace PortCCTV
     {
         public const string Id = "marina_01";
 
-        public static readonly CameraPreset[] Cameras =
+        /// <summary>Camera poses of the 2026-11-16 set, kept as map-layout anchors only: the camera hill, the masts, the distant
+        /// towers and the tree-free view corridors were built around them, and keeping them keeps the map (and every capture of the
+        /// current cameras) unchanged. Not selectable; the poses that are still cameras are in OverviewCameras (2026-11-20).</summary>
+        internal static readonly CameraPreset[] SiteViews20261116 =
         {
-            new CameraPreset { id = "mr_A_promenade", display_name = "A - promenade lamp post 7 m (berths)", position = new Vector3(-20f, 9.5f, 66f),
+            new CameraPreset { id = "mr_A_promenade", display_name = "A (2026-11-16 framing) - promenade lamp post 7 m (berths)", position = new Vector3(-20f, 9.5f, 66f),
                 euler_deg = new Vector3(4f, 185f, 0f), vertical_fov_deg = 34f, mount_note = "lamp post on the marina promenade; pontoon berths and the basin (berth watch)" },
-            new CameraPreset { id = "mr_B_tower", display_name = "B - east headland 60 m (beach and coastal city)", position = new Vector3(912f, 60f, -230f),
+            new CameraPreset { id = "mr_B_tower", display_name = "B (2026-11-16 framing) - east headland 60 m (beach and coastal city)", position = new Vector3(912f, 60f, -230f),
                 euler_deg = new Vector3(9f, 285f, 0f), vertical_fov_deg = 26f, mount_note = "mast on the headland at the east end of the beach; beachfront, high-rise shore, marina and distant bay bridge; Haeundae CCTV reference" },
-            new CameraPreset { id = "mr_C_breakwater", display_name = "C - breakwater head 12 m (entrance approach)", position = new Vector3(96f, 12.5f, -209f),
+            new CameraPreset { id = "mr_C_breakwater", display_name = "C (2026-11-16 framing) - breakwater head 12 m (entrance approach)", position = new Vector3(96f, 12.5f, -209f),
                 euler_deg = new Vector3(5f, 130f, 0f), vertical_fov_deg = 32f, mount_note = "mast on the south breakwater 18 m west of the red light; craft approaching the entrance from the bay" },
         };
+
+        /// <summary>Research presets of framing_v2_20261119 (see ContainerTerminal01.ResearchCameras).</summary>
+        public static readonly CameraPreset[] ResearchCameras =
+        {
+            new CameraPreset { id = "mr_D_west_bw_fairway", display_name = "D - west breakwater pole 3 m (fairway to the entrance)", position = new Vector3(-250f, 6.5f, -170f),
+                euler_deg = new Vector3(1.0f, 95f, 0f), vertical_fov_deg = 26f, framing = CameraPresetLibrary.FramingSeaShips,
+                mount_note = "pole on the harbour side of the west breakwater road; along the southern fairway to the entrance, breakwater and headland behind" },
+            new CameraPreset { id = "mr_E_beach_bw_bay", display_name = "E - beach breakwater head wall 1.5 m (bay)", position = new Vector3(268f, 7.5f, -154f),
+                euler_deg = new Vector3(-1.6f, 160f, 0f), vertical_fov_deg = 20f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall at the head of the beach breakwater; open bay to the south-south-east (aimed clear of the east headland, which renders white in the heavy-rain cell)" },
+            new CameraPreset { id = "mr_F_south_bw_sea", display_name = "F - south breakwater wall 1.5 m (open bay)", position = new Vector3(100f, 7.5f, -214f),
+                euler_deg = new Vector3(-0.3f, 188f, 0f), vertical_fov_deg = 24f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the south breakwater; open bay to the south with a distant island" },
+        };
+
+        /// <summary>Elevated mast views kept from the 2026-11-16 set as current presets (2026-11-20, user decision); same poses.
+        /// Not part of the research framing groups (CameraPresetLibrary.ResearchForHarbor).</summary>
+        public static readonly CameraPreset[] OverviewCameras = CameraPresetLibrary.Overview(SiteViews20261116,
+            ("mr_C_breakwater", "C - breakwater head 12 m (entrance approach)"));
+
+        /// <summary>Selectable presets of the map: research presets first, then the overview presets.</summary>
+        public static readonly CameraPreset[] Cameras = ResearchCameras.Concat(OverviewCameras).ToArray();
+
+        /// <summary>Every pose the map layout is built around, in the order used since 2026-11-19 (tree placement draws in this order).</summary>
+        internal static readonly CameraPreset[] LayoutViews = ResearchCameras.Concat(SiteViews20261116).ToArray();
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
         {
             { "mr_A_promenade", Deck }, { "mr_B_tower", 60f - CameraMastOnHill }, { "mr_C_breakwater", Crest },
+            { "mr_D_west_bw_fairway", Crest }, { "mr_E_beach_bw_bay", Crest + 2.5f }, { "mr_F_south_bw_sea", Crest + 2.5f },
         };
 
         public static HarborDefinition Build()
@@ -141,7 +171,7 @@ namespace PortCCTV
             Scrub(300f, 870f, 113f, 148f, 90, 2.5f, 5f);
 
             // --- dense high-rise apartments (Haeundae-like); camera B stands on the first one
-            CameraHill(Cameras[1], 240f, 240f, 3, new Vector2(972f, -237f));
+            CameraHill(SiteViews20261116[1], 240f, 240f, 3, new Vector2(972f, -237f));
             // Distinct silhouettes along the coastal road. The narrow 29 m strip limits the
             // footprint: 38 m apartment towers at 0.62-0.71, 26 m-deep officetels at 0.84-0.9.
             Boulevard(260f, 900f, 112f, true, 4, true);
@@ -248,8 +278,8 @@ namespace PortCCTV
             Prefab("buoy", "ocean_buoy", new Vector3(180, -0.6f, -300), 0, Vector3.one * 1.6f, id: "buoy_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(160, -1.0f, -235), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
 
-            DistantTowers(-1500f, 1500f, 905f, 1450f, 10, 26111011, new[] { Cameras[0].position, Cameras[1].position, Cameras[2].position }, 900f);   // 2026-11-10
-            CameraMasts(Cameras, MastBases);
+            DistantTowers(-1500f, 1500f, 905f, 1450f, 10, 26111011, new[] { SiteViews20261116[0].position, SiteViews20261116[1].position, SiteViews20261116[2].position }, 900f);   // 2026-11-10
+            CameraMasts(LayoutViews, MastBases);
 
             h.water_regions.Add(Region("marina_basin", -250, 58, 250, 58, 250, -200, -250, -200));
             h.water_regions.Add(Region("bay", -2440, -215, 120, -215, 120, -200, 250, -200, 278, -200, 278, -22, 900, -22, 900, -400, 3000, -400, 3000, -4000, -2440, -4000));
@@ -272,7 +302,7 @@ namespace PortCCTV
 
         public static ScenarioConfig DefaultScenario()
         {
-            var s = new ScenarioConfig { scenario_id = "marina_default", harbor_id = Id, camera_preset_id = "mr_B_tower" };
+            var s = new ScenarioConfig { scenario_id = "marina_default", harbor_id = Id, camera_preset_id = "mr_D_west_bw_fairway" };
             string[] berth = { "sailing_yacht", "cabin_cruiser", "sailing_yacht", "motorboat", "sailing_yacht", "cabin_cruiser", "rib", "sailing_yacht", "motorboat", "cabin_cruiser" };
             int n = 0;
             for (int i = 0; i < berth.Length; i++)
@@ -299,6 +329,13 @@ namespace PortCCTV
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "sailing_yacht", x = 650, z = -450, heading_deg = 250, immersion_m = 0.3f });
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "motor_yacht", x = 510, z = -610, heading_deg = 70, immersion_m = 1.6f });
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "police_boat", x = 420, z = -300, heading_deg = 200, immersion_m = 0.6f });
+            // 2026-11-19 (framing_v2): craft 180-480 m in front of the seaward camera F (south breakwater)
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "cabin_cruiser", x = 97, z = -394, heading_deg = 80, immersion_m = 0.3f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "fishing_boat_iii", x = 20, z = -461, heading_deg = 300, immersion_m = 1.0f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "patrol_boat", x = 17, z = -687, heading_deg = 100, immersion_m = 1.3f });
+            // and two craft in the southern fairway in front of camera D (west breakwater)
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "sar_boat", x = -90, z = -172, heading_deg = 20, immersion_m = 1.0f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "motor_yacht", x = 40, z = -160, heading_deg = 190, immersion_m = 1.6f });
             return s;
         }
     }

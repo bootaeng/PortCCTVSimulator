@@ -293,8 +293,7 @@ namespace PortCCTV.Tests
                     _w.Apply(s);
                     var random = new System.Random(1037);
                     var added = new System.Collections.Generic.List<VesselPlacement>();
-                    int repeat = camera.id == "ct_E_basin_breakwater" ? 3 : 2;
-                    for (int i = 0; i < repeat; i++)
+                    for (int i = 0; i < 2; i++)
                     {
                         var entry = _w.Catalog.Find(item.Item2[i]);
                         Assert.IsTrue(VesselSpawnPlanner.TryFind(_w, entry, s.vessels, random, out var p), $"{item.Id}/{camera.id} spawn {i}");
@@ -307,8 +306,6 @@ namespace PortCCTV.Tests
                         Assert.Greater(vp.x, 0.04f); Assert.Less(vp.x, 0.96f);
                         Assert.Greater(vp.y, 0.08f); Assert.Less(vp.y, 0.94f);
                     }
-                    if (camera.id == "ct_E_basin_breakwater")
-                        Assert.Greater(added.Max(v => v.z) - added.Min(v => v.z), 25f, "successive boats should use different water depths");   // 2026-11-16: ct_E vFOV 52 -> 32 deg narrows the visible water band (was 45 m)
                     var lay = PlacementQuality.Evaluate(_w, s.vessels, 1920, 1080);
                     Assert.IsFalse(added.Any(v => lay.Involves(v.object_id)), $"{item.Id}/{camera.id}: " + string.Join(";", lay.issues.Select(x => $"{x.rule} {x.a}/{x.b}")));
                 }
@@ -380,9 +377,9 @@ namespace PortCCTV.Tests
             foreach (var hid in new[] { ContainerTerminal01.Id, Marina01.Id })
             {
                 var s = SimulatorApp.DefaultScenarioFor(hid);
-                if (hid == Marina01.Id) s.camera_preset_id = "mr_A_promenade";     // the default marina view is a wide bay overview
+                // close pontoon berths exercise mask edges: the former promenade view (mr_A, retired as a preset 2026-11-20) as an override
+                if (hid == Marina01.Id) s.camera_override = new CameraOverride { enabled = true, position = new Vector3(-20f, 9.5f, 66f), euler_deg = new Vector3(4f, 185f, 0f), vertical_fov_deg = 34f };
                 _w.Apply(s);
-                if (hid == Marina01.Id) { s.camera_preset_id = "mr_A_promenade"; _w.Apply(s); } // close berths exercise mask edges, independent of overview default
                 const int W = 480, H = 270;
                 var cam = _w.CctvCamera; cam.aspect = (float)W / H;
                 Physics.SyncTransforms();

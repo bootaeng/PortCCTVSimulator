@@ -327,16 +327,16 @@ namespace PortCCTV.Research
                 output_dir = "Captures/research/" + experimentId,
                 notes = "Technical pilot of the research tooling. No detector is trained and no test split is evaluated.",
             };
-            c.freeze = new FreezeRef { freeze_id = "freeze_20261116", freeze_manifest_path = "Research/freeze/freeze_20261116.json" };   // 2026-11-16: fog/glass fix, camera presets re-aimed, screen-layout rules, episodes, bow fix (sar_boat, fishing_boat_iii); earlier 2026-11-12 b: IR illuminator, wave presets / harbour mask (calm / light chop / IR off unchanged); 2026-11-12: lens rain v2; c: town assets / hulls (11-10); b: barge pile + CT east walk
+            c.freeze = new FreezeRef { freeze_id = "freeze_20261120c", freeze_manifest_path = "Research/freeze/freeze_20261120c.json" };   // 2026-11-20c: overcast lowers visibility (weather.overcast_haze), capture rename retry; 2026-11-20b: six 2026-11-16 presets retired, five kept as overview presets (map unchanged); 2026-11-20: physics sync after the harbour build (first scenario after a build stepped vessels around stale colliders); 2026-11-19: research presets framing_v2 (low shore / side views), episode profiles, default scenes; before that 2026-11-16: fog/glass fix, camera presets re-aimed, screen-layout rules, episodes, bow fix (sar_boat, fishing_boat_iii); earlier 2026-11-12 b: IR illuminator, wave presets / harbour mask (calm / light chop / IR off unchanged); 2026-11-12: lens rain v2; c: town assets / hulls (11-10); b: barge pile + CT east walk
             c.data.real_manifest_paths.Add("Research/data/real_manifest_v1.json");
             c.data.real_manifest_paths.Add("Research/data/external_inventory_v1.json");
             c.arms = DefaultArms(c.training.B_s, c.training.B_r);
             c.legacy_names = DefaultLegacyNames();
             c.generation.maps = new List<MapCameras>
             {
-                new MapCameras { harbor_id = ContainerTerminal01.Id, camera_preset_ids = new List<string> { "ct_A_quay_east_mast", "ct_B_breakwater_head" } },
-                new MapCameras { harbor_id = FishingPort01.Id, camera_preset_ids = new List<string> { "fp_A_market_roof", "fp_C_breakwater" } },
-                new MapCameras { harbor_id = Marina01.Id, camera_preset_ids = new List<string> { "mr_A_promenade", "mr_C_breakwater" } },
+                new MapCameras { harbor_id = ContainerTerminal01.Id, camera_preset_ids = new List<string> { "ct_F_south_bw_sea", "ct_J_south_bw_berths" } },
+                new MapCameras { harbor_id = FishingPort01.Id, camera_preset_ids = new List<string> { "fp_D_market_entrance", "fp_E_west_arm_sea" } },
+                new MapCameras { harbor_id = Marina01.Id, camera_preset_ids = new List<string> { "mr_D_west_bw_fairway", "mr_F_south_bw_sea" } },
             };
             c.generation.c_profile_path = "Research/profiles/profile_fixture_v1.json";
             c.pending_human_decisions = new List<string>

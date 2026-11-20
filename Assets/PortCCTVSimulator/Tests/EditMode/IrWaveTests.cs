@@ -120,7 +120,9 @@ namespace PortCCTV.Tests
             var tmp = Path.Combine(Path.GetTempPath(), "portcctv_irlong_" + System.Guid.NewGuid().ToString("N"));
             Debug.Log("[IrTest] output " + tmp);
             var s = SimulatorApp.DefaultScenarioFor(FishingPort01.Id);
-            s.camera_preset_id = "fp_B_hillside"; s.environment.preset_id = "night_clear"; s.environment.water_preset_id = "calm";
+            // the west headland mast pose (fp_B, retired as a preset 2026-11-20; its mast is still part of the map): a 40 m mount -> long beam
+            s.camera_override = new CameraOverride { enabled = true, position = new Vector3(-238f, 40f, -36f), euler_deg = new Vector3(10f, 108f, 0f), vertical_fov_deg = 28f };
+            s.environment.preset_id = "night_clear"; s.environment.water_preset_id = "calm";
             s.capture.width = 960; s.capture.height = 540;
             s.sensor = SensorConfig.Preset("night_ir_illum"); s.sensor.noise_read_dn = 0f; s.sensor.noise_shot = 0f; s.sensor.jpeg_quality = 0;
             _w.Apply(s);
@@ -163,7 +165,7 @@ namespace PortCCTV.Tests
             {
                 // west headland camera: inner harbour and the entrance (open sea from ~300 m)
                 var s = SimulatorApp.DefaultScenarioFor(FishingPort01.Id);
-                s.camera_preset_id = "fp_B_hillside"; s.vessels.Clear();
+                s.vessels.Clear();
                 // the pre-2026-11-16 fp_B view (40 deg); the preset is now 28 deg, which samples too little open sea for this water-mask check
                 s.camera_override = new CameraOverride { enabled = true, position = new Vector3(-238f, 40f, -36f), euler_deg = new Vector3(12f, 108f, 0f), vertical_fov_deg = 40f };
                 s.environment.water_preset_id = "rough"; s.environment.water_mask = mask;

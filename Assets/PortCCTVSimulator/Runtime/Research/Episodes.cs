@@ -22,6 +22,74 @@ namespace PortCCTV.Research
         public string water_preset = "";                                 // "" = calm / light_chop by seed
         public string sensor_preset = "hd_ip";
         public float min_frame_motion_px = 2f;                           // in-view movers must move at least this much between frames
+
+        // ---- framing profile (2026-11-19). With the defaults below the planner behaves exactly as on 2026-11-16.
+        /// <summary>"" = fields as given (2026-11-16 behaviour). "auto" = <see cref="EpisodeProfiles.Apply"/> fills the fields
+        /// below, the vessel counts, the height range and the crossing angle from the framing group of the camera preset.</summary>
+        public string profile = "";
+        /// <summary>Name of the profile that was applied (written by the planner; "" = none).</summary>
+        public string profile_applied = "";
+        /// <summary>Median (output pixels at the planned image height) and log-normal sigma of the target above-water box height.
+        /// 0 = pick a row uniformly among the feasible rows (2026-11-16 behaviour).</summary>
+        public float target_height_px_median = 0f, target_height_ln_sigma = 0f;
+        /// <summary>A hull is used only if a feasible position gives a box height within this factor of the drawn target (0 = any).
+        /// Without it a 240 m ship drawn for a 55 px target would always be placed as a frame-filling hull at near_max_m.</summary>
+        public float target_height_tolerance = 0f;
+        /// <summary>Moving vessels and "near" static vessels are placed at most this far from the camera (0 = no limit). It keeps
+        /// most vessels inside the range that stays visible in the dense-fog cell of the weather matrix.</summary>
+        public float near_max_m = 0f;
+        /// <summary>Planned positions are at least this far from the camera (0 = no limit). From a low camera a vessel closer than
+        /// about 100 m sits far below the horizon line at the bottom of the frame, which the real on-shore footage does not show.</summary>
+        public float near_min_m = 0f;
+        /// <summary>Static vessels placed beyond near_max_m, up to far_max_m (ships at anchor near the horizon).</summary>
+        public int far_static_max = 0;
+        public float far_max_m = 0f;
+        public int static_min = 0;
+        /// <summary>Static vessels of a sized profile share one heading per episode (vessels at anchor lie to the same wind and
+        /// current) with this standard deviation in degrees; 0 = every static vessel gets its own uniform random heading.</summary>
+        public float anchor_heading_sigma_deg = 0f;
+        public float row_min = 0.30f, row_step = 0.01f;
+    }
+
+    /// <summary>
+    /// Planner settings per framing group (framing_v2_20261119). The numbers are design choices taken from the measured real
+    /// reference (Research/jmse/audit/framing_20261119): SMD VIS_Onshore train / validation boxes have a median height of 55 px
+    /// (p10 24, p90 163 at 1080 rows) and 4 / 7 / 10 vessels per frame (p10 / median / p90). No SeaShips image was measured; the
+    /// side-view profile only follows the published description (few, larger, mostly broadside vessels).
+    /// </summary>
+    public static class EpisodeProfiles
+    {
+        // v2 (same day): near range 340 -> 280 m and at most one far static vessel. The verification render of v1
+        // (Captures/jmse/framing_20261119/verify_wx_r1) kept only 63% of the clear-weather labels in the dense-fog cell: 32% at
+        // 310-340 m (luma contrast below the label threshold) against >= 84% inside 280 m.
+        // v3 (same day): 3-6 near static vessels for the on-shore type (v2 planned a median of 4 vessels per frame against 7 in SMD).
+        public const string Version = "episode_profiles_v3_20261119";
+
+        public static void Apply(EpisodeSpec s, CameraPreset cam)
+        {
+            if (s.profile != "auto" || cam == null) return;
+            if (cam.framing == CameraPresetLibrary.FramingSmd)
+            {
+                s.profile_applied = Version + ":smd_onshore";
+                s.moving_min = 2; s.moving_max = 4; s.static_min = 3; s.static_max = 6; s.far_static_max = 1;
+                s.height_frac_min = 0.020f; s.height_frac_max = 0.30f;
+                s.target_height_px_median = 55f; s.target_height_ln_sigma = 0.75f; s.target_height_tolerance = 1.6f;
+                s.near_min_m = 110f; s.near_max_m = 280f; s.far_max_m = 1500f;
+                s.max_cross_angle_deg = 55f; s.anchor_heading_sigma_deg = 20f;
+                s.row_min = 0.30f; s.row_step = 0.004f;
+            }
+            else if (cam.framing == CameraPresetLibrary.FramingSeaShips)
+            {
+                s.profile_applied = Version + ":seaships_side";
+                s.moving_min = 1; s.moving_max = 2; s.static_min = 0; s.static_max = 2; s.far_static_max = 1;
+                s.height_frac_min = 0.030f; s.height_frac_max = 0.36f;
+                s.target_height_px_median = 100f; s.target_height_ln_sigma = 0.60f; s.target_height_tolerance = 1.8f;
+                s.near_min_m = 60f; s.near_max_m = 280f; s.far_max_m = 900f;
+                s.max_cross_angle_deg = 35f;
+                s.row_min = 0.30f; s.row_step = 0.004f;
+            }
+            else s.profile_applied = Version + ":none(" + (cam.framing ?? "") + ")";
+        }
     }
 
     [Serializable]
@@ -91,6 +159,20 @@ namespace PortCCTV.Research
             return s;
         }
 
+        static float Gauss(System.Random rng)
+        {
+            double u1 = 1.0 - rng.NextDouble(), u2 = rng.NextDouble();
+            return (float)(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2));
+        }
+
+        /// <summary>Target above-water box height in pixels (log-normal, clipped to the allowed range); -1 = no target.</summary>
+        static float DrawTargetHeight(EpisodeSpec spec, System.Random rng)
+        {
+            if (spec.target_height_px_median <= 0f) return -1f;
+            float h = spec.target_height_px_median * Mathf.Exp(spec.target_height_ln_sigma * Gauss(rng));
+            return Mathf.Clamp(h, spec.height_frac_min * spec.height, spec.height_frac_max * spec.height);
+        }
+
         static bool WaterHit(Camera cam, float u, float v, float waterY, out Vector2 xz)
         {
             xz = default;
@@ -152,6 +234,7 @@ namespace PortCCTV.Research
         {
             var plan = new EpisodePlan { spec = spec, episode_id = $"ep_{spec.camera_preset_id}_s{spec.seed:0000}" };
             var rng = new System.Random(unchecked((int)Rng64.SeedOf("episode", spec.experiment_id, spec.harbor_id, spec.camera_preset_id, spec.seed.ToString())));
+            EpisodeProfiles.Apply(spec, CameraPresetLibrary.Exists(spec.camera_preset_id) ? CameraPresetLibrary.Get(spec.camera_preset_id) : null);
             var baseCfg = BaseScenario(spec, rng);
             var probe = JsonUtility.FromJson<ScenarioConfig>(JsonUtility.ToJson(baseCfg));
             w.Apply(probe);
@@ -191,10 +274,13 @@ namespace PortCCTV.Research
                             float heading = NavigationSim.HeadingOf(dir);
                             // rows of a random image column whose water point gives a box height inside [min, max] (feasible for this camera)
                             float u0 = 0.2f + 0.6f * (float)rng.NextDouble();
+                            float hTarget = DrawTargetHeight(spec, rng);
                             var rows = new List<(Vector2 xz, string reg, float h)>();
-                            for (float v = 0.30f; v <= 0.97f; v += 0.01f)
+                            for (float v = spec.row_min; v <= 0.97f; v += spec.row_step)
                             {
                                 if (!WaterHit(cam, u0, v, waterY, out var xz)) continue;
+                                if (spec.near_max_m > 0f && (xz - camXZ).magnitude > spec.near_max_m) continue;
+                                if (spec.near_min_m > 0f && (xz - camXZ).magnitude < spec.near_min_m) continue;
                                 var reg = w.Harbor.WaterRegionAt(xz);
                                 if (reg == null) continue;
                                 if (!ScenePlanner.PredictBox(w, proj, e, xz.x, xz.y, heading, e.default_immersion_m, spec.width, spec.height, out var box)) continue;
@@ -202,7 +288,9 @@ namespace PortCCTV.Research
                                 if (h >= spec.height_frac_min && h <= spec.height_frac_max) rows.Add((xz, reg, h));
                             }
                             if (rows.Count == 0) { plan.attempt_log.Add($"a{attempt} m{k} {e.asset_id}: no row with height in range at u {u0:F2}"); continue; }
-                            var pick = rows[rng.Next(rows.Count)];
+                            var pick = hTarget > 0f ? rows.OrderBy(r => Mathf.Abs(Mathf.Log(r.h * spec.height / hTarget))).First() : rows[rng.Next(rows.Count)];
+                            if (hTarget > 0f && spec.target_height_tolerance > 1f && Mathf.Abs(Mathf.Log(pick.h * spec.height / hTarget)) > Mathf.Log(spec.target_height_tolerance))
+                            { plan.attempt_log.Add($"a{attempt} m{k} {e.asset_id}: no position within x{spec.target_height_tolerance:F1} of the target height {hTarget:F0} px"); continue; }
                             if (!PointClear(w, e, pick.xz, heading, e.asset_id, harborCols)) { plan.attempt_log.Add($"a{attempt} m{k} {e.asset_id}: centre point blocked"); continue; }
                             float depth = Vector2.Dot(pick.xz - camXZ, fwd);
                             float halfW = Mathf.Max(20f, depth * Mathf.Tan(hHalf));
@@ -239,7 +327,53 @@ namespace PortCCTV.Research
                     }
                     if (fail != null) continue;
                     // optional static vessels (moored / drifting at rest) in view
-                    int nStatic = rng.Next(0, spec.static_max + 1);
+                    bool sized = spec.target_height_px_median > 0f;
+                    int nStatic = sized ? 0 : rng.Next(0, spec.static_max + 1);
+                    if (sized)
+                    {
+                        // framing profile: static vessels get a target size like the movers; "near" ones stay inside near_max_m,
+                        // "far" ones lie between near_max_m and far_max_m (ships at anchor close to the horizon line)
+                        int nNear = rng.Next(spec.static_min, spec.static_max + 1), nFar = rng.Next(0, spec.far_static_max + 1);
+                        float anchorHeading = (float)rng.NextDouble() * 360f;
+                        for (int k = 0; k < nNear + nFar; k++)
+                        {
+                            bool far = k >= nNear;
+                            for (int tries = 0; tries < 60; tries++)
+                            {
+                                var cands = pool.Where(a => !used.Contains(a)).Select(a => w.Catalog.Find(a)).Where(e0 => e0?.geometry != null).ToList();
+                                if (cands.Count == 0) break;
+                                var e = cands[rng.Next(cands.Count)];
+                                float L = e.geometry.bounds_max.x - e.geometry.bounds_min.x;
+                                float hd = spec.anchor_heading_sigma_deg > 0f ? Mathf.Repeat(anchorHeading + spec.anchor_heading_sigma_deg * Gauss(rng), 360f) : (float)rng.NextDouble() * 360f;
+                                float u0 = 0.06f + 0.88f * (float)rng.NextDouble();
+                                float hTarget = DrawTargetHeight(spec, rng);
+                                (Vector2 xz, string reg, float h) best = default; float bestErr = float.MaxValue;
+                                for (float v = spec.row_min; v <= 0.97f; v += spec.row_step)
+                                {
+                                    if (!WaterHit(cam, u0, v, waterY, out var xz)) continue;
+                                    float dist = (xz - camXZ).magnitude;
+                                    if (far ? (dist <= spec.near_max_m || dist > spec.far_max_m) : (spec.near_max_m > 0f && dist > spec.near_max_m)) continue;
+                                    if (dist < spec.near_min_m) continue;
+                                    var reg = w.Harbor.WaterRegionAt(xz);
+                                    if (reg == null) continue;
+                                    if (!ScenePlanner.PredictBox(w, proj, e, xz.x, xz.y, hd, e.default_immersion_m, spec.width, spec.height, out var box)) continue;
+                                    float h = box.height / spec.height;
+                                    if (h < spec.height_frac_min || h > spec.height_frac_max) continue;
+                                    float err = Mathf.Abs(Mathf.Log(h * spec.height / hTarget));
+                                    if (err < bestErr) { bestErr = err; best = (xz, reg, h); }
+                                }
+                                if (bestErr == float.MaxValue) continue;
+                                if (spec.target_height_tolerance > 1f && bestErr > Mathf.Log(spec.target_height_tolerance)) continue;
+                                if (!PointClear(w, e, best.xz, hd, e.asset_id, harborCols)) continue;
+                                if (plan.vessels.Any(pv => DistToSegment(best.xz, pv.entry, pv.exit) < (pv.length_m + L) * 0.75f + 15f)) continue;
+                                string id = $"s{k:00}";
+                                cfg.vessels.Add(new VesselPlacement { object_id = id, asset_id = e.asset_id, x = best.xz.x, z = best.xz.y, heading_deg = hd, immersion_m = e.default_immersion_m });
+                                plan.vessels.Add(new EpisodeVesselPlan { object_id = id, asset_id = e.asset_id, role = "static", entry = best.xz, exit = best.xz, region = best.reg, length_m = L, route_kind = far ? "static_far" : "static_near" });
+                                used.Add(e.asset_id);
+                                break;
+                            }
+                        }
+                    }
                     for (int k = 0; k < nStatic; k++)
                     {
                         var cands = pool.Where(a => !used.Contains(a)).Select(a => w.Catalog.Find(a)).Where(e => e?.geometry != null).ToList();

@@ -15,11 +15,14 @@ namespace PortCCTV.EditorTools
     /// that the Windows player renders. Planning only; nothing is rendered here.
     ///   Unity.exe -batchmode -projectPath <root> -executeMethod PortCCTV.EditorTools.EpisodeTools.PlanFromArgs -spec <spec.json> -out <folder> [-capture-dir Captures/x]
     /// spec.json: {"experiment_id": "...", "cameras": ["ct_A_quay_east_mast", ...], "seeds": [1, 2, ...], "split_rule": "k=((seed-1) mod 40)+1 ...",
-    ///             "frames": 8, "moving_min": 1, "moving_max": 3, "static_max": 1}
+    ///             "frames": 8, "moving_min": 1, "moving_max": 3, "static_max": 1, "profile": "auto"}
+    /// With "profile": "auto" the counts, target sizes and ranges come from the framing group of each camera (EpisodeProfiles).
     /// </summary>
     public static class EpisodeTools
     {
-        [Serializable] class Spec { public string experiment_id = "jmse_wx_ep"; public List<string> cameras = new List<string>(); public List<int> seeds = new List<int>(); public int frames = 8, moving_min = 1, moving_max = 3, static_max = 1; public float height_frac_min = 0.025f, height_frac_max = 0.16f; }
+        [Serializable] class Spec { public string experiment_id = "jmse_wx_ep"; public List<string> cameras = new List<string>(); public List<int> seeds = new List<int>(); public int frames = 8, moving_min = 1, moving_max = 3, static_max = 1; public float height_frac_min = 0.025f, height_frac_max = 0.16f;
+            /// <summary>"auto" = vessel counts, sizes and ranges from the framing group of each camera (EpisodeProfiles); "" = the fields above.</summary>
+            public string profile = ""; }
 
         static string Arg(string name)
         {
@@ -56,7 +59,7 @@ namespace PortCCTV.EditorTools
                         {
                             experiment_id = spec.experiment_id, harbor_id = HarborOf(cam), camera_preset_id = cam, seed = seed, split = SplitOf(seed),
                             frames = spec.frames, moving_min = spec.moving_min, moving_max = spec.moving_max, static_max = spec.static_max,
-                            height_frac_min = spec.height_frac_min, height_frac_max = spec.height_frac_max,
+                            height_frac_min = spec.height_frac_min, height_frac_max = spec.height_frac_max, profile = spec.profile,
                         };
                         var plan = EpisodePlanner.Plan(world, es);
                         File.WriteAllText(Path.Combine(outDir, "episodes", plan.episode_id + ".json"), JsonUtility.ToJson(plan, true), new UTF8Encoding(false));

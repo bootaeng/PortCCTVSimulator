@@ -15,24 +15,64 @@ namespace PortCCTV
     {
         public const string Id = "container_terminal_01";
 
-        public static readonly CameraPreset[] Cameras =
+        /// <summary>Camera poses of the 2026-11-16 set, kept as map-layout anchors only: the camera hill, the masts, the distant
+        /// towers and the tree-free view corridors were built around them, and keeping them keeps the map (and every capture of the
+        /// current cameras) unchanged. Not selectable; the poses that are still cameras are in OverviewCameras (2026-11-20).</summary>
+        internal static readonly CameraPreset[] SiteViews20261116 =
         {
-            new CameraPreset { id = "ct_A_quay_east_mast", display_name = "A - quay mast 20 m (basin -> entrance)", position = new Vector3(-60f, 22.5f, 66f),
+            new CameraPreset { id = "ct_A_quay_east_mast", display_name = "A (2026-11-16 framing) - quay mast 20 m (basin -> entrance)", position = new Vector3(-60f, 22.5f, 66f),
                 euler_deg = new Vector3(5f, 155f, 0f), vertical_fov_deg = 24f, mount_note = "lighting mast at the quay edge; looks across the basin at the entrance gap 600 m away" },
-            new CameraPreset { id = "ct_B_breakwater_head", display_name = "B - breakwater head 10 m (entrance approach)", position = new Vector3(232f, 13.5f, -463f),
+            new CameraPreset { id = "ct_B_breakwater_head", display_name = "B (2026-11-16 framing) - breakwater head 10 m (entrance approach)", position = new Vector3(232f, 13.5f, -463f),
                 euler_deg = new Vector3(5f, 125f, 0f), vertical_fov_deg = 32f, mount_note = "mast beside the red entrance light; the approach to the entrance gap and the anchorage ahead" },
-            new CameraPreset { id = "ct_C_admin_roof", display_name = "C - east quay mast 30 m (entrance)", position = new Vector3(340f, 31f, 65f),
+            new CameraPreset { id = "ct_C_admin_roof", display_name = "C (2026-11-16 framing) - east quay mast 30 m (entrance)", position = new Vector3(340f, 31f, 65f),
                 euler_deg = new Vector3(7f, 182f, 0f), vertical_fov_deg = 28f, mount_note = "30 m mast on the east quay; straight down the basin to the entrance gap, clear of the crane booms" },
-            new CameraPreset { id = "ct_D_hill_tower", display_name = "D - east headland 58 m (terminal panorama)", position = new Vector3(470f, 58f, -142f),
+            new CameraPreset { id = "ct_D_hill_tower", display_name = "D (2026-11-16 framing) - east headland 58 m (terminal panorama)", position = new Vector3(470f, 58f, -142f),
                 euler_deg = new Vector3(11f, 300f, 0f), vertical_fov_deg = 30f, mount_note = "mast on the headland at the east breakwater root; looks across the basin at the container berths and industrial waterfront" },
-            new CameraPreset { id = "ct_E_basin_breakwater", display_name = "E - south breakwater mast 13 m (berths)", position = new Vector3(100f, 13.5f, -463f),
+            new CameraPreset { id = "ct_E_basin_breakwater", display_name = "E (2026-11-16 framing) - south breakwater mast 13 m (berths)", position = new Vector3(100f, 13.5f, -463f),
                 euler_deg = new Vector3(4.5f, 345f, 0f), vertical_fov_deg = 32f, mount_note = "mast on the detached breakwater; the berths and basin traffic ahead (terminal-side watch)" },
         };
+
+        /// <summary>Research presets of framing_v2_20261119. F, G, I: low cameras on the breakwater crown wall looking over open
+        /// water (SMD VIS_Onshore type). H, J: side views across the basin with the far shore behind the traffic (SeaShips type).
+        /// Positions, heights and fields of view are design choices; no real installation is copied.</summary>
+        public static readonly CameraPreset[] ResearchCameras =
+        {
+            new CameraPreset { id = "ct_F_south_bw_sea", display_name = "F - south breakwater wall 1.5 m (outer anchorage)", position = new Vector3(-150f, 7.5f, -469f),
+                euler_deg = new Vector3(1.1f, 180f, 0f), vertical_fov_deg = 22f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the south breakwater, 7.5 m above the water; open sea and anchorage to the south" },
+            new CameraPreset { id = "ct_G_bw_head_approach", display_name = "G - breakwater head wall 1.5 m (entrance approach)", position = new Vector3(236f, 7.5f, -469f),
+                euler_deg = new Vector3(-0.5f, 125f, 0f), vertical_fov_deg = 26f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the crown wall at the south breakwater head; vessels approaching the entrance from the south-east" },
+            new CameraPreset { id = "ct_H_east_quay_basin", display_name = "H - east quay mast 11.5 m (basin to the entrance)", position = new Vector3(340f, 14f, 65f),
+                euler_deg = new Vector3(2.5f, 188f, 0f), vertical_fov_deg = 20f, framing = CameraPresetLibrary.FramingSeaShips,
+                mount_note = "bracket at 11.5 m on the east quay lighting mast; down the basin to the south breakwater and the entrance gap" },
+            new CameraPreset { id = "ct_I_east_bw_sea", display_name = "I - east breakwater wall 1.5 m (eastern approach)", position = new Vector3(434f, 7.5f, -300f),
+                euler_deg = new Vector3(2.0f, 105f, 0f), vertical_fov_deg = 20f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the east breakwater; open water east of the port with a distant shore" },
+            new CameraPreset { id = "ct_J_south_bw_berths", display_name = "J - south breakwater pole 5.5 m (basin and berths)", position = new Vector3(100f, 9f, -456f),
+                euler_deg = new Vector3(2.0f, 345f, 0f), vertical_fov_deg = 28f, framing = CameraPresetLibrary.FramingSeaShips,
+                mount_note = "pole on the harbour side of the south breakwater road; basin traffic in front of the container berths and cranes" },
+        };
+
+        /// <summary>Elevated mast views kept from the 2026-11-16 set as current presets (2026-11-20, user decision); same poses.
+        /// Not part of the research framing groups (CameraPresetLibrary.ResearchForHarbor).</summary>
+        public static readonly CameraPreset[] OverviewCameras = CameraPresetLibrary.Overview(SiteViews20261116,
+            ("ct_A_quay_east_mast", "A - quay mast 20 m (basin -> entrance)"),
+            ("ct_B_breakwater_head", "B - breakwater head 10 m (entrance approach)"),
+            ("ct_C_admin_roof", "C - east quay mast 30 m (entrance)"));
+
+        /// <summary>Selectable presets of the map: research presets first, then the overview presets.</summary>
+        public static readonly CameraPreset[] Cameras = ResearchCameras.Concat(OverviewCameras).ToArray();
+
+        /// <summary>Every pose the map layout is built around, in the order used since 2026-11-19 (tree placement draws in this order).</summary>
+        internal static readonly CameraPreset[] LayoutViews = ResearchCameras.Concat(SiteViews20261116).ToArray();
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
         {
             { "ct_A_quay_east_mast", Deck }, { "ct_B_breakwater_head", Crest }, { "ct_C_admin_roof", Deck }, { "ct_D_hill_tower", 58f - CameraMastOnHill },
             { "ct_E_basin_breakwater", Crest },
+            { "ct_F_south_bw_sea", Crest + 2.5f }, { "ct_G_bw_head_approach", Crest + 2.5f }, { "ct_H_east_quay_basin", Deck },
+            { "ct_I_east_bw_sea", Crest + 2.5f }, { "ct_J_south_bw_berths", Crest },
         };
 
         public static HarborDefinition Build()
@@ -170,7 +210,7 @@ namespace PortCCTV
             foreach (var (cx, cz) in new[] { (-1088f, -81f), (-1206f, 175f) }) Cyl("factory", cx, cz, Deck, Deck + R(45f, 80f), R(3.5f, 5f), "chimney");
 
             // --- east town with apartment towers (camera D stands on the first one); coastal road + village on the east shore below it
-            CameraHill(Cameras[3], 240f, 420f, 2, new Vector2(527f, -94f));
+            CameraHill(SiteViews20261116[3], 240f, 420f, 2, new Vector2(527f, -94f));
             CoastalVillage(760f, 1200f, -128f, -1f, 3, true);                                                // village starts 60 m past the buffer
             for (float z = -140f; z < 140f; z += 3.9f) Prefab("fence", "fence", new Vector3(652f, Deck, z), 90f, Vector3.one);
             for (float z = -140f; z < 140f; z += R(6f, 9f)) Tree(660f + R(0f, 60f), z, Deck, R(7f, 12f));
@@ -195,8 +235,8 @@ namespace PortCCTV
             Prefab("buoy", "lateral_marker", new Vector3(390, -1.0f, -540), 0, Vector3.one * 0.8f, id: "buoy_green_1", nonVessel: true);
             Prefab("buoy", "ocean_buoy", new Vector3(380, -0.6f, -900), 0, Vector3.one * 1.8f, id: "buoy_fairway", nonVessel: true);
 
-            DistantTowers(-1500f, 1500f, 1000f, 1450f, 8, 26111021, Cameras.Select(c => c.position), 900f);   // 2026-11-10
-            CameraMasts(Cameras, MastBases);
+            DistantTowers(-1500f, 1500f, 1000f, 1450f, 8, 26111021, SiteViews20261116.Select(c => c.position), 900f);   // 2026-11-10
+            CameraMasts(LayoutViews, MastBases);
 
             h.water_regions.Add(Region("terminal_basin", -420, 60, 420, 60, 420, -400, 250, -455, -435, -455, -435, -250, -420, -250));
             h.water_regions.Add(Region("entrance", 250, -455, 420, -400, 435, -400, 435, -480, 250, -480));
@@ -315,7 +355,7 @@ namespace PortCCTV
 
         public static ScenarioConfig DefaultScenario()
         {
-            var s = new ScenarioConfig { scenario_id = "container_terminal_default", harbor_id = Id, camera_preset_id = "ct_E_basin_breakwater" };
+            var s = new ScenarioConfig { scenario_id = "container_terminal_default", harbor_id = Id, camera_preset_id = "ct_J_south_bw_berths" };
             // berthed under the STS cranes: the CC BY 95 m feeder (beam 15.6 m) replaced the blocky procedural 172 m ship in the default
             // scene after a same-view comparison (detail review 2026-11-09 §8); the procedural one stays available as "(구형)"
             s.vessels.Add(new VesselPlacement { object_id = "v00", asset_id = "feeder_ship", x = -270, z = 60 - 1.6f - 7.8f, heading_deg = 180, immersion_m = 4.0f });
@@ -332,6 +372,17 @@ namespace PortCCTV
             // (moved from (950, -1050) when the headland hill_L_0 became a ridge and its slope reached the hull, 2026-11-09)
             s.vessels.Add(new VesselPlacement { object_id = "v10", asset_id = "feeder_ship", x = 880, z = -1150, heading_deg = 245, immersion_m = 4.0f });
             s.vessels.Add(new VesselPlacement { object_id = "v12", asset_id = "bulk_carrier", x = -350, z = -1350, heading_deg = 60, immersion_m = 7f, motion = new VesselMotion { mode = "anchor" } });
+            // 2026-11-19 (framing_v2): craft waiting at anchor 180-380 m in front of the seaward cameras F, G and I, so that the
+            // default scene is not an empty sea from the low breakwater cameras. All at anchor (they keep clear of the south-east
+            // island, which lies inside the outer_sea region); no rib / motorboat / pilot boat, which the interactive
+            // "add vessel" check places next (three of one hull in a scene is a layout issue).
+            s.vessels.Add(new VesselPlacement { object_id = "v13", asset_id = "tugboat", x = -119, z = -687, heading_deg = 95, immersion_m = 1.0f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v14", asset_id = "patrol_boat", x = -202, z = -764, heading_deg = 250, immersion_m = 1.3f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v15", asset_id = "police_boat", x = 399, z = -545, heading_deg = 300, immersion_m = 0.6f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v16", asset_id = "sar_boat", x = 426, z = -646, heading_deg = 140, immersion_m = 1.0f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v17", asset_id = "tugboat", x = 632, z = -331, heading_deg = 200, immersion_m = 1.0f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v18", asset_id = "patrol_boat", x = 699, z = -418, heading_deg = 20, immersion_m = 1.3f, motion = new VesselMotion { mode = "anchor" } });
+            s.vessels.Add(new VesselPlacement { object_id = "v19", asset_id = "general_cargo", x = 800, z = -380, heading_deg = 20, immersion_m = 5.0f, motion = new VesselMotion { mode = "anchor" } });
             return s;
         }
     }

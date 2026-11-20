@@ -15,6 +15,10 @@ namespace PortCCTV
     public class CameraRecord
     {
         public string preset_id;
+        /// <summary>Framing group of the preset ("smd_onshore" | "seaships_side" | "legacy_20261116" | "") and the version of the
+        /// research preset set the build was made with (2026-11-19).</summary>
+        public string framing = "";
+        public string preset_set_version = "";
         public string mount_note;
         public Vector3 position_world;
         public Quaternion rotation_world;
@@ -562,7 +566,14 @@ namespace PortCCTV
                 WriteFile(partial, "metadata.json", new UTF8Encoding(false).GetBytes(JsonUtility.ToJson(meta, true)));
 
                 if (Directory.Exists(finalDir)) throw new IOException("Output appeared during capture: " + finalDir);
-                Directory.Move(partial, finalDir);
+                // Another process (virus scanner, indexer) can hold a handle on a file that was just written; the rename then fails
+                // with "Access to the path is denied" (5 of about 1,440 captures on 2026-11-19 / 20). Retry briefly before giving up.
+                for (int attempt = 0; ; attempt++)
+                {
+                    try { Directory.Move(partial, finalDir); break; }
+                    catch (Exception moveEx) when ((moveEx is IOException || moveEx is UnauthorizedAccessException) && attempt < 9 && !Directory.Exists(finalDir))
+                    { System.Threading.Thread.Sleep(300); }
+                }
                 res.success = true;
                 res.labels = labels;
                 res.metadata = meta;
@@ -606,7 +617,7 @@ namespace PortCCTV
             float fx = fy; // square pixels, aspect = W/H
             return new CameraRecord
             {
-                preset_id = p.id, mount_note = p.mount_note,
+                preset_id = p.id, mount_note = p.mount_note, framing = p.framing ?? "", preset_set_version = CameraPresetLibrary.PresetSetVersion,
                 position_world = cam.transform.position, rotation_world = cam.transform.rotation, euler_deg = p.euler_deg,
                 vertical_fov_deg = cam.fieldOfView,
                 horizontal_fov_deg = Camera.VerticalToHorizontalFieldOfView(cam.fieldOfView, (float)W / H),

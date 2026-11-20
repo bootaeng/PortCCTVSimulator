@@ -254,6 +254,10 @@ namespace PortCCTV
             GroundWearDecals = GroundWear.Scatter(Harbor, Theme, HarborRoot.transform);
             Physics.SyncTransforms();
             VegetationResult = Vegetation.Scatter(Harbor, Theme, HarborRoot.transform, objs, cols);
+            // Scatter creates colliders and then moves them (shore line pieces, lighthouse landing). Until the next sync the physics
+            // scene still has them at their creation pose (piled at the map origin), so the first scenario applied after a harbour
+            // build stepped its vessels around an obstacle that later scenarios did not see (2026-11-20).
+            Physics.SyncTransforms();
             HarborColliders = cols;
             HarborObjects = objs;
             Water.transform.position = new Vector3(0, Harbor.water_reference_y, 0);
@@ -370,9 +374,11 @@ namespace PortCCTV
             // overcast / precipitation: grey overcast HDRI (Poly Haven CC0), dim diffuse sun, lower exposure (engine values)
             string overcastKey = e.night ? NightOvercastSky : OvercastSky;
             if (wx.Overcast && _skies != null && _skies.Find(overcastKey) != null) sky = _skies.Find(overcastKey);
-            float sunLux = e.sun_illuminance_lux * (wx.Overcast ? Mathf.Lerp(0.22f, 0.08f, wx.Precipitating ? wx.I : 0f) : 1f);
-            float skyLux = e.sky_lux * (wx.Overcast ? Mathf.Lerp(0.7f, 0.45f, wx.Precipitating ? wx.I : 0f) : 1f);
-            float ev = e.exposure_ev100 - (wx.Overcast ? 0.7f + (wx.Precipitating ? 0.4f * wx.I : 0f) : 0f);   // partial compensation: rain/snow scenes stay darker than clear ones
+            // AtmosphereI = intensity while precipitating (0 without precipitation or with the research switch no_precipitation_atmosphere)
+            float sunLux = e.sun_illuminance_lux * (wx.Overcast ? Mathf.Lerp(0.22f, 0.08f, wx.AtmosphereI) : 1f);
+            float skyLux = e.sky_lux * (wx.Overcast ? Mathf.Lerp(0.7f, 0.45f, wx.AtmosphereI) : 1f);
+            // partial compensation: rain/snow scenes stay darker than clear ones; an overcast day with haze gets none (grey, darker)
+            float ev = e.exposure_ev100 - (wx.Overcast ? wx.OvercastExposureCompensationEv + 0.4f * wx.AtmosphereI : 0f);
             float hdriRotation = 0f;
             if (sky != null && sky.cubemap != null)
             {
@@ -398,7 +404,7 @@ namespace PortCCTV
             _exposure.fixedExposure.Override(ev);
             float mfp = e.fog_enabled ? e.fog_mean_free_path_m : e.aerial_haze_mfp_m;
             if (mfp <= 0f && (wx.Precipitating || wx.visibility_scale < 1f)) mfp = 3000f;
-            mfp *= Mathf.Clamp(wx.visibility_scale, 0.05f, 4f) * wx.PrecipitationVisibilityFactor;
+            mfp *= Mathf.Clamp(wx.visibility_scale, 0.05f, 4f) * wx.PrecipitationVisibilityFactor * wx.OvercastVisibilityFactor;
             _fog.enabled.Override(mfp > 0f);
             _fog.meanFreePath.Override(Mathf.Max(1f, mfp > 0f ? mfp : 400f));
             _clouds.opacity.Override(wx.Overcast ? 0.95f : e.cloud_opacity);

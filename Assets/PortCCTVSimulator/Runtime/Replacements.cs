@@ -15,7 +15,7 @@ namespace PortCCTV
         /// </summary>
         internal static int DetailNearContainers(HarborDefinition h, float range = 150f, int cap = 400)
         {
-            var cams = CameraPresetLibrary.ForHarbor(h.harbor_id);
+            var cams = CameraPresetLibrary.LayoutViewsForHarbor(h.harbor_id);   // incl. the retired 2026-11-16 poses: the map stays as built
             if (cams == null || cams.Length == 0) return 0;
             var cand = new List<(int i, float d)>();
             for (int i = 0; i < h.elements.Count; i++)

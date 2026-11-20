@@ -706,8 +706,15 @@ namespace PortCCTV
 
             if (Fold(ref _foldWx, "세부 설정"))
             {
-                bool oc = GUILayout.Toggle(wx.Overcast, wx.Precipitating ? " 흐림 (비·눈일 때 항상)" : " 흐림");
+                bool oc = GUILayout.Toggle(wx.Overcast, wx.Precipitating ? " 흐림 (비·눈일 때 항상)" : " 흐림 (시정 저하 포함)");
                 if (!wx.Precipitating && oc != wx.overcast) { wx.overcast = oc; _pendingApply = true; }
+                if (wx.Overcast && !wx.Precipitating)
+                {
+                    bool autoHaze = wx.overcast_haze < 0f;
+                    bool ah = GUILayout.Toggle(autoHaze, $" 흐림 연무 자동 ({wx.OvercastHaze:F1})");
+                    if (ah != autoHaze) { wx.overcast_haze = ah ? -1f : wx.OvercastHaze; _pendingApply = true; }
+                    if (!ah) wx.overcast_haze = NumberField("wx_ochaze", "흐림 연무 (0 = 하늘·조명만)", wx.overcast_haze, 0f, 1f, 0.1f);
+                }
                 wx.visibility_scale = NumberField("wx_v", "시정 배율", wx.visibility_scale, 0.1f, 3f, 0.1f);
                 bool autoWet = wx.wetness < 0f;
                 bool aw = GUILayout.Toggle(autoWet, $" 젖은 노면 자동 ({wx.Wetness:F1})");
