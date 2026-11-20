@@ -402,17 +402,21 @@ namespace PortCCTV
             }
         }
 
-        /// <summary>Beach furniture: rows of parasols (with a lounger pair) and lifeguard towers along x.</summary>
+        /// <summary>Beach furniture in loose clusters, with clear access corridors and room at the waterline.</summary>
         public static void BeachFurniture(float x0, float x1, float z0, float z1, float y)
         {
-            string[] cols = { "red", "blue", "white", "green", "navy", "red", "blue" };
-            for (float z = z0; z <= z1; z += 7f)
-                for (float x = x0 + R(0f, 3f); x < x1; x += R(4f, 6f))
+            string[] cols = { "white", "white", "blue", "navy", "green", "red" };
+            for (float z = z0 + 3f; z <= z1; z += 10f)
+                for (float x = x0 + R(0f, 5f); x < x1; x += R(7f, 10f))
                 {
-                    if (Rng.NextDouble() < 0.06) continue;
-                    Prefab("beach", "beach_parasol_" + cols[Rng.Next(cols.Length)], new Vector3(x, y, z + R(-0.6f, 0.6f)), R(0f, 360f), Vector3.one);
+                    // Broad pedestrian routes connect the promenade to the surf.
+                    if (Mathf.Abs(x - (x0 + 110f)) < 8f || Mathf.Abs(x - (x0 + 300f)) < 8f ||
+                        Mathf.Abs(x - (x0 + 480f)) < 8f || Rng.NextDouble() < 0.24) continue;
+                    Prefab("beach", "beach_parasol_" + cols[Rng.Next(cols.Length)],
+                        new Vector3(x + R(-0.8f, 0.8f), y, z + R(-1.2f, 1.2f)), R(-18f, 18f), Vector3.one);
                 }
-            for (float x = x0 + 60f; x < x1; x += 180f) Prefab("beach", "lifeguard_tower", new Vector3(x, y, z0 - 6f), 180f, Vector3.one);
+            for (float x = x0 + 60f; x < x1; x += 180f)
+                Prefab("beach", "lifeguard_tower", new Vector3(x, y, z0 + 3f), 180f, Vector3.one);
         }
 
         /// <summary>Promenade furniture along x: benches facing the sea (seaDir = -1 -> sea at -z) and planted trees.</summary>
@@ -515,6 +519,7 @@ namespace PortCCTV
             for (float x = x0 + R(26f, 50f); x < x1 - 30f; x += R(55f, 85f)) cross.Add(x);
             cross.Add(x1 - 6f);
             float rowPitch = 22f, firstRow = roadZ + land * 12f;
+            var occupied = new List<(int row, float a, float b)>();                 // frontage taken per row (for the infill pass)
             for (int r = 0; r < rows; r++)
             {
                 float rz = firstRow + land * r * rowPitch;
@@ -529,9 +534,14 @@ namespace PortCCTV
                     if (Rng.NextDouble() < 0.3)
                     {
                         // 2-3 storey Korean multi-family building (CC BY scan-based model) at village scale
-                        float vs = R(0.5f, 0.65f);
-                        BoxC("pad", new Vector3(x + 6f, Deck + 0.025f, rz), new Vector3(27f * vs + 3f, 0.05f, 25f * vs + 3f), "lane_concrete", yaw);
-                        Prefab("house", "bld_villa_kr", new Vector3(x + 6f, Deck + 0.05f, rz), yaw, Vector3.one * vs);
+                        float vs = R(0.5f, 0.65f), vz = rz;
+                        // front row: the 25 m-deep model at 0.5-0.65 reached 4 m from the road centre, over the lamp / pole line
+                        // and the kerb (2026-11-10 photo). Front-row villas are kept at 0.42 and set 1.1 m back (pad front 6.35 m
+                        // from the centre line, back 2.9 m clear of the lane behind).
+                        if (r == 0) { vs = Mathf.Min(vs, 0.42f); vz = rz + land * 1.1f; }
+                        BoxC("pad", new Vector3(x + 6f, Deck + 0.025f, vz), new Vector3(27f * vs + 3f, 0.05f, 25f * vs + 3f), "lane_concrete", yaw);
+                        Prefab("house", "bld_villa_kr", new Vector3(x + 6f, Deck + 0.05f, vz), yaw, Vector3.one * vs);
+                        occupied.Add((r, x + 6f - 13.5f * vs - 1.5f, x + 6f + 13.5f * vs + 1.5f));
                         x += 8f;
                         continue;
                     }
@@ -539,8 +549,10 @@ namespace PortCCTV
                     var k = kinds[kind]; float sc = R(0.92f, 1.08f);
                     BoxC("pad", new Vector3(x, Deck + 0.025f, rz), new Vector3(k.w * sc + 3f, 0.05f, k.d * sc + 3f), "lane_concrete", yaw);
                     Prefab("house", k.key, new Vector3(x, Deck + 0.05f, rz), yaw, Vector3.one * sc);
+                    occupied.Add((r, x - k.w * sc / 2f - 1.5f, x + k.w * sc / 2f + 1.5f));
                 }
             }
+            VillageInfill(x0, x1, roadZ, land, rows, rowPitch, firstRow, cross, occupied);
             float backZ = firstRow + land * ((rows - 0.5f) * rowPitch);
             foreach (var cx in cross)
                 Box("lane", cx - 2f, cx + 2f, Deck + 0.02f, Deck + 0.05f, Mathf.Min(roadZ + land * 3.5f, backZ), Mathf.Max(roadZ + land * 3.5f, backZ), "lane_concrete");
@@ -557,6 +569,62 @@ namespace PortCCTV
                     else for (int t = 0; t < 14; t++) Tree(x + R(0, w), bz + land * R(2f, d), Deck, R(5f, 9f));
                 }
             }
+        }
+
+        /// <summary>
+        /// Village infill (2026-11-10, user: villages too sparse): every free stretch of a house row at least 11 m long and
+        /// clear of the cross lanes (2 m from the lane edge) gets houses -- the Korean-style house kinds, the Japanese-style house
+        /// (rows behind the first only: it is 11.5 m deep) and gear sheds -- with a paved plot, front towards the road; own
+        /// seeded RNG (the shared random stream of the map is untouched). Then a stop sign at each cross-lane mouth on the coast
+        /// road and a 30 km/h sign at both village ends.
+        /// </summary>
+        static void VillageInfill(float x0, float x1, float roadZ, float land, int rows, float rowPitch, float firstRow, List<float> cross, List<(int row, float a, float b)> occupied)
+        {
+            var rr = new System.Random(911 * Mathf.RoundToInt(x0) + 37 * Mathf.RoundToInt(roadZ) + 5);
+            float RRf(float a, float b) => a + (float)rr.NextDouble() * (b - a);
+            var kinds = HillFeatures.HouseKinds;
+            for (int r = 0; r < rows; r++)
+            {
+                float rz = firstRow + land * r * rowPitch;
+                var blocked = new List<(float a, float b)>();
+                foreach (var o in occupied) if (o.row == r) blocked.Add((o.a, o.b));
+                foreach (var cx in cross) blocked.Add((cx - 2f - 2f, cx + 2f + 2f));
+                blocked.Add((float.MinValue, x0 + 8f)); blocked.Add((x1 - 8f, float.MaxValue));
+                blocked.Sort((p, q) => p.a.CompareTo(q.a));
+                float cur = float.MinValue;
+                var gaps = new List<(float a, float b)>();
+                foreach (var (a, b) in blocked) { if (a > cur && cur > float.MinValue) gaps.Add((cur, a)); cur = Mathf.Max(cur, b); }
+                foreach (var (ga, gb) in gaps)
+                {
+                    for (float x = ga + 0.5f; ;)
+                    {
+                        bool jp = r > 0 && rr.NextDouble() < 0.3;
+                        int kind = rr.NextDouble() < 0.15 ? 5 : rr.Next(5);
+                        float w = jp ? 11.84f * 0.8f : kinds[kind].w, d = jp ? 11.48f * 0.8f : kinds[kind].d;
+                        float sc = jp ? 0.8f : RRf(0.92f, 1.05f);
+                        float fw = jp ? w : w * sc;
+                        if (x + fw + 3f > gb) break;
+                        float cxh = x + 1.5f + fw / 2f, yaw = (land > 0 ? 0f : 180f) + RRf(-4f, 4f);
+                        float dz = jp ? d : d * sc;
+                        if (r == 0 && dz / 2f + 1.5f > 12f - 6.2f) { x += 2f; continue; }   // first row: plot front must stay behind the pole line
+                        BoxC("pad", new Vector3(cxh, Deck + 0.025f, rz), new Vector3(fw + 3f, 0.05f, dz + 3f), "lane_concrete", yaw);
+                        float hx = fw / 2f + 2f, hz = dz / 2f + 2f;                              // trees left in the old empty slot
+                        E.RemoveAll(e => e.kind == "tree" && Mathf.Abs(e.center.x - cxh) < hx && Mathf.Abs(e.center.z - rz) < hz);
+                        if (jp) Prefab("house", "house_jp03", new Vector3(cxh, Deck + 0.05f, rz), yaw + 180f, Vector3.one * sc);
+                        else Prefab("house", kinds[kind].key, new Vector3(cxh, Deck + 0.05f, rz), yaw, Vector3.one * sc);
+                        x += fw + 3f + RRf(0.5f, 3f);
+                    }
+                }
+            }
+            // stop sign at each cross-lane mouth (lane traffic joining the coast road), 30 km/h at both village ends
+            foreach (var cx in cross)
+            {
+                var p = new Vector3(cx + 2.9f, Deck, roadZ + land * 5.2f);
+                if (!E.Exists(e => (e.kind == "power_pole" || e.kind == "street_light") && (new Vector2(e.center.x - p.x, e.center.z - p.z)).sqrMagnitude < 1.5f * 1.5f))
+                    KrSign("kr_sign_stop", p, new Vector2(0f, land));
+            }
+            KrSign("kr_sign_sl30", new Vector3(x0 + 3f, Deck, roadZ - land * 4.8f), new Vector2(-1f, 0f));
+            KrSign("kr_sign_sl30", new Vector3(x1 - 3f, Deck, roadZ + land * 4.8f), new Vector2(1f, 0f));
         }
 
         // ------------------------------------------------------------ road vehicles and parking (background, never labelled)
@@ -969,21 +1037,27 @@ namespace PortCCTV
             for (int c = 0; c + 1 < cross.Count; c++)
             {
                 float a = cross[c] + 2.2f, b = cross[c + 1] - 2.2f;
+                float ca = cross[c] + 1.75f + 2.0f, cb = cross[c + 1] - 1.75f - 2.0f;      // usable frontage between the lanes
                 // front row: small shops of 7-10 m frontage
                 for (float x = a; x < b - 6f;)
                 {
                     float w = Mathf.Min(R(7f, 10f), b - x);
                     if (w < 6f) break;
                     double u = Rng.NextDouble();
+                    float sx0 = Mathf.Max(x, ca), sx1 = Mathf.Min(x + w, cb), sw = sx1 - sx0, scx = (sx0 + sx1) / 2f;
                     if (u < 0.55)
                     {
                         float hgt = R(6.5f, 10f);
-                        BoxC("building", new Vector3(x + w / 2f, Deck + hgt / 2f, frontZ + 1.5f), new Vector3(w - 0.4f, hgt, 9f), Rng.NextDouble() < 0.5 ? "wall_white" : "wall_cream");
-                        BoxC("awning", new Vector3(x + w / 2f, Deck + 3.0f, frontZ - 3.6f), new Vector3(w - 0.6f, 0.08f, 2.4f), awn[Rng.Next(awn.Length)], 0f, new Vector3(-12f, 0f, 0f));
-                        if (Rng.NextDouble() < 0.6) BoxC("fish_tank", new Vector3(x + w / 2f, Deck + 0.55f, frontZ - 3.9f), new Vector3(Mathf.Min(3f, w - 2f), 1.1f, 1.0f), "glass_dark");
+                        string wall = Rng.NextDouble() < 0.5 ? "wall_white" : "wall_cream"; string aw = awn[Rng.Next(awn.Length)]; bool tank = Rng.NextDouble() < 0.6;
+                        if (sw >= 5f)
+                        {
+                            BoxC("building", new Vector3(scx, Deck + hgt / 2f, frontZ + 1.5f), new Vector3(sw - 0.4f, hgt, 9f), wall);
+                            BoxC("awning", new Vector3(scx, Deck + 3.0f, frontZ - 3.6f), new Vector3(sw - 0.6f, 0.08f, 2.4f), aw, 0f, new Vector3(-12f, 0f, 0f));
+                            if (tank) BoxC("fish_tank", new Vector3(scx, Deck + 0.55f, frontZ - 3.9f), new Vector3(Mathf.Min(3f, sw - 2f), 1.1f, 1.0f), "glass_dark");
+                        }
                     }
-                    else if (u < 0.8) Prefab("building", "bld_bakery_kr", new Vector3(x + w / 2f, Deck + 0.02f, frontZ + 1.5f), 180f + R(-2f, 2f), Vector3.one * 0.9f);
-                    else Prefab("house", HillFeatures.HouseKinds[2].key, new Vector3(x + w / 2f, Deck + 0.05f, frontZ + 1f), 180f, Vector3.one);
+                    else if (u < 0.8) { float yb = 180f + R(-2f, 2f); float bc = Mathf.Clamp(x + w / 2f, ca + 4.2f, cb - 4.2f); if (cb - ca >= 8.4f) Prefab("building", "bld_bakery_kr", new Vector3(bc, Deck + 0.02f, frontZ + 1.5f), yb, Vector3.one * 0.9f); }
+                    else { float hc = Mathf.Clamp(x + w / 2f, ca + 4.3f, cb - 4.3f); if (cb - ca >= 8.6f) Prefab("house", HillFeatures.HouseKinds[2].key, new Vector3(hc, Deck + 0.05f, frontZ + 1f), 180f, Vector3.one); }
                     x += w;
                 }
                 // back row: houses and gear sheds facing the alley
@@ -1004,6 +1078,17 @@ namespace PortCCTV
             }
         }
 
+        /// <summary>While true, "tower" apartment plots replace some cells with the Sketchfab "Urban" collection towers
+        /// (bld_urban_ny_hirise, bld_urban_office_tower). Set only around the marina beach-city blocks.</summary>
+        public static bool UrbanCollectionMix;
+        /// <summary>Positions (x, z) of Urban office towers already placed while the mix is on; a new one keeps
+        /// UrbanOfficeSpacing from all of them so the dark glass towers never stand side by side (seeded with the front row).</summary>
+        public static readonly List<Vector2> UrbanOfficeTowers = new List<Vector2>();
+        public const float UrbanOfficeSpacing = 110f;
+        /// <summary>Wrapped prefab footprints (m, yaw 0): NY hi-rise 44.05 x 44.05 (with podium), office tower 32.61 x 23.17.</summary>
+        public const float UrbanNyFootprint = 44.05f;
+        public static readonly Vector2 UrbanOfficeFootprint = new Vector2(32.61f, 23.17f);
+
         public static void ApartmentPlot(float ax, float ex, float az, float ez, string mix = null)
         {
             float wx = ex - ax, wz = ez - az;
@@ -1019,7 +1104,38 @@ namespace PortCCTV
             float sx0 = (ax + ex) / 2f - (nx - 1) * px / 2f, sz0 = (az + ez) / 2f - (nz - 1) * pz / 2f;
             for (int i = 0; i < nx; i++)
                 for (int k = 0; k < nz; k++)
-                    Prefab("building", key, new Vector3(sx0 + i * px, Deck + 0.02f, sz0 + k * pz), 0f, Vector3.one * sc * R(0.97f, 1.03f));
+                {
+                    // A whole block of the same tower reads as a copied asset from the beach.
+                    // Both alternatives fit the selected tower cell (38 x 38 m is the largest footprint).
+                    string cellKey = key;
+                    float cellScale = sc;
+                    float cellYaw = 0f;
+                    if (mix == "tower" && (i + 2 * k) % 3 == 1)
+                    {
+                        cellKey = key == "bld_hirise" ? "bld_officetel" : "bld_hirise";
+                        cellScale = cellKey == "bld_hirise" ? Mathf.Min(sc, 0.65f) : Mathf.Min(sc, 0.8f);
+                    }
+                    if (mix == "tower" && UrbanCollectionMix)
+                    {
+                        // Sketchfab "Urban" collection towers (marina beach city only): picked from the cell position, no RNG draw,
+                        // scaled so the wrapped bounds stay inside this cell's footprint (fx x fz at sc), so other maps are unchanged.
+                        int sel = ((i * 3 + k * 5 + Mathf.RoundToInt(sx0 / 7f)) % 4 + 4) % 4;
+                        float cellX = fx * sc, cellZ = fz * sc;
+                        if (sel == 0) { cellKey = "bld_urban_ny_hirise"; cellScale = Mathf.Min(Mathf.Min(cellX, cellZ) / UrbanNyFootprint, 0.75f); }
+                        else if (sel == 2 && (i + k) % 2 == 0)
+                        {
+                            var here = new Vector2(sx0 + i * px, sz0 + k * pz);
+                            if (!UrbanOfficeTowers.Any(o => (o - here).magnitude < UrbanOfficeSpacing))
+                            {
+                                cellKey = "bld_urban_office_tower"; UrbanOfficeTowers.Add(here);
+                                cellScale = Mathf.Min(Mathf.Min(cellX / UrbanOfficeFootprint.x, cellZ / UrbanOfficeFootprint.y), 1f);
+                            }
+                        }
+                        if (cellKey.StartsWith("bld_urban") && (i + k) % 2 == 1) cellYaw = 180f;     // both fit the cell turned by 180 deg
+                    }
+                    Prefab("building", cellKey, new Vector3(sx0 + i * px, Deck + 0.02f, sz0 + k * pz), cellYaw,
+                        Vector3.one * cellScale * R(0.97f, 1.03f));
+                }
             // trees in the gaps between buildings and along the plot edge
             for (int i = 0; i + 1 < nx; i++)
                 for (float z = az + 3f; z < ez - 3f; z += 6f) Tree(sx0 + (i + 0.5f) * px, z, Deck, R(5f, 8f));
@@ -1035,7 +1151,14 @@ namespace PortCCTV
             for (float x = x0 + 14f; x < x1 - 10f;)
             {
                 double u = Rng.NextDouble();
-                if (u < 0.5) { Prefab("building", "bld_shops", new Vector3(x + 17f, Deck + 0.02f, z), yaw, Vector3.one); x += 38f; }
+                if (u < 0.5)
+                {
+                    // the 34.6 x 9.2 m "asian shop pack" block (low-res billboard fronts, user photo 2026-11-10) is replaced by a
+                    // harbour shop street inside the same footprint; own seeded RNG, so the shared draws here stay as before
+                    float front = z + (yaw > 90f ? -4.58f : 4.58f);
+                    HarbourShopStreet(x + 0.3f, x + 34.9f, front, 9.2f, 7919 * Mathf.RoundToInt(x) + 104729 * Mathf.RoundToInt(z) + 17, yaw > 90f ? 0f : 180f);
+                    x += 38f;
+                }
                 else if (u < 0.75) { Prefab("building", "bld_bakery_kr", new Vector3(x + 4f, Deck + 0.02f, z + (yaw > 90f ? 1f : -1f) * 1.5f), yaw + R(-3f, 3f), Vector3.one); x += 10f; }
                 else { Prefab("building", "bld_villa_kr", new Vector3(x + 12f, Deck + 0.02f, z + (yaw > 90f ? 1f : -1f) * 7f), yaw, Vector3.one * R(0.75f, 0.95f)); x += 27f; }
             }

@@ -40,6 +40,16 @@ namespace PortCCTV
         /// <summary>Water drops on the lens window: -1 = automatic (rain intensity, a few melted flakes in snow), 0..1 = density.</summary>
         public float lens_drops = -1f;
         public int seed = 7;
+        /// <summary>850 nm IR illuminator of the camera (2026-11-12): "off" (older files) | "on". Needs enabled = true; the IR
+        /// component is a separate render added to the visible image (see IrIlluminator). 0 / -1 = camera default.</summary>
+        public string ir_mode = "off";
+        public float ir_power = 0f, ir_beam_deg = 0f, ir_range_m = 0f;
+        /// <summary>Camera behind a dome window (its own IR reflects off drops on the dome): -1 = camera default, 0 / 1.</summary>
+        public int ir_dome = -1;
+        /// <summary>External illuminator on the same pole, this many metres below the camera (0 = built into the camera housing).
+        /// An illuminator outside the dome does not light the drops on the dome from inside.</summary>
+        public float ir_mount_drop_m = 0f;
+        public bool IrOn => enabled && ir_mode == "on";
         /// <summary>Also write the undegraded image as rgb_clean.png (paired data).</summary>
         public bool save_clean = true;
 
@@ -60,11 +70,14 @@ namespace PortCCTV
                 case "night_ir":   // IR night mode: monochrome, noisy, soft
                     s.distortion_k1 = 0.12f; s.blur_sigma_px = 1.1f; s.noise_read_dn = 1.0f; s.noise_shot = 0.2f; s.vignette = 0.3f;
                     s.monochrome = true; s.jpeg_quality = 50; break;
+                case "night_ir_illum":   // IR night mode with the camera's own 850 nm illuminator (2026-11-12)
+                    s.distortion_k1 = 0.12f; s.blur_sigma_px = 1.0f; s.noise_read_dn = 1.0f; s.noise_shot = 0.2f; s.vignette = 0.3f;
+                    s.monochrome = true; s.jpeg_quality = 50; s.ir_mode = "on"; break;
             }
             return s;
         }
 
-        public static readonly string[] PresetIds = { "off", "hd_ip", "typical", "low_quality", "night_ir" };
+        public static readonly string[] PresetIds = { "off", "hd_ip", "typical", "low_quality", "night_ir", "night_ir_illum" };
     }
 
     /// <summary>A water drop on the window in front of the lens, in SOURCE image pixels (top-left origin) at capture resolution.</summary>
@@ -73,6 +86,9 @@ namespace PortCCTV
     {
         public float x, y, rx, ry;
         public float opacity, refraction, blur;
+        /// <summary>static | merging | running | stopped | bead (LensRain); age in seconds within its life.</summary>
+        public string kind = "static";
+        public float age_s;
     }
 
     /// <summary>Resolved sensor values written to metadata.</summary>
@@ -86,9 +102,19 @@ namespace PortCCTV
         public string distortion_model = "source = c + (p - c) * s * (1 + k1 r^2 + k2 r^4); r = |p - c| / half image diagonal; p, c in output pixels (top-left origin); bilinear RGB sampling, nearest-neighbour label masks; boxes from projected vertices mapped with the forward (inverted) model.";
         public string intrinsics_note = "camera.fx/fy/cx/cy describe the UNDISTORTED pinhole image; rgb.png and all labels are in the distorted output image.";
         public float lens_drop_density;
+        /// <summary>Simulation time the water state belongs to (navigation.sim_time_s) and the drop model.</summary>
+        public float lens_drop_time_s;
+        public string lens_drop_model = LensRainState.Model;
         public List<LensDrop> lens_drops = new List<LensDrop>();
+        public List<LensTrail> lens_trails = new List<LensTrail>();
+        /// <summary>Share of the image where the water film's combined alpha is &gt;= 0.5 (4-px grid).</summary>
+        public float lens_drop_cover_fraction_image;
+        /// <summary>Strength of the bright-light spread through the water (0 = day, larger at night; from the exposure).</summary>
+        public float lens_drop_glow;
+        /// <summary>IR illuminator (null / on = false when off).</summary>
+        public IrRecord ir;
         public int jpeg_quality;
-        public string pipeline = "render -> distortion -> lens drops -> lens blur + shake -> vignetting -> noise (read + shot, x gain) -> monochrome -> sRGB -> JPEG";
+        public string pipeline = "render (+ IR illuminator component when ir_mode = on) -> distortion -> lens blur + shake -> window water (wet trails, then drops: slope-dependent refraction and blur, bright-light spread) -> vignetting -> noise (read + shot, x gain) -> monochrome -> sRGB -> JPEG";
     }
 
     /// <summary>Radial distortion shared by the GPU image pass and the CPU label warp.</summary>
@@ -176,12 +202,12 @@ namespace PortCCTV
     /// <summary>Applies SensorConfig to a rendered frame (GPU pass + CPU JPEG).</summary>
     public sealed class SensorProcessor
     {
-        public const int MaxDrops = 64;
+        public const int MaxDrops = LensRain.MaxDrops, MaxTrails = LensRain.MaxTrails;
         /// <summary>True: texture v grows downwards in the blit's uv (top-left rows first). Determined by test
         /// SensorTests.LensDrop_LandsWhereItsLabelSaysItIs; Unity's default (v up) is false.</summary>
         public static bool UvYDown = false;
         readonly Material _mat;
-        readonly Vector4[] _drops = new Vector4[MaxDrops], _dropP = new Vector4[MaxDrops];
+        readonly Vector4[] _drops = new Vector4[MaxDrops], _dropP = new Vector4[MaxDrops], _trails = new Vector4[MaxTrails], _trailP = new Vector4[MaxTrails];
         public bool Available => _mat != null && _mat.shader != null && _mat.shader.isSupported;
 
         public SensorProcessor(Shader shader)
@@ -198,7 +224,17 @@ namespace PortCCTV
             return wxCfg.precipitation == "rain" ? 0.15f + 0.55f * wxCfg.I : 0.1f * wxCfg.I;
         }
 
-        /// <summary>Deterministic drops for this seed and density, in source pixels of a W x H image.</summary>
+        /// <summary>Snow gives melted flakes only; rain also gives running drops with trails.</summary>
+        public static bool DropsRun(WeatherConfig wxCfg) => wxCfg == null || wxCfg.precipitation != "snow";
+
+        /// <summary>The water on the window for a capture / preview frame: function of seed, density, simulation time, size.</summary>
+        public static LensRainState MakeRain(SensorConfig s, float density, float simTimeS, int W, int H, WeatherConfig wxCfg)
+            => LensRain.Make(s.seed, density, simTimeS, W, H, DropsRun(wxCfg));
+
+        /// <summary>Strength of the bright-light spread inside drops / trails: 0.35 by day, up to 1.6 at night (EV100 &lt;= 3).</summary>
+        public static float DropGlow(float ev100) => Mathf.Lerp(0.35f, 1.6f, Mathf.Clamp01((10f - ev100) / 7f));
+
+        /// <summary>Older static drop set (before 2026-11-12), kept for tests that need a fixed drop list.</summary>
         public static List<LensDrop> MakeDrops(int seed, float density, int W, int H)
         {
             var list = new List<LensDrop>();
@@ -215,21 +251,23 @@ namespace PortCCTV
             return list;
         }
 
-        /// <summary>True if the source pixel lies inside a drop where the drop dominates the image (alpha &gt; ~0.5).</summary>
-        public static bool UnderDrop(List<LensDrop> drops, Vector2 src)
+        /// <summary>Wraps a plain drop list (no trails) as a water state.</summary>
+        public static LensRainState StateOf(List<LensDrop> drops)
         {
-            if (drops == null) return false;
-            foreach (var d in drops)
-            {
-                float ex = (src.x - d.x) / d.rx, ey = (src.y - d.y) / d.ry;
-                if (ex * ex + ey * ey < 0.64f) return true;
-            }
-            return false;
+            var st = new LensRainState();
+            if (drops != null) st.drops.AddRange(drops);
+            return st;
         }
 
         /// <summary>GPU pass. <paramref name="pixelScale"/> = destination height / capture height (preview); drops and blur are
         /// given at capture resolution.</summary>
         public void Blit(Texture src, RenderTexture dst, SensorConfig s, float gain, List<LensDrop> drops, int captureW, int captureH, int frameSeed = 0)
+            => Blit(src, dst, s, gain, StateOf(drops), captureW, captureH, frameSeed, 0.35f);
+
+        /// <summary>GPU pass with the full water state (drops + trails); <paramref name="glow"/> = DropGlow(EV100);
+        /// <paramref name="debugCover"/> writes the water film's combined alpha instead of the image (coverage test).</summary>
+        public void Blit(Texture src, RenderTexture dst, SensorConfig s, float gain, LensRainState rain, int captureW, int captureH, int frameSeed, float glow, bool debugCover = false,
+                         Texture ir = null, float irDome = 0f)
         {
             if (!Available) { Graphics.Blit(src, dst); return; }
             int W = dst.width, H = dst.height;
@@ -252,6 +290,7 @@ namespace PortCCTV
             _mat.SetFloat("_Mono", s.monochrome ? 1f : 0f);
             _mat.SetFloat("_OutputLinear", dst.sRGB ? 1f : 0f);   // sRGB target encodes itself
             _mat.SetInteger("_SeedI", s.seed * 1000003 + frameSeed);
+            var drops = rain?.drops;
             int n = drops == null ? 0 : Mathf.Min(drops.Count, MaxDrops);
             for (int i = 0; i < MaxDrops; i++)
             {
@@ -264,9 +303,32 @@ namespace PortCCTV
                 }
                 else { _drops[i] = new Vector4(-10, -10, 1, 1); _dropP[i] = Vector4.zero; }
             }
+            var trails = rain?.trails;
+            int nt = trails == null ? 0 : Mathf.Min(trails.Count, MaxTrails);
+            for (int i = 0; i < MaxTrails; i++)
+            {
+                if (i < nt)
+                {
+                    var t = trails[i];
+                    float y0 = t.y0 / captureH, y1 = t.y1 / captureH;
+                    _trails[i] = new Vector4(t.x0 / captureW, UvYDown ? y0 : 1f - y0, t.x1 / captureW, UvYDown ? y1 : 1f - y1);
+                    _trailP[i] = new Vector4(t.width * ps, t.wet, t.wet1, t.group);
+                }
+                else { _trails[i] = new Vector4(-10, -10, -10, -10); _trailP[i] = new Vector4(1, 0, 0, -1); }
+            }
             _mat.SetVectorArray("_Drops", _drops);
             _mat.SetVectorArray("_DropP", _dropP);
             _mat.SetInteger("_DropCount", n);
+            _mat.SetVectorArray("_Trails", _trails);
+            _mat.SetVectorArray("_TrailP", _trailP);
+            _mat.SetInteger("_TrailCount", nt);
+            _mat.SetFloat("_TrailOpacity", LensRainState.TrailOpacity);
+            _mat.SetFloat("_Glow", glow);
+            _mat.SetFloat("_DebugCover", debugCover ? 1f : 0f);
+            _mat.SetFloat("_UvYDown", UvYDown ? 1f : 0f);
+            _mat.SetTexture("_IrTex", ir != null ? ir : Texture2D.blackTexture);
+            _mat.SetFloat("_IrOn", ir != null ? 1f : 0f);
+            _mat.SetFloat("_IrDome", ir != null ? irDome : 0f);
             var cmd = new CommandBuffer { name = "PortCCTV sensor" };
             cmd.SetRenderTarget(dst);
             cmd.DrawProcedural(Matrix4x4.identity, _mat, 0, MeshTopology.Triangles, 3);
@@ -279,6 +341,9 @@ namespace PortCCTV
 
         /// <summary>Renders the degraded image of <paramref name="src"/> and reads it back (bottom-left origin pixels).</summary>
         public Color32[] Process(RenderTexture src, SensorConfig s, float gain, List<LensDrop> drops)
+            => Process(src, s, gain, StateOf(drops), 0.35f);
+
+        public Color32[] Process(RenderTexture src, SensorConfig s, float gain, LensRainState rain, float glow, bool debugCover = false, Texture ir = null, float irDome = 0f)
         {
             int W = src.width, H = src.height;
             var dst = new RenderTexture(new RenderTextureDescriptor(W, H, GraphicsFormat.R8G8B8A8_UNorm, 0) { msaaSamples = 1 }) { name = "PortCCTV_Sensor" };
@@ -286,14 +351,14 @@ namespace PortCCTV
             var prev = RenderTexture.active;
             try
             {
-                Blit(src, dst, s, gain, drops, W, H);
+                Blit(src, dst, s, gain, rain, W, H, 0, glow, debugCover, ir, irDome);
                 RenderTexture.active = dst;
                 var tex = new Texture2D(W, H, TextureFormat.RGBA32, false, true);
                 tex.ReadPixels(new Rect(0, 0, W, H), 0, 0);
                 tex.Apply(false);
                 var px = tex.GetPixels32();
                 for (int i = 0; i < px.Length; i++) px[i].a = 255;
-                if (s.jpeg_quality > 0) px = Jpeg(tex, px, W, H, s.jpeg_quality);
+                if (s.jpeg_quality > 0 && !debugCover) px = Jpeg(tex, px, W, H, s.jpeg_quality);
                 Util.SafeDestroy(tex);
                 return px;
             }

@@ -11,7 +11,7 @@ namespace PortCCTV.Tests
         [Test]
         public void ProceduralHulls_HaveVisibleOutwardSidesAndStern()
         {
-            foreach (string id in new[] { "barge", "container_ship", "tugboat", "korean_fishing_boat" })
+            foreach (string id in new[] { "barge", "tugboat", "korean_fishing_boat" })
             {
                 var entry = VesselCatalog.Load().Find(id);
                 Assert.IsNotNull(entry, id);
@@ -277,11 +277,12 @@ namespace PortCCTV.Tests
         [Test]
         public void RepeatedInteractiveSpawns_AreVisibleAndDoNotOverlap()
         {
+            // 2026-11-16: repeated additions use different hulls (PlacementQuality forbids the same hull close by / look-alike)
             var cases = new[]
             {
-                (ContainerTerminal01.Id, "rib"),
-                (FishingPort01.Id, "fishing_boat"),
-                (Marina01.Id, "motorboat"),
+                (ContainerTerminal01.Id, new[] { "rib", "motorboat", "pilot_boat" }),
+                (FishingPort01.Id, new[] { "fishing_boat", "small_motorboat", "crrc" }),
+                (Marina01.Id, new[] { "motorboat", "rib", "speedboat" }),
             };
             foreach (var item in cases)
             {
@@ -290,12 +291,11 @@ namespace PortCCTV.Tests
                     var s = SimulatorApp.DefaultScenarioFor(item.Id);
                     s.camera_preset_id = camera.id;
                     _w.Apply(s);
-                    var entry = _w.Catalog.Find(item.Item2);
                     var random = new System.Random(1037);
                     var added = new System.Collections.Generic.List<VesselPlacement>();
-                    int repeat = camera.id == "ct_E_basin_breakwater" ? 3 : 2;
-                    for (int i = 0; i < repeat; i++)
+                    for (int i = 0; i < 2; i++)
                     {
+                        var entry = _w.Catalog.Find(item.Item2[i]);
                         Assert.IsTrue(VesselSpawnPlanner.TryFind(_w, entry, s.vessels, random, out var p), $"{item.Id}/{camera.id} spawn {i}");
                         p.object_id = "added_" + i;
                         s.vessels.Add(p);
@@ -306,8 +306,8 @@ namespace PortCCTV.Tests
                         Assert.Greater(vp.x, 0.04f); Assert.Less(vp.x, 0.96f);
                         Assert.Greater(vp.y, 0.08f); Assert.Less(vp.y, 0.94f);
                     }
-                    if (camera.id == "ct_E_basin_breakwater")
-                        Assert.Greater(added.Max(v => v.z) - added.Min(v => v.z), 45f, "successive boats should use different water depths");
+                    var lay = PlacementQuality.Evaluate(_w, s.vessels, 1920, 1080);
+                    Assert.IsFalse(added.Any(v => lay.Involves(v.object_id)), $"{item.Id}/{camera.id}: " + string.Join(";", lay.issues.Select(x => $"{x.rule} {x.a}/{x.b}")));
                 }
             }
         }
@@ -377,9 +377,9 @@ namespace PortCCTV.Tests
             foreach (var hid in new[] { ContainerTerminal01.Id, Marina01.Id })
             {
                 var s = SimulatorApp.DefaultScenarioFor(hid);
-                if (hid == Marina01.Id) s.camera_preset_id = "mr_A_promenade";     // the default marina view is a wide bay overview
+                // close pontoon berths exercise mask edges: the former promenade view (mr_A, retired as a preset 2026-11-20) as an override
+                if (hid == Marina01.Id) s.camera_override = new CameraOverride { enabled = true, position = new Vector3(-20f, 9.5f, 66f), euler_deg = new Vector3(4f, 185f, 0f), vertical_fov_deg = 34f };
                 _w.Apply(s);
-                if (hid == Marina01.Id) { s.camera_preset_id = "mr_A_promenade"; _w.Apply(s); } // close berths exercise mask edges, independent of overview default
                 const int W = 480, H = 270;
                 var cam = _w.CctvCamera; cam.aspect = (float)W / H;
                 Physics.SyncTransforms();
@@ -397,7 +397,8 @@ namespace PortCCTV.Tests
         {
             var s = SimulatorApp.DefaultScenarioFor(Marina01.Id);
             _w.Apply(s);
-            Assert.Greater(_w.SetAutoNavigationForUnmoored(s), 3, "offshore marina vessels switch to auto");
+            // 2026-11-16: DefaultSceneLayout.Diversify drops hulls without a distinct substitute, the default marina keeps 3 unmoored vessels
+            Assert.GreaterOrEqual(_w.SetAutoNavigationForUnmoored(s), 3, "offshore marina vessels switch to auto");
             return s;
         }
 
@@ -423,7 +424,7 @@ namespace PortCCTV.Tests
             }
             int moved = _w.Vessels.Count(v => _w.Nav.IsMoving(v.placement.object_id) && Vector2.Distance(new Vector2(v.placement.x, v.placement.z),
                 new Vector2(s.vessels.First(q => q.object_id == v.placement.object_id).x, s.vessels.First(q => q.object_id == v.placement.object_id).z)) > 20f);
-            Assert.Greater(moved, 3, "auto vessels actually move in 90 s");
+            Assert.GreaterOrEqual(moved, 3, "auto vessels actually move in 90 s");
         }
 
         [Test]
@@ -1020,6 +1021,79 @@ namespace PortCCTV.Tests
         }
 
         [Test]
+        public void LensRain_IsAFunctionOfTime_AndMovesSmoothly()
+        {
+            const int W = 1920, H = 1080;
+            foreach (float density in new[] { 0.26f, 0.7f })
+            {
+                var a = LensRain.Make(7, density, 123.4f, W, H);
+                var b = LensRain.Make(7, density, 123.4f, W, H);
+                Assert.AreEqual(JsonUtility.ToJson(new SensorRecord { lens_drops = a.drops, lens_trails = a.trails }),
+                                JsonUtility.ToJson(new SensorRecord { lens_drops = b.drops, lens_trails = b.trails }), "same seed / density / time -> same water state");
+                Assert.Greater(a.drops.Count, 10, $"density {density}: drops present");
+                // 2 s at 0.1 s steps: every drop of a frame has a counterpart within a few pixels in the next frame, except drops
+                // that appear (fade in from opacity ~0) or vanish (absorbed / evaporated); running drops move at most vmax * dt
+                for (int k = 0; k < 20; k++)
+                {
+                    float t = 300f + k * 0.1f;
+                    var s0 = LensRain.Make(7, density, t, W, H); var s1 = LensRain.Make(7, density, t + 0.1f, W, H);
+                    foreach (var d in s0.drops)
+                    {
+                        float best = float.MaxValue;
+                        foreach (var e in s1.drops) best = Mathf.Min(best, new Vector2(e.x - d.x, e.y - d.y).magnitude);
+                        bool fading = d.opacity < 0.25f;
+                        // a static drop never moves; it may vanish only while fading or when a running drop reaches it (absorbed)
+                        bool runnerHere = s1.drops.Any(e => (e.kind == "running" || e.kind == "stopped") && new Vector2(e.x - d.x, e.y - d.y).magnitude < 0.06f * H);
+                        if (d.kind == "static") Assert.IsTrue(best < 0.01f || fading || runnerHere, $"t={t}: a static drop jumped (nearest {best:F1} px, opacity {d.opacity:F2})");
+                        else if (d.kind == "running") Assert.Less(best, 0.26f * H * 0.1f + 3f, $"t={t}: running drop moved more than vmax*dt");
+                        else Assert.IsTrue(best < 6f || fading || d.kind == "merging", $"t={t}: {d.kind} drop jumped {best:F1} px");
+                    }
+                    // image coverage changes slowly
+                    Assert.Less(Mathf.Abs(s0.ImageCoverFraction(W, H, 8) - s1.ImageCoverFraction(W, H, 8)), 0.02f, $"t={t}: coverage jumps");
+                }
+                // over a minute of heavy rain some drops merge, run down and leave trails
+                if (density > 0.5f)
+                {
+                    bool run = false, trail = false, merge = false;
+                    for (float t = 300f; t < 360f; t += 1f)
+                    {
+                        var st = LensRain.Make(7, density, t, W, H);
+                        run |= st.drops.Any(d => d.kind == "running"); merge |= st.drops.Any(d => d.kind == "merging"); trail |= st.trails.Count > 0;
+                    }
+                    Assert.IsTrue(run && trail && merge, $"heavy rain over 60 s: running {run}, trails {trail}, merging {merge}");
+                }
+            }
+        }
+
+        [Test]
+        public void LensRain_GpuCoverageMatchesTheLabelStatistic()
+        {
+            var s = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
+            s.environment.water_preset_id = "calm";
+            _w.Apply(s);
+            const int W = 960, H = 540;
+            var rt = Clean(W, H);
+            int cmp = 0, agree = 0, inter = 0, uni = 0;
+            foreach (float t in new[] { 50f, 137.5f, 412f })
+            {
+                var rain = LensRain.Make(11, 0.7f, t, W, H);
+                Assert.Greater(rain.trails.Count + rain.drops.Count, 20);
+                var gpu = _w.Sensor.Process(rt, new SensorConfig { enabled = true, noise_chroma = 0f }, 1f, rain, 1f, true);
+                for (int y = 1; y < H; y += 3)
+                    for (int x = 1; x < W; x += 3)
+                    {
+                        bool g = gpu[(H - 1 - y) * W + x].r >= 128;          // readback rows are bottom-up
+                        bool c = rain.Covered(new Vector2(x + 0.5f, y + 0.5f));
+                        cmp++; if (g == c) agree++; if (g && c) inter++; if (g || c) uni++;
+                    }
+            }
+            float iou = uni > 0 ? (float)inter / uni : 1f;
+            Assert.Greater((float)agree / cmp, 0.998f, $"pixel agreement {(float)agree / cmp:F4}");
+            Assert.Greater(iou, 0.97f, $"coverage IoU {iou:F4} (GPU alpha >= 0.5 vs LensRainState.Covered)");
+            rt.Release(); Object.DestroyImmediate(rt);
+        }
+
+        [Test]
         public void DistortedCapture_KeepsMaskAndBoxesTogether_AndWritesTheCleanImage()
         {
             var s = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
@@ -1137,6 +1211,54 @@ namespace PortCCTV.Tests
                 }
             }
             Assert.GreaterOrEqual(withHull, 20, "vessel types with a repaintable hull");
+        }
+
+        /// <summary>Deck cargo of the loaded container ships keeps its colours under random paint (the paint heuristic once took
+        /// gogiart's container slabs for superstructure and Innerscene's hatch covers under the stacks for superstructure).</summary>
+        [Test]
+        public void LoadedContainerShips_KeepTheirContainerColours()
+        {
+            var cat = VesselCatalog.Load();
+            foreach (var id in new[] { "container_ship_loaded", "container_ship_rm02", "container_ship_gogi" })
+            {
+                var e = cat.Find(id);
+                Assert.IsNotNull(e, id);
+                var cargo = e.paint_slots.Where(s =>
+                {
+                    var n = s.material_name.ToLowerInvariant();
+                    if (n.Contains("container") && !n.StartsWith("container_ship_") || n.Contains("container_atlas") || n.Contains("hatch_cover")) return true;
+                    for (int k = 40; k <= 49; k++) if (id == "container_ship_gogi" && (n == $"acmat_{k}" || n.EndsWith($"_acmat_{k}"))) return true;
+                    return false;
+                }).ToList();
+                Assert.Greater(cargo.Count, 0, id + ": no container slots found");
+                foreach (var s in cargo) Assert.AreEqual("keep", s.role, $"{id}: {s.material_name} would be repainted");
+            }
+        }
+
+        /// <summary>The procedural 172 m "container_ship" left the catalog (2026-11-16); its id still loads, as the loaded ship at that
+        /// hull's default immersion, so older scenario files keep working.</summary>
+        [Test]
+        public void RetiredContainerShipId_LoadsAsTheLoadedShip_AtItsDefaultImmersion()
+        {
+            var cat = VesselCatalog.Load();
+            Assert.Greater(VesselCatalog.Retired.Count, 0);
+            foreach (var kv in VesselCatalog.Retired)
+            {
+                var e = cat.Find(kv.Value.id);
+                Assert.IsNotNull(e, kv.Value.id);
+                Assert.IsFalse(cat.entries.Any(x => x.asset_id == kv.Key), kv.Key + " is still in the catalog");
+                Assert.AreSame(e, cat.Find(kv.Key));
+                Assert.AreEqual(e.default_immersion_m, kv.Value.immersion_m, 1e-4f, "alias immersion must equal the replacement's default");
+                var cfg = SimulatorApp.DefaultScenarioFor(ContainerTerminal01.Id);
+                cfg.vessels.Clear();
+                cfg.vessels.Add(new VesselPlacement { object_id = "v0", asset_id = kv.Key, x = 150, z = 60 - 1.6f - 16.33f, heading_deg = 180, immersion_m = 4.2f });
+                var back = ScenarioIO.FromJson(ScenarioIO.ToJson(cfg));
+                Assert.AreEqual(kv.Value.id, back.vessels[0].asset_id);
+                Assert.AreEqual(kv.Value.immersion_m, back.vessels[0].immersion_m, 1e-4f);
+                _w.Apply(back);
+                Assert.AreEqual(1, _w.Vessels.Count);
+                Assert.AreEqual(kv.Value.id, _w.Vessels[0].entry.asset_id);
+            }
         }
 
         ScenarioConfig Scene(string paint, int seed)

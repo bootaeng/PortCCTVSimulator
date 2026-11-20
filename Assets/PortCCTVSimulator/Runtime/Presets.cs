@@ -17,12 +17,30 @@ namespace PortCCTV
         public float near_m = 0.3f;
         public float far_m = 6000f;
         public string mount_note;
+        /// <summary>IR illuminator of this camera (2026-11-12): "" = from the mount height (>= 35 m: "long" narrow long-range
+        /// beam, else "wide" short dome beam); beam angle (deg), range (m), relative power; 0 = profile default.</summary>
+        public string ir_profile = "";
+        public float ir_beam_deg = 0f, ir_range_m = 0f, ir_power = 0f;
+        /// <summary>Framing group (2026-11-19 redesign against real coastal surveillance footage):
+        /// "smd_onshore" = low shore / breakwater camera over open water, horizon near mid-frame, vessels near the horizon line
+        /// (reference: SMD VIS_Onshore); "seaships_side" = view across a basin or channel with a far shore behind the vessels
+        /// (reference: SeaShips); "overview_mast" = elevated mast overview kept from the 2026-11-16 set (2026-11-20; not one of
+        /// the research framing groups); "" = generic maps.</summary>
+        public string framing = "";
+        /// <summary>One of the two research framing groups (the JMSE episode cameras).</summary>
+        public bool IsResearch => framing == CameraPresetLibrary.FramingSmd || framing == CameraPresetLibrary.FramingSeaShips;
     }
 
     /// <summary>Fixed CCTV poses per map. Values are design choices, not surveyed installs.</summary>
     public static class CameraPresetLibrary
     {
         public const string DefaultId = "cam_A_quay_mast";
+        /// <summary>Version of the research framing (the poses of the smd_onshore / seaships_side presets).</summary>
+        public const string FramingVersion = "framing_v2_20261119";
+        /// <summary>Version of the selectable preset set of the three research maps; written into every capture
+        /// (camera.preset_set_version). 2026-11-20: six presets of 2026-11-16 retired, five kept as overview presets.</summary>
+        public const string PresetSetVersion = "presets_20261120";
+        public const string FramingSmd = "smd_onshore", FramingSeaShips = "seaships_side", FramingOverview = "overview_mast";
 
         /// <summary>Cameras of the legacy/mixed harbors (generic_harbor_01/02).</summary>
         public static readonly CameraPreset[] Generic =
@@ -60,6 +78,32 @@ namespace PortCCTV
             Marina01.Id => Marina01.Cameras,
             _ => Generic,
         };
+
+        /// <summary>Presets of the research framing groups (overview presets excluded).</summary>
+        public static CameraPreset[] ResearchForHarbor(string harborId) => ForHarbor(harborId).Where(p => p.IsResearch).ToArray();
+
+        /// <summary>Poses the map layout is built around (selectable presets plus the retired 2026-11-16 poses). Map generation
+        /// only; never a camera choice.</summary>
+        public static CameraPreset[] LayoutViewsForHarbor(string harborId) => harborId switch
+        {
+            ContainerTerminal01.Id => ContainerTerminal01.LayoutViews,
+            FishingPort01.Id => FishingPort01.LayoutViews,
+            Marina01.Id => Marina01.LayoutViews,
+            _ => ForHarbor(harborId),
+        };
+
+        /// <summary>Copies of the given site poses as overview presets (same pose, field of view, mount and IR settings).</summary>
+        internal static CameraPreset[] Overview(CameraPreset[] site, params (string id, string displayName)[] keep) =>
+            keep.Select(k =>
+            {
+                var s = site.Single(v => v.id == k.id);
+                return new CameraPreset
+                {
+                    id = s.id, display_name = k.displayName, position = s.position, euler_deg = s.euler_deg, vertical_fov_deg = s.vertical_fov_deg,
+                    near_m = s.near_m, far_m = s.far_m, mount_note = s.mount_note, ir_profile = s.ir_profile, ir_beam_deg = s.ir_beam_deg,
+                    ir_range_m = s.ir_range_m, ir_power = s.ir_power, framing = FramingOverview,
+                };
+            }).ToArray();
 
         public static CameraPreset[] All =>
             Generic.Concat(ContainerTerminal01.Cameras).Concat(FishingPort01.Cameras).Concat(Marina01.Cameras).ToArray();
@@ -171,6 +215,15 @@ namespace PortCCTV
         public float repetition_size_m;
         public float large_band0_multiplier;
         public float large_band1_multiplier;
+        /// <summary>HDRP simulation foam (whitecaps) and its amount; harbour water mask on by default (2026-11-12: moderate and
+        /// rough; calm / light chop keep the earlier unmasked, foam-free surface so older captures reproduce).</summary>
+        public bool foam;
+        public float foam_amount;
+        public bool harbor_mask_default;
+        /// <summary>Render-only distance fade of the two large bands (HDRP "Automatic" fades the agitation band from ~300 m and the
+        /// swell from ~1.5 km on the GPU only; the CPU height query that moves the vessels has no fade). &gt; 0: custom fade start
+        /// (m) for both large bands, so the rendered waves and the vessels agree within the view; 0 = HDRP automatic (older presets).</summary>
+        public float large_fade_start_m;
     }
 
     public static class WaterPresetLibrary
@@ -190,6 +243,18 @@ namespace PortCCTV
                 id = "light_chop", display_name = "Light chop",
                 large_wind_speed_kmh = 25f, ripples_wind_speed_kmh = 10f, repetition_size_m = 300f,
                 large_band0_multiplier = 0.5f, large_band1_multiplier = 1.0f
+            },
+            new WaterPreset
+            {
+                id = "moderate", display_name = "Moderate sea",
+                large_wind_speed_kmh = 50f, ripples_wind_speed_kmh = 18f, repetition_size_m = 500f,
+                large_band0_multiplier = 0.8f, large_band1_multiplier = 1.0f, foam = true, foam_amount = 0.35f, harbor_mask_default = true, large_fade_start_m = 2500f
+            },
+            new WaterPreset
+            {
+                id = "rough", display_name = "Rough sea",
+                large_wind_speed_kmh = 85f, ripples_wind_speed_kmh = 30f, repetition_size_m = 800f,
+                large_band0_multiplier = 1.0f, large_band1_multiplier = 1.0f, foam = true, foam_amount = 0.6f, harbor_mask_default = true, large_fade_start_m = 2500f
             },
         };
 

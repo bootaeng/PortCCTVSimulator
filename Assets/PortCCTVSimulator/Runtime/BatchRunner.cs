@@ -335,7 +335,7 @@ namespace PortCCTV
             var maps = new (string id, ScenarioConfig def, string oddAsset, Vector2 oddPos)[]
             {
                 (ContainerTerminal01.Id, ContainerTerminal01.DefaultScenario(), "kayak", new Vector2(200, -100)),
-                (FishingPort01.Id, FishingPort01.DefaultScenario(), "container_ship", new Vector2(0, -600)),
+                (FishingPort01.Id, FishingPort01.DefaultScenario(), "container_ship_loaded", new Vector2(0, -600)),
                 (Marina01.Id, Marina01.DefaultScenario(), "tanker", new Vector2(0, -900)),
             };
             foreach (var m in maps)

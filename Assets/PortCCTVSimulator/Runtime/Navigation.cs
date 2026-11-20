@@ -121,7 +121,7 @@ namespace PortCCTV
         readonly List<(string id, Vector2 pos, float radius)> _routeObstacles = new List<(string, Vector2, float)>();
         readonly HarborDefinition _harbor;
         readonly HashSet<Collider> _harborCols;
-        readonly Collider[] _buf = new Collider[32];
+        readonly Collider[] _buf = new Collider[1024];
         readonly float _waterY;
         readonly Vector2 _wind, _current;    // world (x, z) velocity vectors in m/s: wind blowing TO, current setting TO
         public Vector2 Wind => _wind;
@@ -135,7 +135,7 @@ namespace PortCCTV
         public static float DefaultSpeedKn(string assetId, float lengthM) => assetId switch
         {
             "kayak" => 2.5f, "canoe" => 2.5f, "sailing_dinghy" => 4f, "sailing_yacht" => 5f,
-            "rib" => 12f, "motorboat" => 10f, "cabin_cruiser" => 8f,
+            "rib" => 12f, "motorboat" => 10f, "cabin_cruiser" => 8f, "small_motorboat" => 9f, "crrc" => 10f, "fishing_boat_iii" => 8f,
             "fishing_boat" => 7f, "korean_fishing_boat" => 8f, "ferry" => 10f, "tugboat" => 7f, "barge" => 5f,
             "container_ship" => 7f, "tanker" => 6f,
             _ => lengthM < 6f ? 3f : lengthM < 30f ? 8f : 6f,
@@ -147,7 +147,7 @@ namespace PortCCTV
         public static float LeewayFactor(string assetId) => assetId switch
         {
             "sailing_yacht" => 0.05f, "sailing_dinghy" => 0.06f, "kayak" => 0.04f, "canoe" => 0.04f,
-            "rib" => 0.035f, "motorboat" => 0.03f, "cabin_cruiser" => 0.03f, "ferry" => 0.025f,
+            "rib" => 0.035f, "motorboat" => 0.03f, "cabin_cruiser" => 0.03f, "ferry" => 0.025f, "crrc" => 0.035f, "small_motorboat" => 0.03f,
             "fishing_boat" => 0.03f, "korean_fishing_boat" => 0.025f, "tugboat" => 0.02f, "barge" => 0.03f,
             "container_ship" => 0.02f, "tanker" => 0.015f,
             _ => 0.025f,
@@ -160,6 +160,8 @@ namespace PortCCTV
         public NavigationSim(HarborDefinition harbor, IEnumerable<Collider> harborColliders, Camera cctv, VesselCatalog catalog, ScenarioConfig cfg)
         {
             _harbor = harbor;
+            // route and obstacle checks are physics queries: they must see every collider at its current transform, whoever built it
+            Physics.SyncTransforms();
             _harborCols = new HashSet<Collider>(harborColliders.Where(c => c != null));
             _waterY = harbor.water_reference_y;
             var nav = cfg.navigation ?? new NavigationConfig();
@@ -344,10 +346,17 @@ namespace PortCCTV
 
         /// <summary>Any harbor collider inside a flat box (half size radius x 1 m x radius) on the waterline band [+0.0, +2.0] m:
         /// quays, piers, pontoons, breakwaters, land, buoys; not the sea bed or hill bases below the water.</summary>
-        bool Blocked(Vector2 xz, float radius)
+        /// The query returns every collider in the box, also vessel hulls (a vessel prefab has 50 .. 400 mesh colliders; they are in
+        /// the scene during the interactive playback, not while a scenario is applied or planned). A full buffer may have left
+        /// the harbour collider out, so that case is answered by the complete query (2026-11-20; the buffer held 32 before; a wrong
+        /// answer of the 32-slot version was not reproduced, this is a precaution).
+        internal bool Blocked(Vector2 xz, float radius)
         {
-            int n = Physics.OverlapBoxNonAlloc(new Vector3(xz.x, _waterY + 1.0f, xz.y), new Vector3(radius, 1.0f, radius), _buf, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+            var centre = new Vector3(xz.x, _waterY + 1.0f, xz.y); var half = new Vector3(radius, 1.0f, radius);
+            int n = Physics.OverlapBoxNonAlloc(centre, half, _buf, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < n; i++) if (_harborCols.Contains(_buf[i])) return true;
+            if (n < _buf.Length) return false;
+            foreach (var c in Physics.OverlapBox(centre, half, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore)) if (_harborCols.Contains(c)) return true;
             return false;
         }
 

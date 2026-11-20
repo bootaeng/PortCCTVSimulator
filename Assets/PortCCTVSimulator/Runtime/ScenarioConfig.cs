@@ -61,6 +61,12 @@ namespace PortCCTV
         /// averaged over the hull so large ships move less). false (also for older files) = vessels sit on the mean plane.
         /// Kinematic surface following, not a seakeeping model.</summary>
         public bool vessel_wave_motion = false;
+        /// <summary>Strength of the long swell (x HDRP large band 0) and of the short ripples (x ripple wind speed); 1 = preset.</summary>
+        public float water_swell_scale = 1f;
+        public float water_ripple_scale = 1f;
+        /// <summary>Harbour water mask (smaller waves inside the breakwaters, growing from the entrance to the open sea):
+        /// "auto" (= the water preset's default: on for moderate / rough), "on", "off".</summary>
+        public string water_mask = "auto";
     }
 
     [Serializable]
@@ -158,6 +164,11 @@ namespace PortCCTV
                 if (string.IsNullOrEmpty(v.motion.mode)) v.motion.mode = "none";
                 v.motion.route ??= new List<Vector2>();
                 v.paint ??= "";
+                if (v.asset_id != null && VesselCatalog.Retired.TryGetValue(v.asset_id, out var r))
+                {
+                    Debug.Log($"[ScenarioIO] {v.object_id}: retired asset_id '{v.asset_id}' -> '{r.id}' (immersion {v.immersion_m:F2} -> {r.immersion_m:F2} m)");
+                    v.asset_id = r.id; v.immersion_m = r.immersion_m;
+                }
             }
             return cfg;
         }

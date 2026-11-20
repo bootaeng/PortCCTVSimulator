@@ -22128,7 +22128,7 @@ MonoBehaviour:
     prefab: {fileID: 7935429745592667837, guid: 7195a67627273d644a06a14418ee8726, type: 3}
     geometry: {fileID: 11400000, guid: f8b1a18ddafcce44d8e6cca66594f480, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#tug
-    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
+    source_sha256: 26a3f5e64c16ca11e8a049969cce4aa03ce90d8c827b6883356d4d2690cab9d7
     license: procedural (this project)
     source_url: 
     default_immersion_m: 1
@@ -22645,11 +22645,11 @@ MonoBehaviour:
     prefab: {fileID: 1510086013009763721, guid: e747e7be52bac3947920b35dd16bd0c4, type: 3}
     geometry: {fileID: 11400000, guid: 930fe999e044b1e4a881891459c016e2, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#barge
-    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
+    source_sha256: 26a3f5e64c16ca11e8a049969cce4aa03ce90d8c827b6883356d4d2690cab9d7
     license: procedural (this project)
     source_url: 
     default_immersion_m: 0.15
-    material_note: 'replaced with M_vessel_glazing_opaque: poclainaiStandardSurface136(a=0.328);
+    material_note: 'replaced with M_vessel_glazing_opaque: poclainaiStandardSurface136_ee7397dbd5(a=0.328);
       flattened 6 texture slots; kept textured: poclainaiStandardSurface124, poclainaiStandardSurface127,
       poclainaiStandardSurface129, poclainaiStandardSurface130, poclainaiStandardSurface137,
       poclainaiStandardSurface141, poclainaiStandardSurface143, poclainaiStandardSurface144,
@@ -22714,17 +22714,17 @@ MonoBehaviour:
     - renderer_path: 0/4
       submesh: 0
       material_name: M_sand
-      role: superstructure
-      reason: largest light upper slot
-      area_m2: 386.97406
-      height_frac: 0.5699116
-      height_min_frac: 0.43708608
-      height_max_frac: 0.8903866
-      above_water_area_m2: 386.97406
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 385.45007
+      height_frac: 0.5517686
+      height_min_frac: 0.4172185
+      height_max_frac: 0.8695531
+      above_water_area_m2: 385.45007
       topside_band_area_m2: 0
-      original_srgb: {r: 0.5148456, g: 0.45243794, b: 0.36639923, a: 1}
+      original_srgb: {r: 0.6596611, g: 0.5434564, b: 0.362368, a: 1}
       textured: 1
-      texture_mean_srgb: {r: 0.51484567, g: 0.452438, b: 0.36639926, a: 1}
+      texture_mean_srgb: {r: 0.7513823, g: 0.67490923, b: 0.5282096, a: 1}
     - renderer_path: 0/5/0/0/0/0/0/0/0
       submesh: 0
       material_name: barge_poclainaiStandardSurface139
@@ -23663,2169 +23663,14 @@ MonoBehaviour:
       original_srgb: {r: 0.9, g: 0.9, b: 0.88, a: 1}
       textured: 0
       texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    paint_note: slots=72 hull=3 (47 % of area) super=1 (10 %) textured_kept=26
-  - asset_id: container_ship
-    display_name: Container feeder 172 m (procedural)
-    category: container_ship
-    prefab: {fileID: 6616157609668042835, guid: 9a3c1221883ea2046b8fbed392e2d0cb, type: 3}
-    geometry: {fileID: 11400000, guid: 398dcb1ae304c8741bf6a51773ef231b, type: 2}
-    source_file: procedural:Editor/ProceduralVessels.cs#container_ship
-    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
-    license: procedural (this project)
-    source_url: 
-    default_immersion_m: 4.2
-    material_note: 'none; flattened 0 texture slots; kept textured: none'
-    paint_slots:
-    - renderer_path: 0/0
-      submesh: 0
-      material_name: M_vessel_cs_hull
-      role: hull
-      reason: largest low slot
-      area_m2: 7660.633
-      height_frac: 0.2912729
-      height_min_frac: 0.103724614
-      height_max_frac: 0.38166863
-      above_water_area_m2: 7660.633
-      topside_band_area_m2: 1855.0521
-      original_srgb: {r: 0.08688528, g: 0.12339408, b: 0.19673198, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/0
-      submesh: 1
-      material_name: M_vessel_cs_boottop
-      role: keep
-      reason: small
-      area_m2: 506.229
-      height_frac: 0.10341431
-      height_min_frac: 0.076245055
-      height_max_frac: 0.11996488
-      above_water_area_m2: 450.54266
-      topside_band_area_m2: 450.54266
-      original_srgb: {r: 0.041115835, g: 0.041058354, b: 0.041115835, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/0
-      submesh: 2
-      material_name: M_vessel_cs_antifouling
-      role: keep
-      reason: name:antifoul
-      area_m2: 4152.1
-      height_frac: 0.025272567
-      height_min_frac: 0
-      height_max_frac: 0.0960113
-      above_water_area_m2: 0
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.3798098, g: 0.10509724, b: 0.07773139, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/1
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 5.7707334
-      height_frac: 0.45828438
-      height_min_frac: 0.3877791
-      height_max_frac: 0.52878964
-      above_water_area_m2: 5.7707334
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/2
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: largest light upper slot
-      area_m2: 1930
-      height_frac: 0.5405406
-      height_min_frac: 0.34077555
-      height_max_frac: 0.74030554
-      above_water_area_m2: 1930
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/3
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/4
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/5
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/6
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/7
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/8
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.41245592
-      height_min_frac: 0.41057578
-      height_max_frac: 0.41433606
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/9
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/10
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/11
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/12
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/13
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359983
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.5359983
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/14
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.41245592
-      height_min_frac: 0.41057578
-      height_max_frac: 0.41433606
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/15
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540048
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.6540048
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/16
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654007
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.654007
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/17
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654007
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.654007
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/18
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540065
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.6540065
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/19
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654007
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.654007
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/20
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654007
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.654007
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/21
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540048
-      height_frac: 0.3877791
-      height_min_frac: 0.3748531
-      height_max_frac: 0.40070504
-      above_water_area_m2: 2.6540048
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/22
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/23
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/24
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/25
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/26
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/27
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.4853114
-      height_min_frac: 0.48343125
-      height_max_frac: 0.48719153
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/28
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/29
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/30
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/31
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/32
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/33
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.4853114
-      height_min_frac: 0.48343125
-      height_max_frac: 0.48719153
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/34
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/35
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/36
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/37
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540043
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.6540043
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/38
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/39
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/40
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.46063456
-      height_min_frac: 0.4477086
-      height_max_frac: 0.4735605
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/41
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/42
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/43
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/44
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/45
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/46
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.55816686
-      height_min_frac: 0.55628675
-      height_max_frac: 0.56004703
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/47
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/48
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/49
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/50
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/51
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/52
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.55816686
-      height_min_frac: 0.55628675
-      height_max_frac: 0.56004703
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/53
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/54
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/55
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/56
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540043
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.6540043
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/57
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/58
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/59
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.53349006
-      height_min_frac: 0.5205641
-      height_max_frac: 0.546416
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/60
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/61
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/62
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/63
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/64
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/65
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.6310223
-      height_min_frac: 0.62914217
-      height_max_frac: 0.63290244
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/66
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/67
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/68
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/69
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/70
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/71
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.6310223
-      height_min_frac: 0.62914217
-      height_max_frac: 0.63290244
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/72
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/73
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/74
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/75
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540043
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.6540043
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/76
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/77
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/78
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.6063455
-      height_min_frac: 0.5934195
-      height_max_frac: 0.6192714
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/79
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/80
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/81
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/82
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/83
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/84
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.70387775
-      height_min_frac: 0.70199764
-      height_max_frac: 0.7057579
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/85
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/86
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/87
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/88
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/89
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.5359964
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.5359964
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/90
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 21.807991
-      height_frac: 0.70387775
-      height_min_frac: 0.70199764
-      height_max_frac: 0.7057579
-      above_water_area_m2: 21.807991
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/91
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/92
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/93
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/94
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540043
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.6540043
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/95
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/96
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.654005
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.654005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/97
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 2.6540027
-      height_frac: 0.67920095
-      height_min_frac: 0.66627496
-      height_max_frac: 0.69212687
-      above_water_area_m2: 2.6540027
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/98
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 678.59985
-      height_frac: 0.74735606
-      height_min_frac: 0.74030554
-      height_max_frac: 0.7544066
-      above_water_area_m2: 678.59985
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/99
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 557.1999
-      height_frac: 0.7779083
-      height_min_frac: 0.74735606
-      height_max_frac: 0.8084606
-      above_water_area_m2: 557.1999
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/100
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 654.30023
-      height_frac: 0.81551117
-      height_min_frac: 0.8119859
-      height_max_frac: 0.8190365
-      above_water_area_m2: 654.30023
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/101
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.6490035
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.6490035
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/102
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/103
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/104
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/105
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/106
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.6490054
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.6490054
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/107
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649005
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/108
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/109
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/110
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.649006
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.649006
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/111
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.6490035
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.6490035
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/112
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7920117
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7920117
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/113
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/114
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/115
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/116
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7920117
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7920117
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/117
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/118
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/119
-      submesh: 0
-      material_name: M_vessel_glass
-      role: keep
-      reason: name:glass
-      area_m2: 4.7919903
-      height_frac: 0.7849589
-      height_min_frac: 0.76909524
-      height_max_frac: 0.8008226
-      above_water_area_m2: 4.7919903
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.059999965, g: 0.079999976, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/120
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 8.156862
-      height_frac: 0.8813161
-      height_min_frac: 0.8108108
-      height_max_frac: 0.9518214
-      above_water_area_m2: 8.156862
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/121
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 9.300022
-      height_frac: 0.9400705
-      height_min_frac: 0.9371328
-      height_max_frac: 0.94300824
-      above_water_area_m2: 9.300022
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/122
-      submesh: 0
-      material_name: M_vessel_cs_white
-      role: superstructure
-      reason: same colour as superstructure
-      area_m2: 344
-      height_frac: 0.45828438
-      height_min_frac: 0.34077555
-      height_max_frac: 0.5757932
-      above_water_area_m2: 344
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7642733, g: 0.7637833, b: 0.73681164, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/123
-      submesh: 0
-      material_name: M_vessel_cs_funnel
-      role: keep
-      reason: name:funnel
-      area_m2: 181
-      height_frac: 0.64629847
-      height_min_frac: 0.5757932
-      height_max_frac: 0.7168038
-      above_water_area_m2: 181
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.7, g: 0.11999995, b: 0.09999997, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/124
-      submesh: 0
-      material_name: M_vessel_cs_black
-      role: keep
-      reason: small
-      area_m2: 69.960045
-      height_frac: 0.7238543
-      height_min_frac: 0.7168038
-      height_max_frac: 0.7309048
-      above_water_area_m2: 69.960045
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.04, g: 0.04, b: 0.04, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/125
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.7999
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.7999
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/126
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.7999
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.7999
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/127
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.80005
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.80005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/128
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.80005
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.80005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/129
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.80005
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.80005
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/130
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.8
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.8
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/131
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 650.7999
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 650.7999
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/132
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 514.7999
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 514.7999
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/133
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 378.80008
-      height_frac: 0.35252646
-      height_min_frac: 0.34077555
-      height_max_frac: 0.36427733
-      above_water_area_m2: 378.80008
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/134
-      submesh: 0
-      material_name: M_container_navy
-      role: keep
-      reason: name:container
-      area_m2: 2646.8105
-      height_frac: 0.4699962
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 2646.8105
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.043850243, g: 0.07809167, b: 0.20716813, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/135
-      submesh: 0
-      material_name: M_container_orange
-      role: keep
-      reason: name:container
-      area_m2: 3940.9834
-      height_frac: 0.47494364
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 3940.9834
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.67993057, g: 0.3013423, b: 0.0610416, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/136
-      submesh: 0
-      material_name: M_container_maroon
-      role: keep
-      reason: name:container
-      area_m2: 3767.236
-      height_frac: 0.4911326
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 3767.236
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.30172062, g: 0.052331977, b: 0.07823297, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/137
-      submesh: 0
-      material_name: M_container_teal
-      role: keep
-      reason: name:container
-      area_m2: 4533.6743
-      height_frac: 0.49028948
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 4533.6743
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.0610416, g: 0.33568853, b: 0.35329464, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/138
-      submesh: 0
-      material_name: M_container_white
-      role: keep
-      reason: name:container
-      area_m2: 5511.206
-      height_frac: 0.4899261
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 5511.206
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.69712186, g: 0.6963243, b: 0.67993057, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/139
-      submesh: 0
-      material_name: M_container_brown
-      role: keep
-      reason: name:container
-      area_m2: 3453.8396
-      height_frac: 0.47034836
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6077556
-      above_water_area_m2: 3453.8396
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.30172062, g: 0.18113041, b: 0.10402001, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/140
-      submesh: 0
-      material_name: M_container_green
-      role: keep
-      reason: name:container
-      area_m2: 4220.278
-      height_frac: 0.46314645
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 4220.278
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.0954243, g: 0.3013423, b: 0.16418976, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/141
-      submesh: 0
-      material_name: M_container_grey
-      role: keep
-      reason: name:container
-      area_m2: 4812.969
-      height_frac: 0.475009
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 4812.969
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.46503848, g: 0.47307366, b: 0.47363424, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/142
-      submesh: 0
-      material_name: M_container_red
-      role: keep
-      reason: name:container
-      area_m2: 2687.4016
-      height_frac: 0.48404878
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 2687.4016
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.46503848, g: 0.07809167, b: 0.0610416, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/143
-      submesh: 0
-      material_name: M_container_blue
-      role: keep
-      reason: name:container
-      area_m2: 2929.3508
-      height_frac: 0.51574266
-      height_min_frac: 0.36427733
-      height_max_frac: 0.6686251
-      above_water_area_m2: 2929.3508
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.0610416, g: 0.18113041, b: 0.40486875, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.85184413, g: 0.8508824, b: 0.85184413, a: 1}
-    - renderer_path: 0/144
-      submesh: 0
-      material_name: M_vessel_detail_grey
-      role: keep
-      reason: name:detail
-      area_m2: 287.56583
-      height_frac: 0.5131196
-      height_min_frac: 0.34124562
-      height_max_frac: 0.8424207
-      above_water_area_m2: 287.56583
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.62, g: 0.63, b: 0.6399999, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/145
-      submesh: 0
-      material_name: M_vessel_detail_black
-      role: keep
-      reason: name:detail
-      area_m2: 54.024185
-      height_frac: 0.33495507
-      height_min_frac: 0.24206816
-      height_max_frac: 0.43008223
-      above_water_area_m2: 54.024185
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.04, g: 0.04, b: 0.04, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/146
-      submesh: 0
-      material_name: M_vessel_nav_red
-      role: keep
-      reason: name:nav_
-      area_m2: 0.7763103
-      height_frac: 0.8249207
-      height_min_frac: 0.8190364
-      height_max_frac: 0.8307873
-      above_water_area_m2: 0.7763103
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.9, g: 0.049999982, b: 0.049999982, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/147
-      submesh: 0
-      material_name: M_vessel_nav_green
-      role: keep
-      reason: name:nav_
-      area_m2: 0.7763103
-      height_frac: 0.8249207
-      height_min_frac: 0.8190364
-      height_max_frac: 0.8307873
-      above_water_area_m2: 0.7763103
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.049999982, g: 0.8, b: 0.19999996, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/148
-      submesh: 0
-      material_name: M_vessel_cs_deck
-      role: keep
-      reason: name:deck
-      area_m2: 2218.8398
-      height_frac: 0.43008223
-      height_min_frac: 0.3642773
-      height_max_frac: 0.49588716
-      above_water_area_m2: 2218.8398
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.31573257, g: 0.3246593, b: 0.32488644, a: 1}
-      textured: 1
-      texture_mean_srgb: {r: 0.91073555, g: 0.91015804, b: 0.91073555, a: 1}
-    - renderer_path: 0/149
-      submesh: 0
-      material_name: M_vessel_detail_orange
-      role: keep
-      reason: name:detail
-      area_m2: 55.974842
-      height_frac: 0.5640395
-      height_min_frac: 0.5049274
-      height_max_frac: 0.62315726
-      above_water_area_m2: 55.974842
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.95, g: 0.37999994, b: 0.049999982, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    - renderer_path: 0/150
-      submesh: 0
-      material_name: M_vessel_detail_white
-      role: keep
-      reason: name:detail
-      area_m2: 13.973568
-      height_frac: 0.9487203
-      height_min_frac: 0.62162167
-      height_max_frac: 1
-      above_water_area_m2: 13.973568
-      topside_band_area_m2: 0
-      original_srgb: {r: 0.9, g: 0.9, b: 0.88, a: 1}
-      textured: 0
-      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
-    paint_note: slots=153 hull=1 (12 % of area) super=18 (7 %) textured_kept=0
+    paint_note: slots=72 hull=3 (47 % of area) super=0 (0 %) textured_kept=26
   - asset_id: korean_fishing_boat
     display_name: Korean coastal fishing boat 19 m (procedural)
     category: fishing_boat_coastal
     prefab: {fileID: 3543435817713007860, guid: 92e77d9ce6a7a7f4c99114d358843cc0, type: 3}
     geometry: {fileID: 11400000, guid: b89cd709da00b2d40892fb83f90e9567, type: 2}
     source_file: procedural:Editor/ProceduralVessels.cs#kfish
-    source_sha256: 28b3b389a6bc01ec995d1ebb54c357d66e00950aeb2beacac18968601e630979
+    source_sha256: 26a3f5e64c16ca11e8a049969cce4aa03ce90d8c827b6883356d4d2690cab9d7
     license: procedural (this project)
     source_url: 
     default_immersion_m: 0.45
@@ -34343,3 +32188,2577 @@ MonoBehaviour:
       textured: 1
       texture_mean_srgb: {r: 0.47594506, g: 0.3099932, b: 0.22789982, a: 1}
     paint_note: slots=37 hull=2 (19 % of area) super=4 (28 %) textured_kept=13
+  - asset_id: fishing_boat_iii
+    display_name: Fishing boat 23 m (CC BY)
+    category: fishing_boat_coastal
+    prefab: {fileID: 6436775990610740548, guid: 6c4b7aa643e44ef4e87c33c37656dc35, type: 3}
+    geometry: {fileID: 11400000, guid: bd42a98ab11acee44af0becc12fc9ffa, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/fishing_boat_iii_agt14032013.glb
+    source_sha256: 0f966995c983d32f81407308256195aaaa84b979214cb08132e9839e2d693cd1
+    license: CC BY 4.0 - "Fishing Boat III" by gogiart (agt14032013) (https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63);
+      textures 1k (glb_derive.py), rotated (bow +X), recentred
+    source_url: https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63
+    default_immersion_m: 1
+    material_note: 'none; flattened 4 texture slots; kept textured: acmat_0, acmat_1,
+      acmat_10, acmat_13, acmat_14, acmat_2, acmat_4, acmat_6, acmat_8, acmat_9'
+    paint_slots:
+    - renderer_path: 0/0/0
+      submesh: 0
+      material_name: acmat_1
+      role: keep
+      reason: textured
+      area_m2: 1.6944224
+      height_frac: 0.4231907
+      height_min_frac: 0.3947746
+      height_max_frac: 0.4515115
+      above_water_area_m2: 1.6944224
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.33648083, g: 0.30086613, b: 0.28904417, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.33648086, g: 0.30086616, b: 0.2890442, a: 1}
+    - renderer_path: 0/0/1
+      submesh: 0
+      material_name: fishing_boat_iii_acmat_12
+      role: hull
+      reason: same colour as hull, low
+      area_m2: 0.7123905
+      height_frac: 0.094019204
+      height_min_frac: 0.033191845
+      height_max_frac: 0.154854
+      above_water_area_m2: 0.35614607
+      topside_band_area_m2: 0.35614607
+      original_srgb: {r: 0.34506467, g: 0.0643891, b: 0.06580747, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/2
+      submesh: 0
+      material_name: acmat_14
+      role: keep
+      reason: textured
+      area_m2: 2.2220874
+      height_frac: 0.32176965
+      height_min_frac: 0.28276438
+      height_max_frac: 0.336407
+      above_water_area_m2: 2.2220874
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 0.757895}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/3
+      submesh: 0
+      material_name: acmat_2
+      role: keep
+      reason: small
+      area_m2: 0.15969743
+      height_frac: 0.50583553
+      height_min_frac: 0.49364722
+      height_max_frac: 0.5177963
+      above_water_area_m2: 0.15969743
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+    - renderer_path: 0/0/4
+      submesh: 0
+      material_name: fishing_boat_iii_acmat_7
+      role: keep
+      reason: small
+      area_m2: 1.0764638
+      height_frac: 0.07802125
+      height_min_frac: 0.069758356
+      height_max_frac: 0.08626169
+      above_water_area_m2: 0.120138444
+      topside_band_area_m2: 0.120138444
+      original_srgb: {r: 0.13333347, g: 0.11764533, b: 0.10588706, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/5
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 62.055004
+      height_frac: 0.2833389
+      height_min_frac: 0.26922837
+      height_max_frac: 0.34867945
+      above_water_area_m2: 62.055004
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.40829763, g: 0.5802691, b: 0.18904349, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.40829766, g: 0.58026916, b: 0.18904352, a: 1}
+    - renderer_path: 0/0/6
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 1.3167069
+      height_frac: 0.5614738
+      height_min_frac: 0.30347648
+      height_max_frac: 0.94587123
+      above_water_area_m2: 1.3167069
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/7
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 19.172024
+      height_frac: 0.3775413
+      height_min_frac: 0.14671315
+      height_max_frac: 0.9714711
+      above_water_area_m2: 19.172024
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/8
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 3.0547874
+      height_frac: 0.41002968
+      height_min_frac: 0.29116687
+      height_max_frac: 0.6166334
+      above_water_area_m2: 3.0547874
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/9
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 13.700817
+      height_frac: 0.37545317
+      height_min_frac: 0.21639775
+      height_max_frac: 1
+      above_water_area_m2: 13.700817
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/10
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 59.46431
+      height_frac: 0.354546
+      height_min_frac: 0.046506364
+      height_max_frac: 0.48956457
+      above_water_area_m2: 58.944138
+      topside_band_area_m2: 0.21383521
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/11
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 0.08187632
+      height_frac: 0.3157168
+      height_min_frac: 0.30663744
+      height_max_frac: 0.32532465
+      above_water_area_m2: 0.08187632
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/12
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 1.5766251
+      height_frac: 0.46425575
+      height_min_frac: 0.2809674
+      height_max_frac: 0.97464466
+      above_water_area_m2: 1.5766251
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/13
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 36.203846
+      height_frac: 0.32341036
+      height_min_frac: 0.24490462
+      height_max_frac: 0.9516697
+      above_water_area_m2: 36.203846
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/14
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 25.692451
+      height_frac: 0.5695468
+      height_min_frac: 0.27783176
+      height_max_frac: 0.9270152
+      above_water_area_m2: 25.692451
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/15
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 118.64604
+      height_frac: 0.26989555
+      height_min_frac: 0.14090694
+      height_max_frac: 0.9971217
+      above_water_area_m2: 118.64604
+      topside_band_area_m2: 33.598953
+      original_srgb: {r: 0.8377023, g: 0.45626968, b: 0.102349155, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8377023, g: 0.45626974, b: 0.102349184, a: 1}
+    - renderer_path: 0/0/16
+      submesh: 0
+      material_name: acmat_10
+      role: keep
+      reason: textured atlas spans the vessel
+      area_m2: 2.2939236
+      height_frac: 0.6136036
+      height_min_frac: 0
+      height_max_frac: 0.9957037
+      above_water_area_m2: 2.2937984
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.6448348, g: 0.64240444, b: 0.64547795, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.6448348, g: 0.6424045, b: 0.64547795, a: 1}
+    - renderer_path: 0/0/17
+      submesh: 0
+      material_name: acmat_11
+      role: keep
+      reason: small
+      area_m2: 0.28449914
+      height_frac: 0.5098121
+      height_min_frac: 0.5038788
+      height_max_frac: 0.51319534
+      above_water_area_m2: 0.28449914
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.73406386, g: 0.73406386, b: 0.73406386, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/18
+      submesh: 0
+      material_name: acmat_13
+      role: keep
+      reason: textured
+      area_m2: 6.3428807
+      height_frac: 0.4219868
+      height_min_frac: 0.3770462
+      height_max_frac: 0.46696937
+      above_water_area_m2: 6.3428807
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.12088581, g: 0.13574558, b: 0.21833527, a: 0.831579}
+      textured: 1
+      texture_mean_srgb: {r: 0.12088584, g: 0.13574561, b: 0.2183353, a: 1}
+    - renderer_path: 0/0/19
+      submesh: 0
+      material_name: fishing_boat_iii_acmat_3
+      role: hull
+      reason: largest low slot
+      area_m2: 81.23745
+      height_frac: 0.087061964
+      height_min_frac: 0.019802714
+      height_max_frac: 0.17365685
+      above_water_area_m2: 40.828777
+      topside_band_area_m2: 40.828777
+      original_srgb: {r: 0.34506467, g: 0.0643891, b: 0.06580747, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/20
+      submesh: 0
+      material_name: acmat_4
+      role: keep
+      reason: small
+      area_m2: 2.7268157
+      height_frac: 0.516779
+      height_min_frac: 0.48478386
+      height_max_frac: 0.6428495
+      above_water_area_m2: 2.7268157
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5756196, g: 0.5581678, b: 0.539941, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.57561964, g: 0.5581678, b: 0.5399411, a: 1}
+    - renderer_path: 0/0/21
+      submesh: 0
+      material_name: fishing_boat_iii_acmat_5
+      role: keep
+      reason: small
+      area_m2: 2.356176
+      height_frac: 0.3286792
+      height_min_frac: 0.2874075
+      height_max_frac: 0.3700845
+      above_water_area_m2: 2.356176
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.90987813, g: 0.90987813, b: 0.90987813, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/22
+      submesh: 0
+      material_name: acmat_6
+      role: keep
+      reason: textured
+      area_m2: 1.2745469
+      height_frac: 0.32868138
+      height_min_frac: 0.2921772
+      height_max_frac: 0.3651983
+      above_water_area_m2: 1.2745469
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+    - renderer_path: 0/0/23
+      submesh: 0
+      material_name: acmat_9
+      role: keep
+      reason: textured
+      area_m2: 0.4071478
+      height_frac: 0.3164921
+      height_min_frac: 0.30463535
+      height_max_frac: 0.32834634
+      above_water_area_m2: 0.4071478
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.12553394, g: 0.12597635, b: 0.12596565, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.12553397, g: 0.12597638, b: 0.12596568, a: 1}
+    paint_note: slots=24 hull=2 (18 % of area) super=0 (0 %) textured_kept=16
+  - asset_id: small_motorboat
+    display_name: Small motorboat 6 m (CC BY)
+    category: motorboat
+    prefab: {fileID: 8355064519591090084, guid: 6ef86603ba6f59349b95dc129217aee5, type: 3}
+    geometry: {fileID: 11400000, guid: 2164881f72e8383408e6a29812cb7ad9, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/small_motorboat_tijmenmatthys.glb
+    source_sha256: 2ca7195cfac20c208cf88eb2589604a1622b1f5f1dfa9ea14c082698228b0abc
+    license: CC BY 4.0 - "Small Motorboat" by tijmenmatthys (https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4);
+      outboard brand lettering inpainted (glb_derive.py), rotated (bow +X), recentred
+    source_url: https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4
+    default_immersion_m: 0.25
+    material_note: 'none; flattened 0 texture slots; kept textured: none'
+    paint_slots:
+    - renderer_path: 0/0/0/0/0
+      submesh: 0
+      material_name: Boat_sh
+      role: keep
+      reason: textured
+      area_m2: 39.518837
+      height_frac: 0.5180638
+      height_min_frac: 0
+      height_max_frac: 1
+      above_water_area_m2: 36.84052
+      topside_band_area_m2: 6.8681946
+      original_srgb: {r: 0.40971544, g: 0.40418333, b: 0.35024455, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.40971547, g: 0.40418336, b: 0.35024458, a: 1}
+    paint_note: slots=1 hull=0 (0 % of area) super=0 (0 %) textured_kept=1
+  - asset_id: crrc
+    display_name: Rubber raiding craft 4.7 m (CC BY)
+    category: rib
+    prefab: {fileID: 367877504473200111, guid: a11c454a415c711479b614693a37889c, type: 3}
+    geometry: {fileID: 11400000, guid: d817071161ecbe14aa6e14efb7303c15, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/crrc_blarg1.glb
+    source_sha256: 7ea87cab0fd7801e69a3ab296bdc8423880edd4a11db5f8ecd5e19c6f96c9182
+    license: CC BY 4.0 - "CRRC (Combat Rubber Raiding Craft)" by blarg1 (https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85);
+      x1.05 (4.47 m -> 4.7 m), rotated (bow +X), recentred
+    source_url: https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85
+    default_immersion_m: 0.15
+    material_note: 'none; flattened 0 texture slots; kept textured: lowRing'
+    paint_slots:
+    - renderer_path: 0/0/0/0/0
+      submesh: 0
+      material_name: Main
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 1.1383363
+      height_frac: 0.6335409
+      height_min_frac: 0.5288759
+      height_max_frac: 0.879822
+      above_water_area_m2: 1.1383363
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/1/0
+      submesh: 0
+      material_name: Main
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 6.273468
+      height_frac: 0.68135357
+      height_min_frac: 0
+      height_max_frac: 1
+      above_water_area_m2: 6.212408
+      topside_band_area_m2: 0.32090178
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/2/0
+      submesh: 0
+      material_name: Main
+      role: hull
+      reason: same colour as hull, low
+      area_m2: 16.077291
+      height_frac: 0.47630423
+      height_min_frac: 0.24980351
+      height_max_frac: 0.8560969
+      above_water_area_m2: 16.077291
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/3/0
+      submesh: 0
+      material_name: Main
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 2.4775672
+      height_frac: 0.5241051
+      height_min_frac: 0.45135367
+      height_max_frac: 0.598575
+      above_water_area_m2: 2.4775672
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/4/0
+      submesh: 0
+      material_name: Main
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 1.7638454
+      height_frac: 0.51498723
+      height_min_frac: 0.24729635
+      height_max_frac: 0.8595664
+      above_water_area_m2: 1.7638454
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/5/0
+      submesh: 0
+      material_name: Main
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 1.1721052
+      height_frac: 0.67070735
+      height_min_frac: 0.6124135
+      height_max_frac: 0.88109684
+      above_water_area_m2: 1.1721052
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/6/0
+      submesh: 0
+      material_name: Main
+      role: hull
+      reason: same colour as hull, low
+      area_m2: 1.0234895
+      height_frac: 0.38322106
+      height_min_frac: 0.32273903
+      height_max_frac: 0.4447947
+      above_water_area_m2: 1.0234895
+      topside_band_area_m2: 0
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/7/0
+      submesh: 0
+      material_name: lowRing
+      role: keep
+      reason: textured
+      area_m2: 0.5394888
+      height_frac: 0.45505366
+      height_min_frac: 0.33271962
+      height_max_frac: 0.57699704
+      above_water_area_m2: 0.5394888
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8919011, g: 0.32883072, b: 0.026912436, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8919011, g: 0.32883075, b: 0.026912436, a: 1}
+    - renderer_path: 0/0/0/8/0
+      submesh: 0
+      material_name: Metal
+      role: keep
+      reason: name:metal
+      area_m2: 0.03756295
+      height_frac: 0.6441432
+      height_min_frac: 0.41573176
+      height_max_frac: 0.79323214
+      above_water_area_m2: 0.03756295
+      topside_band_area_m2: 0
+      original_srgb: {r: 1, g: 1, b: 1, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/9/0
+      submesh: 0
+      material_name: Main
+      role: hull
+      reason: largest low slot
+      area_m2: 15.886772
+      height_frac: 0.29111272
+      height_min_frac: 0.16697438
+      height_max_frac: 0.8778205
+      above_water_area_m2: 15.886772
+      topside_band_area_m2: 0.80356294
+      original_srgb: {r: 0, g: 0, b: 0, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    paint_note: slots=10 hull=3 (71 % of area) super=0 (0 %) textured_kept=1
+  - asset_id: container_ship_loaded
+    display_name: Container ship 262 m, loaded (CC0)
+    category: container_ship
+    prefab: {fileID: 3386801051583688957, guid: 5e709e6e3839d784abce091e4a08573d, type: 3}
+    geometry: {fileID: 11400000, guid: 1bffcd37d132aeb4bb7ef04819d308a4, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/Innerscene/innerscene_container_ship_loaded.glb
+    source_sha256: 95b5020347eadb53d4e3cbdbe845b7fdde718435964384954c516db05a532680
+    license: CC0 (Innerscene, source-stated) - "Container ship loaded", 262.2 m,
+      820 x 40 ft containers; as authored (metres), rotated (bow +X), recentred
+    source_url: https://www.innerscene.com/tools/library/3d-parts/container-ship-loaded-5ee3b06d
+    default_immersion_m: 11.6
+    material_note: 'none; flattened 32 texture slots; kept textured: Bridge front
+      windows in white frame, Shipping container atlas, Steel grating, White deckhouse
+      with windows'
+    paint_slots:
+    - renderer_path: 0/0
+      submesh: 0
+      material_name: White deckhouse with windows
+      role: keep
+      reason: name:window
+      area_m2: 1060.446
+      height_frac: 0.60654867
+      height_min_frac: 0.39224488
+      height_max_frac: 0.8510204
+      above_water_area_m2: 1060.446
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7292949, g: 0.7384329, b: 0.7230989, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.7292949, g: 0.7384329, b: 0.7230989, a: 1}
+    - renderer_path: 0/0
+      submesh: 1
+      material_name: container_ship_loaded_White_superstructure_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 439.21802
+      height_frac: 0.59306556
+      height_min_frac: 0.39224488
+      height_max_frac: 0.7938776
+      above_water_area_m2: 439.21802
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7819928, g: 0.7897524, b: 0.7706958, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0
+      submesh: 2
+      material_name: container_ship_loaded_Grey_non_slip_deck
+      role: keep
+      reason: name:deck
+      area_m2: 4720.296
+      height_frac: 0.6135525
+      height_min_frac: 0.39224488
+      height_max_frac: 0.8510204
+      above_water_area_m2: 4720.296
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41934046, g: 0.43516475, b: 0.4465105, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0
+      submesh: 3
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: largest light upper slot
+      area_m2: 4776.379
+      height_frac: 0.62
+      height_min_frac: 0.44653058
+      height_max_frac: 0.7934694
+      above_water_area_m2: 4776.379
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0
+      submesh: 4
+      material_name: Bridge front windows in white frame
+      role: keep
+      reason: name:window
+      area_m2: 190.97418
+      height_frac: 0.82265073
+      height_min_frac: 0.7928571
+      height_max_frac: 0.8510204
+      above_water_area_m2: 190.97418
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.58907473, g: 0.60162294, b: 0.59527445, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.58907473, g: 0.60162294, b: 0.59527445, a: 1}
+    - renderer_path: 0/1
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 14.7297945
+      height_frac: 0.54221684
+      height_min_frac: 0.45102042
+      height_max_frac: 0.8714286
+      above_water_area_m2: 14.7297945
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/2
+      submesh: 0
+      material_name: container_ship_loaded_Dark_grey_paint
+      role: keep
+      reason: small
+      area_m2: 40.39282
+      height_frac: 0.4184308
+      height_min_frac: 0.41114286
+      height_max_frac: 0.4379796
+      above_water_area_m2: 40.39282
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.21569401, g: 0.23138034, b: 0.24706662, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/2
+      submesh: 1
+      material_name: container_ship_loaded_Steel_wire_rope
+      role: keep
+      reason: name:steel
+      area_m2: 22.932467
+      height_frac: 0.42619386
+      height_min_frac: 0.41496938
+      height_max_frac: 0.43741834
+      above_water_area_m2: 22.932467
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42746168, g: 0.435301, b: 0.44312218, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/2
+      submesh: 2
+      material_name: container_ship_loaded_Black_paint
+      role: keep
+      reason: small
+      area_m2: 27.95692
+      height_frac: 0.41829807
+      height_min_frac: 0.41114286
+      height_max_frac: 0.42746937
+      above_water_area_m2: 27.95692
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.09804333, g: 0.10195931, b: 0.10588706, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/3
+      submesh: 0
+      material_name: container_ship_loaded_Black_anchor_paint
+      role: keep
+      reason: small
+      area_m2: 30.085964
+      height_frac: 0.31857544
+      height_min_frac: 0.29791835
+      height_max_frac: 0.36938778
+      above_water_area_m2: 30.085964
+      topside_band_area_m2: 29.808527
+      original_srgb: {r: 0.14510053, g: 0.14510053, b: 0.15294808, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/4
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 176.85315
+      height_frac: 0.4797942
+      height_min_frac: 0.44714114
+      height_max_frac: 0.5124473
+      above_water_area_m2: 176.85315
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/5
+      submesh: 0
+      material_name: Shipping container atlas
+      role: keep
+      reason: name:container
+      area_m2: 110913.91
+      height_frac: 0.5807244
+      height_min_frac: 0.43795916
+      height_max_frac: 0.7562449
+      above_water_area_m2: 110913.91
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.39533797, g: 0.33763823, b: 0.34097728, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.395338, g: 0.33763826, b: 0.3409773, a: 1}
+    - renderer_path: 0/6
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 202.08575
+      height_frac: 0.4096579
+      height_min_frac: 0.39306122
+      height_max_frac: 0.43436664
+      above_water_area_m2: 202.08575
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/7
+      submesh: 0
+      material_name: container_ship_loaded_Dark_grey_paint
+      role: keep
+      reason: small
+      area_m2: 40.39264
+      height_frac: 0.45813766
+      height_min_frac: 0.45084974
+      height_max_frac: 0.47768646
+      above_water_area_m2: 40.39264
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.21569401, g: 0.23138034, b: 0.24706662, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/7
+      submesh: 1
+      material_name: container_ship_loaded_Steel_wire_rope
+      role: keep
+      reason: name:steel
+      area_m2: 22.932549
+      height_frac: 0.46590078
+      height_min_frac: 0.4546763
+      height_max_frac: 0.47712526
+      above_water_area_m2: 22.932549
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42746168, g: 0.435301, b: 0.44312218, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/7
+      submesh: 2
+      material_name: container_ship_loaded_Black_paint
+      role: keep
+      reason: small
+      area_m2: 27.95709
+      height_frac: 0.45800498
+      height_min_frac: 0.45084974
+      height_max_frac: 0.4671763
+      above_water_area_m2: 27.95709
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.09804333, g: 0.10195931, b: 0.10588706, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/8
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 19.287493
+      height_frac: 0.54478836
+      height_min_frac: 0.4529854
+      height_max_frac: 0.6386997
+      above_water_area_m2: 19.287493
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/8
+      submesh: 1
+      material_name: container_ship_loaded_White_navigation_light
+      role: keep
+      reason: name:light
+      area_m2: 0.5999846
+      height_frac: 0.64125067
+      height_min_frac: 0.6376793
+      height_max_frac: 0.6448221
+      above_water_area_m2: 0.5999846
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.99609274, g: 0.96856886, b: 0.9058291, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/9
+      submesh: 0
+      material_name: container_ship_loaded_Orange_gelcoat
+      role: keep
+      reason: small
+      area_m2: 111.32237
+      height_frac: 0.5358278
+      height_min_frac: 0.47785076
+      height_max_frac: 0.59566814
+      above_water_area_m2: 111.32237
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8587603, g: 0.35581684, b: 0.090358876, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/10
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 49.271755
+      height_frac: 0.57091963
+      height_min_frac: 0.50582004
+      height_max_frac: 0.63279223
+      above_water_area_m2: 49.271755
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/11
+      submesh: 0
+      material_name: container_ship_loaded_Red_paint
+      role: keep
+      reason: small
+      area_m2: 735.6505
+      height_frac: 0.6329738
+      height_min_frac: 0.39183676
+      height_max_frac: 0.9122449
+      above_water_area_m2: 735.6505
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.6235348, g: 0.12941691, b: 0.10588706, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/11
+      submesh: 1
+      material_name: container_ship_loaded_Funnel_top_black
+      role: keep
+      reason: name:funnel
+      area_m2: 58.996265
+      height_frac: 0.88979596
+      height_min_frac: 0.86734694
+      height_max_frac: 0.9122449
+      above_water_area_m2: 58.996265
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.09019945, g: 0.09019945, b: 0.09019945, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/11
+      submesh: 2
+      material_name: container_ship_loaded_Dark_grey_paint
+      role: keep
+      reason: small
+      area_m2: 8.873651
+      height_frac: 0.9193878
+      height_min_frac: 0.9016381
+      height_max_frac: 0.9371374
+      above_water_area_m2: 8.873651
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.21569401, g: 0.23138034, b: 0.24706662, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/12
+      submesh: 0
+      material_name: container_ship_loaded_Dark_grey_paint
+      role: keep
+      reason: low, other colour (boot-top / accent)
+      area_m2: 5971.9385
+      height_frac: 0.3967284
+      height_min_frac: 0.39183676
+      height_max_frac: 0.4265306
+      above_water_area_m2: 5971.9385
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.21569401, g: 0.23138034, b: 0.24706662, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/12
+      submesh: 1
+      material_name: container_ship_loaded_Painted_hatch_covers
+      role: keep
+      reason: override keep
+      area_m2: 13366.08
+      height_frac: 0.4299959
+      height_min_frac: 0.4255102
+      height_max_frac: 0.4377551
+      above_water_area_m2: 13366.08
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.34967142, g: 0.40366185, b: 0.44109118, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/13
+      submesh: 0
+      material_name: container_ship_loaded_Antifouling_red_bottom_paint
+      role: keep
+      reason: name:antifoul
+      area_m2: 11425.701
+      height_frac: 0.07317323
+      height_min_frac: 0
+      height_max_frac: 0.2367347
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4479307, g: 0.14037547, b: 0.11783723, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/13
+      submesh: 1
+      material_name: container_ship_loaded_Navy_blue_hull_paint
+      role: hull
+      reason: largest low slot
+      area_m2: 4724.1465
+      height_frac: 0.31884867
+      height_min_frac: 0.2367347
+      height_max_frac: 0.45918062
+      above_water_area_m2: 4724.1465
+      topside_band_area_m2: 3566.4382
+      original_srgb: {r: 0.11529859, g: 0.17061514, b: 0.29215947, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/13
+      submesh: 2
+      material_name: container_ship_loaded_Green_deck_paint
+      role: keep
+      reason: name:deck
+      area_m2: 7949.2817
+      height_frac: 0.3989505
+      height_min_frac: 0.39387754
+      height_max_frac: 0.45918062
+      above_water_area_m2: 7949.2817
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.14893141, g: 0.27887258, b: 0.20251739, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/14
+      submesh: 0
+      material_name: container_ship_loaded_Yellow_paint
+      role: keep
+      reason: small
+      area_m2: 437.0691
+      height_frac: 0.49081635
+      height_min_frac: 0.43673468
+      height_max_frac: 0.544898
+      above_water_area_m2: 437.0691
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.6157037, b: 0.09019945, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/14
+      submesh: 1
+      material_name: Steel grating
+      role: keep
+      reason: name:steel
+      area_m2: 615.2011
+      height_frac: 0.5136735
+      height_min_frac: 0.4844898
+      height_max_frac: 0.54285717
+      above_water_area_m2: 615.2011
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.22539687, g: 0.23343629, b: 0.23791832, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.2253969, g: 0.23343632, b: 0.23791835, a: 1}
+    - renderer_path: 0/15
+      submesh: 0
+      material_name: container_ship_loaded_Propeller_bronze
+      role: keep
+      reason: name:rope
+      area_m2: 63.886456
+      height_frac: 0.09387755
+      height_min_frac: 0.018926578
+      height_max_frac: 0.16882852
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.686279, g: 0.49804622, b: 0.27843952, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/16
+      submesh: 0
+      material_name: container_ship_loaded_White_paint
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 23.762068
+      height_frac: 0.9296905
+      height_min_frac: 0.84897953
+      height_max_frac: 0.9938776
+      above_water_area_m2: 23.762068
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8039408, g: 0.81176746, b: 0.8039408, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/16
+      submesh: 1
+      material_name: container_ship_loaded_Dark_grey_paint
+      role: keep
+      reason: small
+      area_m2: 1.270845
+      height_frac: 0.9536735
+      height_min_frac: 0.9434694
+      height_max_frac: 0.96387756
+      above_water_area_m2: 1.270845
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.21569401, g: 0.23138034, b: 0.24706662, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/16
+      submesh: 2
+      material_name: container_ship_loaded_Radar_scanner
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 9.468057
+      height_frac: 0.9591565
+      height_min_frac: 0.95102036
+      height_max_frac: 0.96938777
+      above_water_area_m2: 9.468057
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8352644, g: 0.8352644, b: 0.81958467, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/16
+      submesh: 3
+      material_name: container_ship_loaded_White_navigation_light
+      role: keep
+      reason: name:light
+      area_m2: 0.60000217
+      height_frac: 0.9964286
+      height_min_frac: 0.99285716
+      height_max_frac: 1
+      above_water_area_m2: 0.60000217
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.99609274, g: 0.96856886, b: 0.9058291, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/17
+      submesh: 0
+      material_name: container_ship_loaded_Antifouling_red_bottom_paint
+      role: keep
+      reason: name:antifoul
+      area_m2: 149.95442
+      height_frac: 0.12244898
+      height_min_frac: 0.020408163
+      height_max_frac: 0.2244898
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4479307, g: 0.14037547, b: 0.11783723, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    paint_note: slots=36 hull=1 (3 % of area) super=9 (3 %) textured_kept=0
+  - asset_id: container_ship_rm02
+    display_name: Container ship 241 m (CC BY)
+    category: container_ship
+    prefab: {fileID: 8449766402968700034, guid: 0cc0e27f111570f4cb5db0d837aa5582, type: 3}
+    geometry: {fileID: 11400000, guid: f14f0464b647f994fae8ee13b28e85a9, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/container_ship_rm02_nobrand.glb
+    source_sha256: a4b1cff1a36f4e94155ae40db88b93a062267c135fadd164116c7fc12f823bed
+    license: CC BY 4.0 - "Container Ship" by RM02 (https://sketchfab.com/3d-models/container-ship-aaa41cca946b4a08bc08cf692b7757be);
+      shipping-line logos removed, container metallic cleared (derive_container_ship_glb.py),
+      x2.639 (40 ft container pitch -> 241 m), rotated (bow +X), recentred
+    source_url: https://sketchfab.com/3d-models/container-ship-aaa41cca946b4a08bc08cf692b7757be
+    default_immersion_m: 11
+    material_note: 'none; flattened 0 texture slots; kept textured: Bridge, Containers,
+      Hull'
+    paint_slots:
+    - renderer_path: 0/0/0/0/0
+      submesh: 0
+      material_name: Bridge
+      role: keep
+      reason: textured atlas spans the vessel
+      area_m2: 1345.6283
+      height_frac: 0.6155341
+      height_min_frac: 0.39801344
+      height_max_frac: 1
+      above_water_area_m2: 1345.6283
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.68918127, g: 0.60210997, b: 0.5470856, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.68918127, g: 0.60210997, b: 0.54708564, a: 0.9970827}
+    - renderer_path: 0/0/0/0/1
+      submesh: 0
+      material_name: Bridge
+      role: keep
+      reason: upper, other colour (accent)
+      area_m2: 2238.691
+      height_frac: 0.6076071
+      height_min_frac: 0.39801353
+      height_max_frac: 0.9435303
+      above_water_area_m2: 2238.691
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.68918127, g: 0.60210997, b: 0.5470856, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.68918127, g: 0.60210997, b: 0.54708564, a: 0.9970827}
+    - renderer_path: 0/0/0/0/2
+      submesh: 0
+      material_name: Hull
+      role: keep
+      reason: textured
+      area_m2: 24437.19
+      height_frac: 0.2801833
+      height_min_frac: 0
+      height_max_frac: 0.53345734
+      above_water_area_m2: 14903.057
+      topside_band_area_m2: 2665.914
+      original_srgb: {r: 0.48400557, g: 0.15971187, b: 0.14971584, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.48400557, g: 0.1597119, b: 0.14971587, a: 1}
+    - renderer_path: 0/0/0/0/3
+      submesh: 0
+      material_name: Hull
+      role: keep
+      reason: textured
+      area_m2: 6612.977
+      height_frac: 0.36495274
+      height_min_frac: 0
+      height_max_frac: 0.5397222
+      above_water_area_m2: 5331.3354
+      topside_band_area_m2: 201.30379
+      original_srgb: {r: 0.48400557, g: 0.15971187, b: 0.14971584, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.48400557, g: 0.1597119, b: 0.14971587, a: 1}
+    - renderer_path: 0/0/0/1/0
+      submesh: 0
+      material_name: Containers
+      role: keep
+      reason: name:container
+      area_m2: 94382.8
+      height_frac: 0.5452528
+      height_min_frac: 0.4407293
+      height_max_frac: 0.72851807
+      above_water_area_m2: 94382.8
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5319834, g: 0.46285397, b: 0.34885728, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5319834, g: 0.46285403, b: 0.3488573, a: 1}
+    paint_note: slots=5 hull=0 (0 % of area) super=0 (0 %) textured_kept=2
+  - asset_id: container_ship_gogi
+    display_name: Container ship 146 m (CC BY)
+    category: container_ship
+    prefab: {fileID: 503424687518301490, guid: 1c8473db302ea664492d95a701a2de92, type: 3}
+    geometry: {fileID: 11400000, guid: ec980ca69c8f2f44a92a92ba9bcea6af, type: 2}
+    source_file: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/container_ship_03_gogiart_opt.glb
+    source_sha256: 61e38fc8c7f9f0ad05d4eea9c84e5cf8b6881dd93f6af8c5edd512a3be0288c5
+    license: CC BY 4.0 - "Container Ship 03 FBX" by gogiart (agt14032013) (https://sketchfab.com/3d-models/container-ship-03-fbx-931fb30ec63a40c6a1ebfe51a454263c);
+      detail decimated 1.27 M -> 153 k triangles, micro-detail removed (derive_container_ship_gogi_glb.py),
+      x34 (container tier 2.59 m -> 146 m), rotated (bow +X), recentred
+    source_url: https://sketchfab.com/3d-models/container-ship-03-fbx-931fb30ec63a40c6a1ebfe51a454263c
+    default_immersion_m: 9.4
+    material_note: 'none; flattened 14 texture slots; kept textured: acmat_0, acmat_1,
+      acmat_10, acmat_12, acmat_14, acmat_15, acmat_16, acmat_17, acmat_18, acmat_20,
+      acmat_22, acmat_23, acmat_24, acmat_25, acmat_26, acmat_28, acmat_3, acmat_30,
+      acmat_31, acmat_32, acmat_37, acmat_38, acmat_39, acmat_40, acmat_41, acmat_42,
+      acmat_43, acmat_44, acmat_45, acmat_46, acmat_47, acmat_48, acmat_49, acmat_5,
+      acmat_50, acmat_54, acmat_55, acmat_56, acmat_57, acmat_6, acmat_7, acmat_8,
+      acmat_9'
+    paint_slots:
+    - renderer_path: 0/0/0/0/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 30.104395
+      height_frac: 0.48443314
+      height_min_frac: 0.4151623
+      height_max_frac: 0.9478663
+      above_water_area_m2: 30.104395
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/0/1
+      submesh: 0
+      material_name: acmat_1
+      role: keep
+      reason: textured
+      area_m2: 1.6697236
+      height_frac: 0.6686208
+      height_min_frac: 0.5802751
+      height_max_frac: 0.94563127
+      above_water_area_m2: 1.6697236
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.48809862, g: 0.3381495, b: 0.30394045, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.48809868, g: 0.33814952, b: 0.30394047, a: 1}
+    - renderer_path: 0/0/0/0/3
+      submesh: 0
+      material_name: acmat_6
+      role: keep
+      reason: small
+      area_m2: 79.80456
+      height_frac: 0.5250948
+      height_min_frac: 0.4089105
+      height_max_frac: 0.7339011
+      above_water_area_m2: 79.80456
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.77517104, g: 0.72325397, b: 0.6578803, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.77517104, g: 0.72325397, b: 0.6578803, a: 1}
+    - renderer_path: 0/0/0/0/4
+      submesh: 0
+      material_name: acmat_7
+      role: keep
+      reason: textured
+      area_m2: 93.27349
+      height_frac: 0.07444962
+      height_min_frac: 0
+      height_max_frac: 0.13816395
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2026191, g: 0.08073137, b: 0.08230259, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.20261914, g: 0.0807314, b: 0.08230262, a: 1}
+    - renderer_path: 0/0/0/0/5
+      submesh: 0
+      material_name: acmat_12
+      role: keep
+      reason: textured
+      area_m2: 3.7991545
+      height_frac: 0.4404721
+      height_min_frac: 0.43250912
+      height_max_frac: 0.44843495
+      above_water_area_m2: 3.7991545
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41264614, g: 0.39483222, b: 0.38309684, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41264617, g: 0.39483225, b: 0.38309687, a: 1}
+    - renderer_path: 0/0/0/0/6
+      submesh: 0
+      material_name: container_ship_gogi_acmat_13
+      role: keep
+      reason: small
+      area_m2: 1.3397353
+      height_frac: 0.4404682
+      height_min_frac: 0.4338565
+      height_max_frac: 0.4470799
+      above_water_area_m2: 1.3397353
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3307174, g: 0.42438337, b: 0.41138604, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/0/7
+      submesh: 0
+      material_name: acmat_14
+      role: keep
+      reason: textured
+      area_m2: 0.075611845
+      height_frac: 0.44725248
+      height_min_frac: 0.4464049
+      height_max_frac: 0.44810003
+      above_water_area_m2: 0.075611845
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2509883, g: 0.26777327, b: 0.31399646, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.25098833, g: 0.2677733, b: 0.3139965, a: 1}
+    - renderer_path: 0/0/0/0/8
+      submesh: 0
+      material_name: acmat_15
+      role: keep
+      reason: small
+      area_m2: 1.0784823
+      height_frac: 0.42690602
+      height_min_frac: 0.42520964
+      height_max_frac: 0.42860243
+      above_water_area_m2: 1.0784823
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.65187883, g: 0.6519934, b: 0.6569794, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.65187883, g: 0.6519934, b: 0.6569794, a: 1}
+    - renderer_path: 0/0/0/0/10
+      submesh: 0
+      material_name: acmat_17
+      role: keep
+      reason: small
+      area_m2: 2.6592245
+      height_frac: 0.44086048
+      height_min_frac: 0.4364899
+      height_max_frac: 0.44523394
+      above_water_area_m2: 2.6592245
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.6898217, g: 0.68884754, b: 0.7080245, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.6898217, g: 0.68884754, b: 0.7080245, a: 1}
+    - renderer_path: 0/0/0/0/11
+      submesh: 0
+      material_name: acmat_18
+      role: keep
+      reason: small
+      area_m2: 3.2440796
+      height_frac: 0.4408997
+      height_min_frac: 0.432775
+      height_max_frac: 0.44902298
+      above_water_area_m2: 3.2440796
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5981431, g: 0.6511751, b: 0.7067824, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5981431, g: 0.6511751, b: 0.7067824, a: 1}
+    - renderer_path: 0/0/0/0/12
+      submesh: 0
+      material_name: container_ship_gogi_acmat_19
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 34.69669
+      height_frac: 0.6616395
+      height_min_frac: 0.47229433
+      height_max_frac: 0.8345159
+      above_water_area_m2: 34.69669
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.94898766, g: 0.85492355, b: 0.7215962, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/0/13
+      submesh: 0
+      material_name: acmat_20
+      role: keep
+      reason: textured
+      area_m2: 1.3912151
+      height_frac: 0.6500318
+      height_min_frac: 0.5323518
+      height_max_frac: 0.94563127
+      above_water_area_m2: 1.3912151
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.17921859, g: 0.52317125, b: 0.270628, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.17921862, g: 0.52317125, b: 0.27062804, a: 1}
+    - renderer_path: 0/0/0/0/14
+      submesh: 0
+      material_name: container_ship_gogi_acmat_21
+      role: keep
+      reason: small
+      area_m2: 0.25193384
+      height_frac: 0.9014562
+      height_min_frac: 0.8928323
+      height_max_frac: 0.91008
+      above_water_area_m2: 0.25193384
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.90987813, g: 0.90987813, b: 0.90987813, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/0/15
+      submesh: 0
+      material_name: acmat_22
+      role: keep
+      reason: textured
+      area_m2: 0.977443
+      height_frac: 0.91114753
+      height_min_frac: 0.9093872
+      height_max_frac: 0.9129078
+      above_water_area_m2: 0.977443
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.18577522, g: 0.3642993, b: 0.7815992, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.18577525, g: 0.36429933, b: 0.7815992, a: 1}
+    - renderer_path: 0/0/0/0/16
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 30.07327
+      height_frac: 0.55549926
+      height_min_frac: 0.5265869
+      height_max_frac: 0.59964484
+      above_water_area_m2: 30.07327
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/0/17
+      submesh: 0
+      material_name: acmat_24
+      role: keep
+      reason: small
+      area_m2: 25.975931
+      height_frac: 0.47702953
+      height_min_frac: 0.47054297
+      height_max_frac: 0.48558927
+      above_water_area_m2: 25.975931
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7418005, g: 0.74633765, b: 0.7681709, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.7418005, g: 0.7463377, b: 0.7681709, a: 1}
+    - renderer_path: 0/0/0/0/18
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 1.763438
+      height_frac: 0.49713683
+      height_min_frac: 0.4869009
+      height_max_frac: 0.5058974
+      above_water_area_m2: 1.763438
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/0/19
+      submesh: 0
+      material_name: acmat_25
+      role: keep
+      reason: textured
+      area_m2: 24.452412
+      height_frac: 0.5545453
+      height_min_frac: 0.5299715
+      height_max_frac: 0.5794902
+      above_water_area_m2: 24.452412
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5444189, g: 0.21634251, b: 0.11427119, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5444189, g: 0.21634257, b: 0.114271216, a: 1}
+    - renderer_path: 0/0/0/0/20
+      submesh: 0
+      material_name: container_ship_gogi_acmat_11
+      role: keep
+      reason: small
+      area_m2: 6.876633
+      height_frac: 0.75707245
+      height_min_frac: 0.5324822
+      height_max_frac: 0.94563127
+      above_water_area_m2: 6.876633
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.87572753, g: 0.8651293, b: 0.87358683, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/1/0
+      submesh: 0
+      material_name: container_ship_gogi_acmat_2
+      role: keep
+      reason: small
+      area_m2: 314.95184
+      height_frac: 0.42520714
+      height_min_frac: 0.40848866
+      height_max_frac: 0.44192553
+      above_water_area_m2: 314.95184
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.80427134, g: 0.7336802, b: 0.63953084, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/2/0
+      submesh: 0
+      material_name: acmat_3
+      role: keep
+      reason: small
+      area_m2: 1.5643709
+      height_frac: 0.7794749
+      height_min_frac: 0.7111079
+      height_max_frac: 0.84699535
+      above_water_area_m2: 1.5643709
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+    - renderer_path: 0/0/0/2/1
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 21.696264
+      height_frac: 0.75057715
+      height_min_frac: 0.70546776
+      height_max_frac: 0.8487411
+      above_water_area_m2: 21.696264
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/2/2
+      submesh: 0
+      material_name: acmat_5
+      role: keep
+      reason: textured
+      area_m2: 0.6220851
+      height_frac: 0.7156469
+      height_min_frac: 0.71066815
+      height_max_frac: 0.7207749
+      above_water_area_m2: 0.6220851
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.47368598, g: 0.018721603, b: 0.020133909, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.47368604, g: 0.018721603, b: 0.020133909, a: 1}
+    - renderer_path: 0/0/0/2/3
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 109.62281
+      height_frac: 0.48936296
+      height_min_frac: 0.46821636
+      height_max_frac: 1
+      above_water_area_m2: 109.62281
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/2/4
+      submesh: 0
+      material_name: acmat_7
+      role: keep
+      reason: textured
+      area_m2: 11.340667
+      height_frac: 0.061567906
+      height_min_frac: 0.05505949
+      height_max_frac: 0.071564
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2026191, g: 0.08073137, b: 0.08230259, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.20261914, g: 0.0807314, b: 0.08230262, a: 1}
+    - renderer_path: 0/0/0/2/5
+      submesh: 0
+      material_name: acmat_12
+      role: keep
+      reason: textured
+      area_m2: 11.123008
+      height_frac: 0.4126625
+      height_min_frac: 0.409271
+      height_max_frac: 0.41605404
+      above_water_area_m2: 11.123008
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41264614, g: 0.39483222, b: 0.38309684, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41264617, g: 0.39483225, b: 0.38309687, a: 1}
+    - renderer_path: 0/0/0/2/6
+      submesh: 0
+      material_name: acmat_38
+      role: keep
+      reason: small
+      area_m2: 0.8225843
+      height_frac: 0.44434333
+      height_min_frac: 0.43504283
+      height_max_frac: 0.45131895
+      above_water_area_m2: 0.8225843
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.61544657, g: 0.5789341, b: 0.5616955, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.61544657, g: 0.5789341, b: 0.5616955, a: 1}
+    - renderer_path: 0/0/0/2/7
+      submesh: 0
+      material_name: container_ship_gogi_acmat_13
+      role: keep
+      reason: small
+      area_m2: 51.949165
+      height_frac: 0.42121363
+      height_min_frac: 0.406047
+      height_max_frac: 0.46055642
+      above_water_area_m2: 51.949165
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3307174, g: 0.42438337, b: 0.41138604, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/2/8
+      submesh: 0
+      material_name: acmat_14
+      role: keep
+      reason: textured
+      area_m2: 2.5179663
+      height_frac: 0.43824938
+      height_min_frac: 0.42419207
+      height_max_frac: 0.44657364
+      above_water_area_m2: 2.5179663
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2509883, g: 0.26777327, b: 0.31399646, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.25098833, g: 0.2677733, b: 0.3139965, a: 1}
+    - renderer_path: 0/0/0/2/9
+      submesh: 0
+      material_name: acmat_39
+      role: keep
+      reason: textured
+      area_m2: 0.25191072
+      height_frac: 0.42452955
+      height_min_frac: 0.4241895
+      height_max_frac: 0.4248696
+      above_water_area_m2: 0.25191072
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.51859087, g: 0.14652348, b: 0.15640765, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5185909, g: 0.1465235, b: 0.15640768, a: 1}
+    - renderer_path: 0/0/0/2/10
+      submesh: 0
+      material_name: acmat_40
+      role: keep
+      reason: override keep
+      area_m2: 4607.1206
+      height_frac: 0.6740294
+      height_min_frac: 0.4858424
+      height_max_frac: 0.71594775
+      above_water_area_m2: 4607.1206
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5467852, g: 0.43646568, b: 0.41186348, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.54678524, g: 0.4364657, b: 0.4118635, a: 1}
+    - renderer_path: 0/0/0/2/11
+      submesh: 0
+      material_name: acmat_41
+      role: keep
+      reason: override keep
+      area_m2: 1499.9928
+      height_frac: 0.6775969
+      height_min_frac: 0.639246
+      height_max_frac: 0.71594775
+      above_water_area_m2: 1499.9928
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41240704, g: 0.5469042, b: 0.41878617, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41240707, g: 0.54690427, b: 0.41878623, a: 1}
+    - renderer_path: 0/0/0/2/12
+      submesh: 0
+      material_name: acmat_42
+      role: keep
+      reason: override keep
+      area_m2: 749.9968
+      height_frac: 0.6775969
+      height_min_frac: 0.639246
+      height_max_frac: 0.71594775
+      above_water_area_m2: 749.9968
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.50905937, g: 0.5469156, b: 0.41171336, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.50905937, g: 0.5469156, b: 0.4117134, a: 1}
+    - renderer_path: 0/0/0/2/13
+      submesh: 0
+      material_name: acmat_43
+      role: keep
+      reason: override keep
+      area_m2: 2999.9866
+      height_frac: 0.5817197
+      height_min_frac: 0.40914065
+      height_max_frac: 0.71594775
+      above_water_area_m2: 2999.9866
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.47191048, g: 0.47191048, b: 0.47191048, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.47191054, g: 0.47191054, b: 0.47191054, a: 1}
+    - renderer_path: 0/0/0/2/14
+      submesh: 0
+      material_name: acmat_44
+      role: keep
+      reason: override keep
+      area_m2: 5678.547
+      height_frac: 0.543007
+      height_min_frac: 0.40914065
+      height_max_frac: 0.639246
+      above_water_area_m2: 5678.547
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.47076887, g: 0.41163146, b: 0.5469557, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.47076893, g: 0.4116315, b: 0.5469557, a: 1}
+    - renderer_path: 0/0/0/2/15
+      submesh: 0
+      material_name: acmat_45
+      role: keep
+      reason: override keep
+      area_m2: 1714.2782
+      height_frac: 0.4618731
+      height_min_frac: 0.40914065
+      height_max_frac: 0.639246
+      above_water_area_m2: 1714.2782
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5470549, g: 0.47325718, b: 0.4115212, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.54705495, g: 0.47325718, b: 0.41152123, a: 1}
+    - renderer_path: 0/0/0/2/16
+      submesh: 0
+      material_name: acmat_46
+      role: keep
+      reason: override keep
+      area_m2: 2999.9873
+      height_frac: 0.6008951
+      height_min_frac: 0.5625442
+      height_max_frac: 0.639246
+      above_water_area_m2: 2999.9873
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41169313, g: 0.48095328, b: 0.5469133, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41169316, g: 0.48095328, b: 0.5469134, a: 1}
+    - renderer_path: 0/0/0/2/17
+      submesh: 0
+      material_name: acmat_47
+      role: keep
+      reason: override keep
+      area_m2: 4499.9805
+      height_frac: 0.5241933
+      height_min_frac: 0.4858424
+      height_max_frac: 0.5625442
+      above_water_area_m2: 4499.9805
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.4118167, g: 0.5469356, b: 0.5362329, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41181672, g: 0.5469356, b: 0.5362329, a: 1}
+    - renderer_path: 0/0/0/2/18
+      submesh: 0
+      material_name: acmat_48
+      role: keep
+      reason: override keep
+      area_m2: 1499.9934
+      height_frac: 0.5241933
+      height_min_frac: 0.4858424
+      height_max_frac: 0.5625442
+      above_water_area_m2: 1499.9934
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.41185662, g: 0.5469592, b: 0.46156496, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.41185665, g: 0.5469592, b: 0.46156502, a: 1}
+    - renderer_path: 0/0/0/2/19
+      submesh: 0
+      material_name: acmat_49
+      role: keep
+      reason: override keep
+      area_m2: 3749.9832
+      height_frac: 0.44749153
+      height_min_frac: 0.40914065
+      height_max_frac: 0.4858424
+      above_water_area_m2: 3749.9832
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.71141815, g: 0.31141588, b: 0.30726412, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.71141815, g: 0.3114159, b: 0.30726415, a: 1}
+    - renderer_path: 0/0/0/2/20
+      submesh: 0
+      material_name: acmat_28
+      role: keep
+      reason: textured
+      area_m2: 52.38413
+      height_frac: 0.57016295
+      height_min_frac: 0.47035122
+      height_max_frac: 0.6614333
+      above_water_area_m2: 52.38413
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.12088581, g: 0.13574558, b: 0.21833527, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.12088584, g: 0.13574561, b: 0.2183353, a: 1}
+    - renderer_path: 0/0/0/2/21
+      submesh: 0
+      material_name: acmat_50
+      role: keep
+      reason: small
+      area_m2: 16.391758
+      height_frac: 0.61392623
+      height_min_frac: 0.47824964
+      height_max_frac: 0.9037803
+      above_water_area_m2: 16.391758
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.72128445, g: 0.694509, b: 0.66903746, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.72128445, g: 0.694509, b: 0.66903746, a: 1}
+    - renderer_path: 0/0/0/2/23
+      submesh: 0
+      material_name: acmat_3
+      role: keep
+      reason: small
+      area_m2: 2.0578287
+      height_frac: 0.5667149
+      height_min_frac: 0.48379958
+      height_max_frac: 0.8528707
+      above_water_area_m2: 2.0578287
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.95622057, g: 0.94130886, b: 0.9390877, a: 1}
+    - renderer_path: 0/0/0/2/25
+      submesh: 0
+      material_name: container_ship_gogi_acmat_19
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 90.37363
+      height_frac: 0.62787837
+      height_min_frac: 0.4101045
+      height_max_frac: 0.9925881
+      above_water_area_m2: 90.37363
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.94898766, g: 0.85492355, b: 0.7215962, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/2/26
+      submesh: 0
+      material_name: container_ship_gogi_acmat_29
+      role: superstructure
+      reason: largest light upper slot
+      area_m2: 1651.9878
+      height_frac: 0.5088193
+      height_min_frac: 0.38774595
+      height_max_frac: 0.6691009
+      above_water_area_m2: 1651.9878
+      topside_band_area_m2: 455.021
+      original_srgb: {r: 0.93452436, g: 0.8495675, b: 0.71985793, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/2/27
+      submesh: 0
+      material_name: acmat_30
+      role: keep
+      reason: textured
+      area_m2: 8.532644
+      height_frac: 0.60200334
+      height_min_frac: 0.52848095
+      height_max_frac: 0.66399
+      above_water_area_m2: 8.532644
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.37597454, g: 0.51554507, b: 0.6253547, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.37597457, g: 0.51554507, b: 0.6253547, a: 1}
+    - renderer_path: 0/0/0/2/28
+      submesh: 0
+      material_name: acmat_31
+      role: keep
+      reason: small
+      area_m2: 5.355927
+      height_frac: 0.51688105
+      height_min_frac: 0.51688105
+      height_max_frac: 0.51688105
+      above_water_area_m2: 5.355927
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.45152193, g: 0.47984946, b: 0.4782784, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.451522, g: 0.47984952, b: 0.4782784, a: 1}
+    - renderer_path: 0/0/0/2/29
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 28.391497
+      height_frac: 0.4948499
+      height_min_frac: 0.46821636
+      height_max_frac: 0.5437957
+      above_water_area_m2: 28.391497
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/2/30
+      submesh: 0
+      material_name: acmat_54
+      role: keep
+      reason: textured
+      area_m2: 213.33482
+      height_frac: 0.4667232
+      height_min_frac: 0.46530423
+      height_max_frac: 0.46814218
+      above_water_area_m2: 213.33482
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42643237, g: 0.37596297, b: 0.2225762, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.4264324, g: 0.375963, b: 0.22257623, a: 1}
+    - renderer_path: 0/0/0/2/31
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 7.5286794
+      height_frac: 0.59685636
+      height_min_frac: 0.5928644
+      height_max_frac: 0.6009513
+      above_water_area_m2: 7.5286794
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/2/32
+      submesh: 0
+      material_name: acmat_55
+      role: keep
+      reason: textured
+      area_m2: 1.040731
+      height_frac: 0.6041716
+      height_min_frac: 0.6031936
+      height_max_frac: 0.60514945
+      above_water_area_m2: 1.040731
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.16926494, g: 0.42695433, b: 0.6663862, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.16926497, g: 0.42695436, b: 0.6663862, a: 1}
+    - renderer_path: 0/0/0/2/33
+      submesh: 0
+      material_name: acmat_56
+      role: keep
+      reason: textured
+      area_m2: 21.491308
+      height_frac: 0.6373513
+      height_min_frac: 0.40448993
+      height_max_frac: 0.9626233
+      above_water_area_m2: 21.491308
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7622099, g: 0.15478083, b: 0.07735843, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.7622099, g: 0.15478086, b: 0.07735845, a: 1}
+    - renderer_path: 0/0/0/2/34
+      submesh: 0
+      material_name: acmat_57
+      role: keep
+      reason: textured
+      area_m2: 43.98608
+      height_frac: 0.68204814
+      height_min_frac: 0.6782693
+      height_max_frac: 0.685827
+      above_water_area_m2: 43.98608
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5336544, g: 0.14635924, b: 0.15630746, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5336544, g: 0.14635926, b: 0.15630749, a: 1}
+    - renderer_path: 0/0/0/2/35
+      submesh: 0
+      material_name: acmat_20
+      role: keep
+      reason: textured
+      area_m2: 0.62208164
+      height_frac: 0.715647
+      height_min_frac: 0.71066815
+      height_max_frac: 0.7207749
+      above_water_area_m2: 0.62208164
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.17921859, g: 0.52317125, b: 0.270628, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.17921862, g: 0.52317125, b: 0.27062804, a: 1}
+    - renderer_path: 0/0/0/3/0
+      submesh: 0
+      material_name: acmat_7
+      role: keep
+      reason: textured
+      area_m2: 69.77517
+      height_frac: 0.13165146
+      height_min_frac: 0.07541257
+      height_max_frac: 0.19819485
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2026191, g: 0.08073137, b: 0.08230259, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.20261914, g: 0.0807314, b: 0.08230262, a: 1}
+    - renderer_path: 0/0/0/4/0
+      submesh: 0
+      material_name: acmat_7
+      role: keep
+      reason: textured
+      area_m2: 18.740568
+      height_frac: 0.07514976
+      height_min_frac: 0.046527307
+      height_max_frac: 0.4990396
+      above_water_area_m2: 0.34211025
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2026191, g: 0.08073137, b: 0.08230259, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.20261914, g: 0.0807314, b: 0.08230262, a: 1}
+    - renderer_path: 0/0/0/4/1
+      submesh: 0
+      material_name: acmat_9
+      role: keep
+      reason: textured
+      area_m2: 0.097683586
+      height_frac: 0.5639197
+      height_min_frac: 0.5605167
+      height_max_frac: 0.5673227
+      above_water_area_m2: 0.097683586
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5680096, g: 0.19672874, b: 0.14743337, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5680096, g: 0.19672877, b: 0.1474334, a: 1}
+    - renderer_path: 0/0/0/5/0
+      submesh: 0
+      material_name: acmat_10
+      role: keep
+      reason: textured
+      area_m2: 32.120747
+      height_frac: 0.08204275
+      height_min_frac: 0.024990387
+      height_max_frac: 0.50438344
+      above_water_area_m2: 0.5969805
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.7630437, g: 0.56827205, b: 0.10023124, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.7630437, g: 0.5682721, b: 0.10023125, a: 1}
+    - renderer_path: 0/0/0/5/1
+      submesh: 0
+      material_name: acmat_9
+      role: keep
+      reason: textured
+      area_m2: 0.09770682
+      height_frac: 0.56323546
+      height_min_frac: 0.55437547
+      height_max_frac: 0.57209355
+      above_water_area_m2: 0.09770682
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5680096, g: 0.19672874, b: 0.14743337, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5680096, g: 0.19672877, b: 0.1474334, a: 1}
+    - renderer_path: 0/0/0/6/0
+      submesh: 0
+      material_name: acmat_7
+      role: keep
+      reason: textured
+      area_m2: 55.059067
+      height_frac: 0.061076757
+      height_min_frac: 0.021250268
+      height_max_frac: 0.11018035
+      above_water_area_m2: 0
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.2026191, g: 0.08073137, b: 0.08230259, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.20261914, g: 0.0807314, b: 0.08230262, a: 1}
+    - renderer_path: 0/0/0/6/2
+      submesh: 0
+      material_name: container_ship_gogi_acmat_11
+      role: keep
+      reason: small
+      area_m2: 18.58182
+      height_frac: 0.8579403
+      height_min_frac: 0.8307372
+      height_max_frac: 0.88418037
+      above_water_area_m2: 18.58182
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.87572753, g: 0.8651293, b: 0.87358683, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/7/0
+      submesh: 0
+      material_name: acmat_26
+      role: hull
+      reason: largest low slot
+      area_m2: 5915.536
+      height_frac: 0.2119152
+      height_min_frac: 0.05623717
+      height_max_frac: 0.587572
+      above_water_area_m2: 1967.8167
+      topside_band_area_m2: 1321.3586
+      original_srgb: {r: 0.58066416, g: 0.51172125, b: 0.42862555, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5806642, g: 0.51172125, b: 0.42862558, a: 1}
+    - renderer_path: 0/0/0/7/1
+      submesh: 0
+      material_name: acmat_26
+      role: keep
+      reason: small
+      area_m2: 1.6883423
+      height_frac: 0.581073
+      height_min_frac: 0.5742182
+      height_max_frac: 0.587572
+      above_water_area_m2: 1.6883423
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.58066416, g: 0.51172125, b: 0.42862555, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5806642, g: 0.51172125, b: 0.42862558, a: 1}
+    - renderer_path: 0/0/0/8/0
+      submesh: 0
+      material_name: acmat_28
+      role: keep
+      reason: textured
+      area_m2: 76.83136
+      height_frac: 0.7729065
+      height_min_frac: 0.7451788
+      height_max_frac: 0.80013055
+      above_water_area_m2: 76.83136
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.12088581, g: 0.13574558, b: 0.21833527, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.12088584, g: 0.13574561, b: 0.2183353, a: 1}
+    - renderer_path: 0/0/0/8/1
+      submesh: 0
+      material_name: container_ship_gogi_acmat_29
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 393.7555
+      height_frac: 0.75635517
+      height_min_frac: 0.6691009
+      height_max_frac: 0.80461246
+      above_water_area_m2: 393.7555
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.93452436, g: 0.8495675, b: 0.71985793, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/8/2
+      submesh: 0
+      material_name: acmat_30
+      role: keep
+      reason: textured
+      area_m2: 16.543451
+      height_frac: 0.7729898
+      height_min_frac: 0.7429263
+      height_max_frac: 0.802383
+      above_water_area_m2: 16.543451
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.37597454, g: 0.51554507, b: 0.6253547, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.37597457, g: 0.51554507, b: 0.6253547, a: 1}
+    - renderer_path: 0/0/0/9/0
+      submesh: 0
+      material_name: container_ship_gogi_acmat_19
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 131.83221
+      height_frac: 0.75772977
+      height_min_frac: 0.690153
+      height_max_frac: 0.8379522
+      above_water_area_m2: 131.83221
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.94898766, g: 0.85492355, b: 0.7215962, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/9/1
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 3.5774925
+      height_frac: 0.5195473
+      height_min_frac: 0.4804043
+      height_max_frac: 0.5436168
+      above_water_area_m2: 3.5774925
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/9/3
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 93.90984
+      height_frac: 0.49226028
+      height_min_frac: 0.48470718
+      height_max_frac: 0.51066816
+      above_water_area_m2: 93.90984
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/10/0
+      submesh: 0
+      material_name: container_ship_gogi_acmat_29
+      role: superstructure
+      reason: same colour as superstructure
+      area_m2: 709.12305
+      height_frac: 0.6929303
+      height_min_frac: 0.66811144
+      height_max_frac: 0.8082021
+      above_water_area_m2: 709.12305
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.93452436, g: 0.8495675, b: 0.71985793, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/10/1
+      submesh: 0
+      material_name: acmat_31
+      role: keep
+      reason: small
+      area_m2: 130.75177
+      height_frac: 0.7887695
+      height_min_frac: 0.46821636
+      height_max_frac: 0.8082021
+      above_water_area_m2: 130.75177
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.45152193, g: 0.47984946, b: 0.4782784, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.451522, g: 0.47984952, b: 0.4782784, a: 1}
+    - renderer_path: 0/0/0/10/2
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 27.237024
+      height_frac: 0.49143493
+      height_min_frac: 0.46821636
+      height_max_frac: 0.51744354
+      above_water_area_m2: 27.237024
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/11/0
+      submesh: 0
+      material_name: acmat_32
+      role: keep
+      reason: textured
+      area_m2: 1735.9288
+      height_frac: 0.40975937
+      height_min_frac: 0.40975937
+      height_max_frac: 0.40975937
+      above_water_area_m2: 1735.9288
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42866048, g: 0.42498046, b: 0.44342536, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.4286605, g: 0.4249805, b: 0.4434254, a: 1}
+    - renderer_path: 0/0/0/11/1
+      submesh: 0
+      material_name: acmat_32
+      role: keep
+      reason: textured
+      area_m2: 1035.7267
+      height_frac: 0.40975937
+      height_min_frac: 0.40975937
+      height_max_frac: 0.40975937
+      above_water_area_m2: 1035.7267
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.42866048, g: 0.42498046, b: 0.44342536, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.4286605, g: 0.4249805, b: 0.4434254, a: 1}
+    - renderer_path: 0/0/0/12/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 136.54842
+      height_frac: 0.6600211
+      height_min_frac: 0.4974525
+      height_max_frac: 0.81879467
+      above_water_area_m2: 136.54842
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/14/0
+      submesh: 0
+      material_name: acmat_16
+      role: keep
+      reason: textured
+      area_m2: 46.514175
+      height_frac: 0.5067427
+      height_min_frac: 0.49013516
+      height_max_frac: 0.5241524
+      above_water_area_m2: 46.514175
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.3131172, g: 0.27039075, b: 0.2574676, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.31311724, g: 0.27039078, b: 0.25746763, a: 1}
+    - renderer_path: 0/0/0/14/1
+      submesh: 0
+      material_name: acmat_57
+      role: keep
+      reason: textured
+      area_m2: 4.7681646
+      height_frac: 0.52455395
+      height_min_frac: 0.522488
+      height_max_frac: 0.52549213
+      above_water_area_m2: 4.7681646
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5336544, g: 0.14635924, b: 0.15630746, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5336544, g: 0.14635926, b: 0.15630749, a: 1}
+    - renderer_path: 0/0/0/14/2
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 88.22439
+      height_frac: 0.5601475
+      height_min_frac: 0.52549213
+      height_max_frac: 0.590318
+      above_water_area_m2: 88.22439
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/14/3
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 0.2852522
+      height_frac: 0.5749454
+      height_min_frac: 0.5687315
+      height_max_frac: 0.5903128
+      above_water_area_m2: 0.2852522
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/15/0
+      submesh: 0
+      material_name: acmat_8
+      role: keep
+      reason: textured
+      area_m2: 3.172218
+      height_frac: 0.5303938
+      height_min_frac: 0.51680946
+      height_max_frac: 0.5439747
+      above_water_area_m2: 3.172218
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8364701, g: 0.42316708, b: 0.12295056, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8364701, g: 0.4231671, b: 0.12295059, a: 1}
+    - renderer_path: 0/0/0/16/1
+      submesh: 0
+      material_name: acmat_30
+      role: keep
+      reason: textured
+      area_m2: 2.6876988
+      height_frac: 0.5788552
+      height_min_frac: 0.5730165
+      height_max_frac: 0.58507663
+      above_water_area_m2: 2.6876988
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.37597454, g: 0.51554507, b: 0.6253547, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.37597457, g: 0.51554507, b: 0.6253547, a: 1}
+    - renderer_path: 0/0/0/17/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 4.978283
+      height_frac: 0.5716434
+      height_min_frac: 0.5693784
+      height_max_frac: 0.57475513
+      above_water_area_m2: 4.978283
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/24/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 2.4868748
+      height_frac: 0.5437533
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453502
+      above_water_area_m2: 2.4868748
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/25/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 2.6633818
+      height_frac: 0.5437533
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453502
+      above_water_area_m2: 2.6633818
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/26/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 2.4527829
+      height_frac: 0.5437533
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453502
+      above_water_area_m2: 2.4527829
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/28/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 0.2617826
+      height_frac: 0.57235706
+      height_min_frac: 0.56924284
+      height_max_frac: 0.57619715
+      above_water_area_m2: 0.2617826
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/29/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 0.75650716
+      height_frac: 0.57316023
+      height_min_frac: 0.57156175
+      height_max_frac: 0.57475764
+      above_water_area_m2: 0.75650716
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/30/0
+      submesh: 0
+      material_name: acmat_0
+      role: keep
+      reason: textured
+      area_m2: 0.2618026
+      height_frac: 0.57235706
+      height_min_frac: 0.56924284
+      height_max_frac: 0.57619715
+      above_water_area_m2: 0.2618026
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.24022129, g: 0.23947048, b: 0.25173447, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.24022132, g: 0.23947051, b: 0.2517345, a: 1}
+    - renderer_path: 0/0/0/31/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 0.046268694
+      height_frac: 0.57300806
+      height_min_frac: 0.5707922
+      height_max_frac: 0.575223
+      above_water_area_m2: 0.046268694
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/35/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 1.1601738
+      height_frac: 0.54375356
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453528
+      above_water_area_m2: 1.1601738
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/36/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 1.1601387
+      height_frac: 0.5437533
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453502
+      above_water_area_m2: 1.1601387
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/37/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 1.9453487
+      height_frac: 0.5437533
+      height_min_frac: 0.54215425
+      height_max_frac: 0.5453502
+      above_water_area_m2: 1.9453487
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    - renderer_path: 0/0/0/38/0
+      submesh: 0
+      material_name: acmat_9
+      role: keep
+      reason: textured
+      area_m2: 0.09768861
+      height_frac: 0.5632347
+      height_min_frac: 0.5598315
+      height_max_frac: 0.56664014
+      above_water_area_m2: 0.09768861
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5680096, g: 0.19672874, b: 0.14743337, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5680096, g: 0.19672877, b: 0.1474334, a: 1}
+    - renderer_path: 0/0/0/39/0
+      submesh: 0
+      material_name: acmat_9
+      role: keep
+      reason: textured
+      area_m2: 0.09771155
+      height_frac: 0.56391925
+      height_min_frac: 0.5550607
+      height_max_frac: 0.57277876
+      above_water_area_m2: 0.09771155
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.5680096, g: 0.19672874, b: 0.14743337, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.5680096, g: 0.19672877, b: 0.1474334, a: 1}
+    - renderer_path: 0/0/0/40/0
+      submesh: 0
+      material_name: acmat_37
+      role: keep
+      reason: textured
+      area_m2: 0.90941507
+      height_frac: 0.5632313
+      height_min_frac: 0.55715203
+      height_max_frac: 0.56931186
+      above_water_area_m2: 0.90941507
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+    - renderer_path: 0/0/0/41/0
+      submesh: 0
+      material_name: acmat_37
+      role: keep
+      reason: textured
+      area_m2: 0.9094237
+      height_frac: 0.563916
+      height_min_frac: 0.55783725
+      height_max_frac: 0.56999445
+      above_water_area_m2: 0.9094237
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+    - renderer_path: 0/0/0/42/0
+      submesh: 0
+      material_name: acmat_37
+      role: keep
+      reason: textured
+      area_m2: 0.9094837
+      height_frac: 0.56323117
+      height_min_frac: 0.55427825
+      height_max_frac: 0.5721856
+      above_water_area_m2: 0.9094837
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+    - renderer_path: 0/0/0/43/0
+      submesh: 0
+      material_name: acmat_37
+      role: keep
+      reason: textured
+      area_m2: 0.9094043
+      height_frac: 0.5639158
+      height_min_frac: 0.55496347
+      height_max_frac: 0.5728682
+      above_water_area_m2: 0.9094043
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.8285122, g: 0.031713046, b: 0.0134613225, a: 1}
+    - renderer_path: 0/0/0/44/0
+      submesh: 0
+      material_name: container_ship_gogi_acmat_21
+      role: keep
+      reason: small
+      area_m2: 3.1262572
+      height_frac: 0.56323117
+      height_min_frac: 0.55446494
+      height_max_frac: 0.57199895
+      above_water_area_m2: 3.1262572
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.90987813, g: 0.90987813, b: 0.90987813, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/45/0
+      submesh: 0
+      material_name: container_ship_gogi_acmat_21
+      role: keep
+      reason: small
+      area_m2: 3.1263132
+      height_frac: 0.5639159
+      height_min_frac: 0.5551476
+      height_max_frac: 0.57268417
+      above_water_area_m2: 3.1263132
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.90987813, g: 0.90987813, b: 0.90987813, a: 1}
+      textured: 0
+      texture_mean_srgb: {r: 1, g: 1, b: 1, a: 1}
+    - renderer_path: 0/0/0/46/0
+      submesh: 0
+      material_name: acmat_23
+      role: keep
+      reason: textured
+      area_m2: 10.710591
+      height_frac: 0.5437958
+      height_min_frac: 0.54172736
+      height_max_frac: 0.5458641
+      above_water_area_m2: 10.710591
+      topside_band_area_m2: 0
+      original_srgb: {r: 0.07024106, g: 0.07357799, b: 0.077591635, a: 1}
+      textured: 1
+      texture_mean_srgb: {r: 0.070241086, g: 0.07357802, b: 0.07759165, a: 1}
+    paint_note: slots=101 hull=1 (14 % of area) super=6 (7 %) textured_kept=64

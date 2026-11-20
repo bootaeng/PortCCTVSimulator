@@ -22,9 +22,10 @@ namespace PortCCTV
         internal static readonly List<Junction> Junctions = new List<Junction>();
         internal static readonly List<(Vector3 p, float yaw)> MedianStarts = new List<(Vector3, float)>();
         internal static readonly List<(float x0, float x1, float z, float seaDir)> CoastalRoads = new List<(float, float, float, float)>();
-        internal static void ResetRoads() { Junctions.Clear(); MedianStarts.Clear(); CoastalRoads.Clear(); }
+        internal static void ResetRoads() { Junctions.Clear(); MedianStarts.Clear(); CoastalRoads.Clear(); _shopLotN = 0; }
 
-        const string SignSpeed = "road_sign_3", SignNoEntry = "road_sign_1", SignNoLeft = "road_sign_5", SignNoParking = "road_sign_6", SignKeepRight = "road_sign_4";
+        // Korean regulatory signs (South Korean Road Signs pack, 2026-11-10) where the pack has them; keep-right stays pictogram
+        const string SignSpeed = "kr_sign_sl50", SignNoEntry = "kr_sign_no_entry", SignNoLeft = "kr_sign_no_left", SignNoParking = "kr_sign_no_parking", SignKeepRight = "road_sign_4";
 
         /// <summary>Mid-block signalled pedestrian crossing (zebra, stop lines, vehicle and pedestrian signals on both sides).</summary>
         public static void PedCrossing(Vector2 centre, bool mainAlongX, float wMain)
@@ -64,7 +65,7 @@ namespace PortCCTV
         /// <summary>A sign standing at `pos` whose face points along `face` (xz); street trees within 4.5 m are removed.</summary>
         static void PlaceSign(string key, Vector3 pos, Vector2 face)
         {
-            float yaw = Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg;              // sign face = local +z
+            float yaw = Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg + (key.StartsWith("kr_") ? KrSignYaw : 0f);   // pictogram pack: face = local +z
             E.RemoveAll(e => e.kind == "tree" && (new Vector2(e.center.x - pos.x, e.center.z - pos.z)).sqrMagnitude < 4.5f * 4.5f);
             Prefab("street", key, pos, yaw, Vector3.one, id: Uid("sign"));
         }
@@ -72,7 +73,7 @@ namespace PortCCTV
         static bool FreeSpot(Vector3 p, float r)
         {
             foreach (var e in E)
-                if ((e.kind == "street" || e.kind == "signal" || e.kind == "street_light" || e.kind == "bench" || e.kind == "power_pole") && e.shape == "prefab"
+                if ((e.kind == "street" || e.kind == "road_sign" || e.kind == "signal" || e.kind == "street_light" || e.kind == "bench" || e.kind == "power_pole") && e.shape == "prefab"
                     && (new Vector2(e.center.x - p.x, e.center.z - p.z)).sqrMagnitude < r * r) return false;
             return true;
         }

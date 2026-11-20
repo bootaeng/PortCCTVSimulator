@@ -1,0 +1,188 @@
+{
+ "schema_version": 1,
+ "scenario_id": "example_ct_loaded_transit",
+ "harbor_id": "container_terminal_01",
+ "camera_preset_id": "ct_B_breakwater_head",
+ "environment": {
+  "preset_id": "day_clear",
+  "water_preset_id": "calm",
+  "water_time_s": 12.0
+ },
+ "vessels": [
+  {
+   "object_id": "v00",
+   "asset_id": "feeder_ship",
+   "x": -270,
+   "z": 50.6,
+   "heading_deg": 180,
+   "immersion_m": 4.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v01",
+   "asset_id": "general_cargo",
+   "x": 40,
+   "z": -230,
+   "heading_deg": 110,
+   "immersion_m": 5.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v02",
+   "asset_id": "tug_harbor",
+   "x": 150,
+   "z": -200,
+   "heading_deg": 120,
+   "immersion_m": 6.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v03",
+   "asset_id": "tug_harbor",
+   "x": -80,
+   "z": -150,
+   "heading_deg": 170,
+   "immersion_m": 6.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v04",
+   "asset_id": "rib",
+   "x": -30,
+   "z": -40,
+   "heading_deg": 250,
+   "immersion_m": 0.1,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v05",
+   "asset_id": "barge",
+   "x": 100,
+   "z": -90,
+   "heading_deg": 10,
+   "immersion_m": 0.15,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v06",
+   "asset_id": "tanker",
+   "x": 420,
+   "z": -1150,
+   "heading_deg": 80,
+   "immersion_m": 6.0,
+   "motion": {
+    "mode": "anchor"
+   }
+  },
+  {
+   "object_id": "v07",
+   "asset_id": "pilot_boat",
+   "x": -100,
+   "z": -90,
+   "heading_deg": 75,
+   "immersion_m": 1.1,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v08",
+   "asset_id": "police_boat",
+   "x": 45,
+   "z": -130,
+   "heading_deg": 255,
+   "immersion_m": 0.6,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v09",
+   "asset_id": "barge",
+   "x": 100,
+   "z": -950,
+   "heading_deg": 65,
+   "immersion_m": 0.15,
+   "motion": {
+    "mode": "anchor"
+   }
+  },
+  {
+   "object_id": "v11",
+   "asset_id": "feeder_ship",
+   "x": 150,
+   "z": 50.6,
+   "heading_deg": 180,
+   "immersion_m": 4.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v10",
+   "asset_id": "feeder_ship",
+   "x": 880,
+   "z": -1150,
+   "heading_deg": 245,
+   "immersion_m": 4.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v12",
+   "asset_id": "bulk_carrier",
+   "x": -350,
+   "z": -1350,
+   "heading_deg": 60,
+   "immersion_m": 7.0,
+   "motion": {
+    "mode": "anchor"
+   }
+  },
+  {
+   "object_id": "v13",
+   "asset_id": "container_ship_rm02",
+   "x": 640,
+   "z": -653,
+   "heading_deg": 170,
+   "immersion_m": 11.0,
+   "motion": {
+    "mode": "none"
+   }
+  },
+  {
+   "object_id": "v14",
+   "asset_id": "container_ship_gogi",
+   "x": 682,
+   "z": -1242,
+   "heading_deg": 165,
+   "immersion_m": 9.4,
+   "motion": {
+    "mode": "none"
+   }
+  }
+ ],
+ "capture": {
+  "width": 1920,
+  "height": 1080,
+  "warmup_frames": 6,
+  "write_mask": false,
+  "compare_cpu_mask": false,
+  "mask_stride": 1,
+  "strict_placement": false
+ },
+ "notes": "Two loaded container ships passing outside the breakwater (default traffic otherwise) (example scene)"
+}

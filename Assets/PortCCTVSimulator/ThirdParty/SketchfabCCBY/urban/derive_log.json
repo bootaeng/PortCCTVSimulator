@@ -1,0 +1,199 @@
+{
+ "ny_hirise_apartment_aitortilla01_nobrand.glb": {
+  "source": "ny_hirise_apartment_aitortilla01.glb",
+  "source_sha256": "83d803d772e4ee1062e8c67b63bc3b4358c845ff539d964327de6940b5a4f670",
+  "output": "ny_hirise_apartment_aitortilla01_nobrand.glb",
+  "edits": [
+   {
+    "rect": [
+     382,
+     218,
+     546,
+     255
+    ],
+    "fill_rgb": [
+     125,
+     125,
+     130
+    ]
+   },
+   {
+    "rect": [
+     546,
+     210,
+     772,
+     247
+    ],
+    "fill_rgb": [
+     89,
+     80,
+     74
+    ]
+   },
+   {
+    "rect": [
+     823,
+     220,
+     905,
+     255
+    ],
+    "fill_rgb": [
+     92,
+     85,
+     69
+    ]
+   },
+   {
+    "rect": [
+     957,
+     193,
+     1024,
+     227
+    ],
+    "fill_rgb": [
+     4,
+     6,
+     5
+    ]
+   },
+   {
+    "rect": [
+     430,
+     58,
+     510,
+     72
+    ],
+    "fill_rgb": [
+     13,
+     13,
+     13
+    ]
+   },
+   {
+    "material": "hirise1",
+    "alphaMode": "BLEND->MASK",
+    "alphaCutoff": 0.5
+   }
+  ],
+  "image": {
+   "format": "PNG",
+   "size": [
+    1024,
+    1024
+   ],
+   "mode": "RGBA",
+   "original_bytes": 1027133,
+   "new_bytes": 987404
+  },
+  "output_sha256": "70f3f6c9f2bd9dc26cafa2c604ce5e5ac04507ea5aa93028e36bc2dadf4d7628"
+ },
+ "midrise_w2w_office_aitortilla01_nobrand.glb": {
+  "source": "midrise_w2w_office_aitortilla01.glb",
+  "source_sha256": "91beb16c4462ae79d5118972e5a6ff5ad673fb089d45200481bfb9f278b80933",
+  "output": "midrise_w2w_office_aitortilla01_nobrand.glb",
+  "edits": [
+   {
+    "rect": [
+     284,
+     535,
+     512,
+     556
+    ],
+    "fill_rgb": [
+     46,
+     46,
+     49
+    ]
+   },
+   {
+    "rect": [
+     284,
+     663,
+     512,
+     685
+    ],
+    "fill_rgb": [
+     61,
+     68,
+     67
+    ]
+   },
+   {
+    "rect": [
+     316,
+     444,
+     378,
+     466
+    ],
+    "fill_rgb": [
+     85,
+     82,
+     70
+    ]
+   },
+   {
+    "rect": [
+     426,
+     444,
+     494,
+     466
+    ],
+    "fill_rgb": [
+     90,
+     85,
+     66
+    ]
+   }
+  ],
+  "image": {
+   "format": "PNG",
+   "size": [
+    512,
+    1024
+   ],
+   "mode": "RGB",
+   "original_bytes": 676830,
+   "new_bytes": 656911
+  },
+  "output_sha256": "04e3b6cd37a8ba7e3ff89ac15a41d79f395ef24935438fc71fc6b966878900c3"
+ },
+ "office_tower_tryfield_gloss.glb": {
+  "source": "office_tower_tryfield.glb",
+  "source_sha256": "23846890b988cc5c52e13751ad5e03bc3cc92935febc6760dab25f59da7ff83e",
+  "output": "office_tower_tryfield_gloss.glb",
+  "edits": [
+   {
+    "material": "02_-_Defaultww",
+    "roughnessFactor": [
+     0.6,
+     0.08
+    ]
+   },
+   {
+    "material": "02_-_Default",
+    "roughnessFactor": [
+     0.45018939393939394,
+     0.15
+    ]
+   },
+   {
+    "material": "02_-_Default",
+    "baseColorFactor": [
+     [
+      0.16081947190583878,
+      0.19398744298558535,
+      0.20460918146957563,
+      1.0
+     ],
+     [
+      0.24122920785875818,
+      0.290981164478378,
+      0.30691377220436344,
+      1.0
+     ]
+    ]
+   }
+  ],
+  "output_sha256": "fc332a3950fe9f75dbf1be4d7fefd54c92dcba90296b6f437e7eb1d113f6b6e2"
+ }
+}

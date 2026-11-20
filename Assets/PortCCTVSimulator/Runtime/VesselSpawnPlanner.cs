@@ -71,7 +71,8 @@ namespace PortCCTV
                 float cameraDepth = Vector2.Dot(xz - cameraXZ, forward);
                 if (!targetViewport.HasValue && sameTypeDepth.Any(d => Mathf.Abs(d - cameraDepth) < Mathf.Max(35f, length * 0.3f)))
                     continue;
-                float heading = Mathf.Repeat((random.Next(2) == 0 ? 90f : 270f) + (float)(random.NextDouble() * 56f - 28f), 360f);
+                // any heading (2026-11-16: the former 90/270 +-28 deg made every added hull look broadside and alike)
+                float heading = (float)(random.NextDouble() * 360.0);
                 var candidate = new VesselPlacement
                 {
                     asset_id = entry.asset_id, x = xz.x, z = xz.y, heading_deg = heading,
@@ -129,6 +130,13 @@ namespace PortCCTV
                         + 0.1f * Mathf.Clamp01(near / Mathf.Max(near, distance))
                         + 0.1f * Mathf.Min(screenWidth / 0.12f, 1f) + 0.02f * (float)random.NextDouble();
                 if (score <= bestScore) continue;
+                // shared screen-layout rules (PlacementQuality): no same hull close by / look-alike, no heavy box overlap
+                var trial = existing.ToList();
+                candidate.object_id = "__candidate__";
+                trial.Add(candidate);
+                var layout = PlacementQuality.Evaluate(world, trial, 1920, Mathf.Max(1, Mathf.RoundToInt(1920f / cam.aspect)));
+                if (layout.Involves("__candidate__") || layout.issues.Any(i => i.rule == "same_asset_count" && i.a == entry.asset_id)) continue;
+                candidate.object_id = "";
                 bestScore = score;
                 placement = candidate;
             }

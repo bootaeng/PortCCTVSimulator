@@ -20,16 +20,23 @@ namespace PortCCTV
 
         static readonly Dictionary<string, string> Cameras = new Dictionary<string, string>
         {
+            // framing_v2_20261119: low shore cameras (SMD VIS_Onshore type) and side views with a far shore (SeaShips type)
+            { "ct_F_south_bw_sea", "F - 남방파제 상치벽 1.5 m (외해 정박지)" },
+            { "ct_G_bw_head_approach", "G - 방파제 두부 상치벽 1.5 m (입구 접근로)" },
+            { "ct_H_east_quay_basin", "H - 동측 안벽 마스트 11.5 m (항내 → 입구)" },
+            { "ct_I_east_bw_sea", "I - 동방파제 상치벽 1.5 m (동측 접근 해역)" },
+            { "ct_J_south_bw_berths", "J - 남방파제 폴 5.5 m (항내·선석)" },
+            { "fp_D_market_entrance", "D - 위판장 지붕 끝 1 m (항내 → 입구)" },
+            { "fp_E_west_arm_sea", "E - 서방파제 상치벽 1.5 m (외해)" },
+            { "fp_F_east_arm_sea", "F - 동방파제 상치벽 1.5 m (접근 해역)" },
+            { "mr_D_west_bw_fairway", "D - 서방파제 폴 3 m (항로 → 입구)" },
+            { "mr_E_beach_bw_bay", "E - 해변 방파제 두부 상치벽 1.5 m (만)" },
+            { "mr_F_south_bw_sea", "F - 남방파제 상치벽 1.5 m (만 외해)" },
+            // elevated mast overviews kept from the 2026-11-16 set (2026-11-20)
             { "ct_A_quay_east_mast", "A - 안벽 마스트 20 m (항내 → 입구)" },
             { "ct_B_breakwater_head", "B - 방파제 두부 10 m (입구 접근로)" },
             { "ct_C_admin_roof", "C - 동측 안벽 마스트 30 m (입구)" },
-            { "ct_D_hill_tower", "D - 동측 곶 58 m (산업항 전경)" },
-            { "ct_E_basin_breakwater", "E - 남방파제 마스트 13 m (선석)" },
             { "fp_A_market_roof", "A - 위판장 지붕 11 m (항내 → 입구)" },
-            { "fp_B_hillside", "B - 서측 곶 40 m (입구 감시)" },
-            { "fp_C_breakwater", "C - 동방파제 18 m (선착장·항구 마을)" },
-            { "mr_A_promenade", "A - 산책로 가로등 7 m (계류장)" },
-            { "mr_B_tower", "B - 동측 곶 60 m (해변·해안 도시)" },
             { "mr_C_breakwater", "C - 방파제 두부 12 m (입구 접근로)" },
             { "cam_A_quay_mast", "A - 북측 안벽 마스트 (12 m)" },
             { "cam_B_breakwater_head", "B - 동방파제 두부 (8 m)" },
@@ -50,7 +57,7 @@ namespace PortCCTV
         static readonly Dictionary<string, string> Waters = new Dictionary<string, string>
         {
             { "calm", "잔잔한 항내" },
-            { "light_chop", "약한 파랑" },
+            { "light_chop", "약한 파랑" }, { "moderate", "보통 파랑" }, { "rough", "거친 파랑" },
         };
 
         static readonly Dictionary<string, string> Vessels = new Dictionary<string, string>
@@ -58,11 +65,13 @@ namespace PortCCTV
             { "kayak", "카약" }, { "canoe", "카누" }, { "sailing_dinghy", "딩기 요트" }, { "sailing_yacht", "세일링 요트" },
             { "rib", "고무보트(RIB)" }, { "motorboat", "모터보트" }, { "cabin_cruiser", "캐빈 크루저" },
             { "fishing_boat", "소형 어선" }, { "korean_fishing_boat", "연안 어선" }, { "ferry", "여객선" },
-            { "tugboat", "예인선(구형)" }, { "barge", "바지선" }, { "container_ship", "컨테이너선(구형)" }, { "tanker", "유조선" },
+            { "tugboat", "예인선(구형)" }, { "barge", "바지선" }, { "tanker", "유조선" },
             { "tug_harbor", "항만 예인선" }, { "general_cargo", "일반 화물선" }, { "feeder_ship", "컨테이너 피더선" }, { "bulk_carrier", "벌크선" },
             { "lng_carrier", "LNG 운반선" }, { "trawler", "트롤 어선" }, { "fishing_vessel", "어선 12 m" }, { "inshore_fishing_boat", "소형 연안 어선" },
             { "sar_boat", "구조정" }, { "pilot_boat", "도선선" }, { "patrol_boat", "경비정" }, { "police_boat", "경찰정" },
             { "speedboat", "스피드보트" }, { "motor_yacht", "모터 요트" },
+            { "fishing_boat_iii", "연안 어선 23 m" }, { "small_motorboat", "소형 모터보트" }, { "crrc", "고무 단정(CRRC)" },
+            { "container_ship_loaded", "만재 컨테이너선 262 m" }, { "container_ship_rm02", "컨테이너선 241 m" }, { "container_ship_gogi", "컨테이너선 146 m" },
         };
 
         public static readonly string[] MotionModes = { "none", "anchor", "roam", "auto" };
@@ -80,13 +89,14 @@ namespace PortCCTV
 
         public static string Harbor(string id) => Harbors.TryGetValue(id, out var s) ? s : (id == HarborLibrary.LegacyHarborId ? "구형 단순 항만" : HarborLibrary.DisplayName(id));
         public static string Camera(CameraPreset p) => Cameras.TryGetValue(p.id, out var s) ? s : p.display_name;
-        public static readonly string[] SensorPresetNames = { "끔", "HD IP", "일반 CCTV", "저화질", "야간 IR 흑백" };
+        public static readonly string[] SensorPresetNames = { "끔", "HD IP", "일반 CCTV", "저화질", "야간 IR 흑백", "야간 IR 조명" };
         public static string SensorPresetNote(string id) => id switch
         {
             "hd_ip" => "최신 HD IP 카메라: 약한 왜곡·잡음, JPEG 85",
             "typical" => "일반 항만 CCTV: 술통형 왜곡, 약한 흐림, 잡음, JPEG 55",
             "low_quality" => "오래된 저화질: 강한 왜곡·흐림·흔들림·잡음, JPEG 25",
             "night_ir" => "야간 적외선 모드: 흑백, 잡음 많음, 흐림",
+            "night_ir_illum" => "야간 적외선 모드 + 카메라 자체 850 nm IR 조명 (가까운 부두·선박이 밝아짐)",
             "custom" => "사용자 지정",
             _ => "열화 없음: 렌더 화면 그대로 저장",
         };

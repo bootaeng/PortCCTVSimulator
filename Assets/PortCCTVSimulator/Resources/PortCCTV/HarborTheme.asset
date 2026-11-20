@@ -47,8 +47,6 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: 388e3f668069f68408f66e5120cffeee, type: 2}
   - key: rock
     material: {fileID: 2100000, guid: 6b86637242c8fe9438faa38f4c47710b, type: 2}
-  - key: paint_yellow
-    material: {fileID: 2100000, guid: 900d459c1c39f124081ed0c90bf5f146, type: 2}
   - key: paint_white
     material: {fileID: 2100000, guid: 39823a83e5ec10a4d9c531ab2240295d, type: 2}
   - key: rubber
@@ -183,6 +181,30 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: 5f2cf973abd64ef4887e8a9141952fc7, type: 2}
   - key: car_light_rear
     material: {fileID: 2100000, guid: 3f1b275b8edbf0f4f8148b96b6580885, type: 2}
+  - key: wall_conc_grey
+    material: {fileID: 2100000, guid: a428b4b6b7a437d4ab026f5d48834503, type: 2}
+  - key: wall_conc_cream
+    material: {fileID: 2100000, guid: ff0b023aba9af694d959c1c61f0c5c6e, type: 2}
+  - key: wall_conc_blue
+    material: {fileID: 2100000, guid: f00b0599a3f5cbd4c9b7ba1208d906d2, type: 2}
+  - key: wall_conc_pink
+    material: {fileID: 2100000, guid: 616ece5339325e14ebd761b53cd6f3bb, type: 2}
+  - key: wall_conc_green
+    material: {fileID: 2100000, guid: cc6dd0daca5192e40b4c3b5b0d33631f, type: 2}
+  - key: corrugated_blue
+    material: {fileID: 2100000, guid: 39545bd53f6c94e469d412490c1d5738, type: 2}
+  - key: corrugated_green
+    material: {fileID: 2100000, guid: df87bfbaa8f77ed459c54fda6aeaa9dc, type: 2}
+  - key: corrugated_red
+    material: {fileID: 2100000, guid: de9bee69277d5504099e6a13a6c24e6f, type: 2}
+  - key: corrugated_grey
+    material: {fileID: 2100000, guid: 3770142ca46468e40ad957b38268c2ed, type: 2}
+  - key: corrugated_white
+    material: {fileID: 2100000, guid: c465b3dfc2eb08a4fa22b79b2eb62917, type: 2}
+  - key: paint_yellow
+    material: {fileID: 2100000, guid: 900d459c1c39f124081ed0c90bf5f146, type: 2}
+  - key: paint_hatch_yellow
+    material: {fileID: 2100000, guid: 2d46f3cdf8978874f9a3284c3174cc1d, type: 2}
   - key: concrete
     material: {fileID: 2100000, guid: b246d1096073a564480a30e1e7ef96f0, type: 2}
   - key: roof_concrete
@@ -723,7 +745,7 @@ MonoBehaviour:
       tint=0.72 dropped=0 merged=False renderers=1 bounds=(92.07, 2.61, 17.15) pivotNode=-;
       flattened 0 texture slots; kept textured: prop_shore_scan_0_tint'
   - key: car_a_00
-    prefab: {fileID: 6257090961768446913, guid: 747cf2aa826c7d849a3b61fa9812a5ad, type: 3}
+    prefab: {fileID: 4280982773430833246, guid: 747cf2aa826c7d849a3b61fa9812a5ad, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -731,7 +753,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_01
-    prefab: {fileID: 8648169930163166165, guid: 3cdd5b14034725a44a37a23e36d8c6a1, type: 3}
+    prefab: {fileID: 5369333337079866297, guid: 3cdd5b14034725a44a37a23e36d8c6a1, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -739,7 +761,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_02
-    prefab: {fileID: 7136342164004989151, guid: 13499737dbb645c48a299c8648bcbfc3, type: 3}
+    prefab: {fileID: 3545947646184264191, guid: 13499737dbb645c48a299c8648bcbfc3, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -747,7 +769,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_03
-    prefab: {fileID: 7616213867189664751, guid: e81a0e7926929de4a92b249625578d4a, type: 3}
+    prefab: {fileID: 6055064717267293419, guid: e81a0e7926929de4a92b249625578d4a, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -755,7 +777,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_04
-    prefab: {fileID: 7031339514969190089, guid: a98d90e838ce1be4492143ae61fefdb6, type: 3}
+    prefab: {fileID: 5502572380850382702, guid: a98d90e838ce1be4492143ae61fefdb6, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -763,7 +785,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_05
-    prefab: {fileID: 2915611116250515270, guid: d1d4126037811bc4b89a886061c79c47, type: 3}
+    prefab: {fileID: 2533176201546820598, guid: d1d4126037811bc4b89a886061c79c47, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -771,7 +793,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_06
-    prefab: {fileID: 1207335733663409554, guid: d3c69c9319b74944bb356cb017cf01fc, type: 3}
+    prefab: {fileID: 2399927784141388209, guid: d3c69c9319b74944bb356cb017cf01fc, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -779,7 +801,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_07
-    prefab: {fileID: 8790492619162381505, guid: e3c8af46406685c49822d0b480f88b46, type: 3}
+    prefab: {fileID: 2231856383660680312, guid: e3c8af46406685c49822d0b480f88b46, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -787,7 +809,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_08
-    prefab: {fileID: 5995223044276125266, guid: 43796b9bdea6a8a4fa9193e1ef2c4507, type: 3}
+    prefab: {fileID: 1861074244096812763, guid: 43796b9bdea6a8a4fa9193e1ef2c4507, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -795,7 +817,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_a_09
-    prefab: {fileID: 1362677361731688836, guid: bd23712ce21e2044da66191bdf45b3d4, type: 3}
+    prefab: {fileID: 2634963006408922100, guid: bd23712ce21e2044da66191bdf45b3d4, type: 3}
     source: 'Generic passenger car pack (comrade1280, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/generic_passenger_car_pack_comrade1280.glb
       sha256=a2d5667f3a1d47fa0dbb84cf2cf76b8aeee6a69f7fff209af09973c625f9be6e scale=1
       clusters=10 skipped=0; car_a_00[5.19x1.70x2.07 n=7] car_a_01[3.91x1.04x1.77
@@ -803,7 +825,7 @@ MonoBehaviour:
       n=11] car_a_05[3.94x1.57x1.96 n=7] car_a_06[4.24x1.28x1.88 n=7] car_a_07[4.38x1.38x1.95
       n=7] car_a_08[3.26x1.32x1.61 n=7] car_a_09[4.36x1.34x1.94 n=7]'
   - key: car_b_00
-    prefab: {fileID: 2901280149472553367, guid: caf10b535c205ae4cbe4f0c44250ea55, type: 3}
+    prefab: {fileID: 2936590070778528252, guid: caf10b535c205ae4cbe4f0c44250ea55, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -812,7 +834,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_01
-    prefab: {fileID: 2391322807640341565, guid: 3b2b2d0e63bc31946872f17657b920ee, type: 3}
+    prefab: {fileID: 3416785403543301030, guid: 3b2b2d0e63bc31946872f17657b920ee, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -821,7 +843,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_02
-    prefab: {fileID: 9168110696658855292, guid: b3814de5b1a264b4e9e447339b7fffa9, type: 3}
+    prefab: {fileID: 5535688071327367600, guid: b3814de5b1a264b4e9e447339b7fffa9, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -830,7 +852,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_03
-    prefab: {fileID: 2018689172723642504, guid: f4b4092bd58920e4a93787f2d535b8e1, type: 3}
+    prefab: {fileID: 6878738182349056113, guid: f4b4092bd58920e4a93787f2d535b8e1, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -839,7 +861,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_04
-    prefab: {fileID: 8294646610521152413, guid: 51971fc4a903ea8418104791bcc674e9, type: 3}
+    prefab: {fileID: 2285261450797555108, guid: 51971fc4a903ea8418104791bcc674e9, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -848,7 +870,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_05
-    prefab: {fileID: 3222487477535878998, guid: 18973a1d728558842b51113b85ad78bf, type: 3}
+    prefab: {fileID: 7259463401313960917, guid: 18973a1d728558842b51113b85ad78bf, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -857,7 +879,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_06
-    prefab: {fileID: 7116786118754125590, guid: be55efa68988f2146bc7e34b2e8d56c4, type: 3}
+    prefab: {fileID: 6576182051741670652, guid: be55efa68988f2146bc7e34b2e8d56c4, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -866,7 +888,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_07
-    prefab: {fileID: 2503531361353907497, guid: d1b03766569274246881fc8961b65599, type: 3}
+    prefab: {fileID: 4901478750723295793, guid: d1b03766569274246881fc8961b65599, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -875,7 +897,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_08
-    prefab: {fileID: 9105790679653642581, guid: 7eff8424ff824d5419502198f3370035, type: 3}
+    prefab: {fileID: 5474122862886254176, guid: 7eff8424ff824d5419502198f3370035, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -884,7 +906,7 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: car_b_09
-    prefab: {fileID: 6766900252803146971, guid: a467ebf620bcdfd48b6ca5ce6a2f3e19, type: 3}
+    prefab: {fileID: 4181938984180324029, guid: a467ebf620bcdfd48b6ca5ce6a2f3e19, type: 3}
     source: 'Traffic Car Pack (MaG80, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/traffic_car_pack_MaG80.glb
       sha256=ed1de3874d15e86158ab268eb767f25605086c995011d53271c1794edb2d0c62 scale=0.5
       clusters=10 skipped=1; car_b_00[4.49x1.80x2.03 n=18] car_b_01[4.57x1.48x2.01
@@ -893,42 +915,42 @@ MonoBehaviour:
       n=24] car_b_08[3.38x1.38x1.72 n=17] skip[1.3x1.4x2.2 n=16] car_b_09[3.21x1.36x1.78
       n=17]'
   - key: van_a_00
-    prefab: {fileID: 8124967017190837647, guid: 3314e66a057f58f4da9e72e6fe086d18, type: 3}
+    prefab: {fileID: 4691377225967371318, guid: 3314e66a057f58f4da9e72e6fe086d18, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
       n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
       n=5] van_a_05[7.48x2.49x2.76 n=5]'
   - key: van_a_01
-    prefab: {fileID: 1519920266764554311, guid: bb9b7d932798281458b177c40e1bf5f3, type: 3}
+    prefab: {fileID: 2544489277518592067, guid: bb9b7d932798281458b177c40e1bf5f3, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
       n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
       n=5] van_a_05[7.48x2.49x2.76 n=5]'
   - key: van_a_02
-    prefab: {fileID: 3377607210558286556, guid: 5d2555d7a26a6d94ea140c4a6e623ab9, type: 3}
+    prefab: {fileID: 2218959051284548350, guid: 5d2555d7a26a6d94ea140c4a6e623ab9, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
       n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
       n=5] van_a_05[7.48x2.49x2.76 n=5]'
   - key: van_a_03
-    prefab: {fileID: 1430242935675637414, guid: d5626d7b39e95ba46bf4b59c48d4fe41, type: 3}
+    prefab: {fileID: 554520913510606686, guid: d5626d7b39e95ba46bf4b59c48d4fe41, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
       n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
       n=5] van_a_05[7.48x2.49x2.76 n=5]'
   - key: van_a_04
-    prefab: {fileID: 1513816138822274222, guid: ec38c3381c88b1d40889c7e3ef3e0105, type: 3}
+    prefab: {fileID: 1856449131016958086, guid: ec38c3381c88b1d40889c7e3ef3e0105, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
       n=5] van_a_02[7.48x2.49x2.76 n=5] van_a_03[7.48x2.49x2.76 n=5] van_a_04[7.48x2.49x2.76
       n=5] van_a_05[7.48x2.49x2.76 n=5]'
   - key: van_a_05
-    prefab: {fileID: 5575819051375528749, guid: 627d460c601d6cf4480fbc8dc9d17924, type: 3}
+    prefab: {fileID: 8779810395772165686, guid: 627d460c601d6cf4480fbc8dc9d17924, type: 3}
     source: 'Truck/Van Pack (Batuhan13, CC BY): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/vehicles/truck_van_pack_Batuhan13.glb
       sha256=fc35fd87f3a4d87885c82b0cbcd75f4253c9ed54c092bd55cb2b9eb79fd30de5 scale=0.075
       clusters=6 skipped=0; van_a_00[7.48x2.49x2.76 n=5] van_a_01[7.48x2.49x2.76
@@ -1246,3 +1268,145 @@ MonoBehaviour:
     prefab: {fileID: 7606590101096519856, guid: ea5fe650a52da7d4aa50a96c7af62d14, type: 3}
     source: pallet of Poly Haven plastic_crate_02 (CC0) fish boxes, white; LOD1 box
       stack (ReplacementAssets)
+  - key: shopfront_kr
+    prefab: {fileID: 657093588140302851, guid: 24b2e4722b1286742b88a590d98466c1, type: 3}
+    source: 'Asian Shop 4 (abhayexe, CC BY 4.0), 3 m shopfront module, phone number
+      inpainted: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/asian_shop_4_abhayexe.glb
+      sha256=0a9d6e6394fb6907b52495181adb76d5f502dfb2c81fa321189795e742c8e7f5 scale=1
+      kept=2 dropped=0 bounds=(3.00, 3.00, 1.18) tris=4508; flattened 0 texture slots;
+      kept textured: shop1.004, shop4window'
+  - key: house_jp03
+    prefab: {fileID: 7952463071649461381, guid: 7d25f3d558cbc5445ad4dd449d2596fd, type: 3}
+    source: 'Japanese Residential Home 03 (reckzilla, CC BY 4.0), 1k textures: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/jp_residential_home_03_reckzilla.glb
+      sha256=963d2504058fc913a4e2caeba3280523b9155099f0e495b06f8c7eaf4f44b8cc scale=0.010027
+      kept=1 dropped=0 bounds=(11.84, 7.10, 11.48) tris=2350; flattened 0 texture
+      slots; kept textured: blinn1'
+  - key: bld_hk_tower
+    prefab: {fileID: 377249957960899416, guid: d944e471f5d90e34097f3ce26fc24c8f, type: 3}
+    source: 'Full Gameready City Buildings III [HongKong] (abhayexe, CC BY 4.0),
+      brand-free tower only (glb_subset.py): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/hk_tower_abhayexe.glb
+      sha256=78b4fcd59f67055e38770a2b69a8d995319822f2dcae316dd3758646f1e28101 scale=0.9999
+      kept=28 dropped=0 bounds=(14.22, 53.70, 19.19) tris=8736; flattened 0 texture
+      slots; kept textured: building3win_71, building3win_72'
+  - key: kr_sign_stop
+    prefab: {fileID: 7960517860722073398, guid: 5e756deaa36fcc34a981bc269d20c6c5, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Stop: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0089
+      kept=6 dropped=228 bounds=(0.56, 2.60, 0.17) tris=5380; flattened 0 texture
+      slots; kept textured: Stop'
+  - key: kr_sign_slow
+    prefab: {fileID: 3307380688154010676, guid: 96382198d41089446851cfa440863cbb, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Slow_: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.04
+      kept=6 dropped=228 bounds=(0.53, 2.60, 0.17) tris=7044; flattened 0 texture
+      slots; kept textured: Slow_0'
+  - key: kr_sign_yield
+    prefab: {fileID: 2414213469622869862, guid: b843326bfacc0b34dbbf139b01fceae7, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Yield: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.04
+      kept=6 dropped=228 bounds=(0.53, 2.60, 0.17) tris=7044; flattened 0 texture
+      slots; kept textured: Slow'
+  - key: kr_sign_danger
+    prefab: {fileID: 1390579699893029116, guid: 944b713c2ffa73249bd995b5e59bd1ff, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Other_dangers: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=0.96556
+      kept=6 dropped=228 bounds=(0.49, 2.60, 0.16) tris=7044; flattened 0 texture
+      slots; kept textured: Other_dangers'
+  - key: kr_sign_sl30
+    prefab: {fileID: 6627270665966304805, guid: 845cdd3449c13c94cae16aa4d3a3cae7, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Speed_limit_30: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: SL30'
+  - key: kr_sign_sl50
+    prefab: {fileID: 1385565576335790658, guid: f785ab41f97ca97409dc55a7d95627a7, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Speed_limit_50: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: SL50'
+  - key: kr_sign_sl60
+    prefab: {fileID: 8914600024568588148, guid: fc109c6858c811e419ba903659bfe99f, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Speed_limit_60: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: SL60'
+  - key: kr_sign_no_parking
+    prefab: {fileID: 6689026113430170414, guid: 6c5cb42908f7da743a6b82900ab8fb2c, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_8:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_parking'
+  - key: kr_sign_no_stopping
+    prefab: {fileID: 2941466238273387185, guid: c1865feeab7cb3743bd483ec1b6aa15b, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_9_2:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_stopping_or_parking'
+  - key: kr_sign_no_entry
+    prefab: {fileID: 936690137729551993, guid: 593c0a1454b4b7448997d695abd55234, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_1:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_entry'
+  - key: kr_sign_no_u_turn
+    prefab: {fileID: 2011145613229885320, guid: 30584d703dfd38d44b4b3c0c05e97aef, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_7:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_U_turn'
+  - key: kr_sign_no_trucks
+    prefab: {fileID: 6908929021270308036, guid: f5eb4fa34b411644683c0304ef16a725, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_4:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_trucks'
+  - key: kr_sign_no_left
+    prefab: {fileID: 8524241597253517611, guid: 820f56497622a924d81668fb680b1672, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Give_way_to_oncoming_traffic_5:
+      Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0111
+      kept=6 dropped=228 bounds=(0.55, 2.60, 0.18) tris=6161; flattened 0 texture
+      slots; kept textured: No_left_turn'
+  - key: kr_sign_one_way
+    prefab: {fileID: 1516687633354758286, guid: b5186ae656651114dbfeba41c6438ed7, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Crosswalk_3: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0301
+      kept=6 dropped=228 bounds=(0.46, 2.60, 0.17) tris=11702; flattened 0 texture
+      slots; kept textured: One_way'
+  - key: kr_sign_parking
+    prefab: {fileID: 8495222899134369215, guid: e130b73f3b9d0e44997536a260b7038b, type: 3}
+    source: 'South Korean Road Signs (notbadworks, CC BY 4.0), Crosswalk_4: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/kr_road_signs_notbadworks.glb
+      sha256=c7bdab29519edd85258007c48a70df7a92d6fdaa02a63d1efa84187d897e5923 scale=1.0301
+      kept=6 dropped=228 bounds=(0.46, 2.60, 0.17) tris=11702; flattened 0 texture
+      slots; kept textured: Parking_lot'
+  - key: guard_soldier
+    prefab: {fileID: 3482501068159979128, guid: 6722c5cb8372cc043ba0c1f2a445e074, type: 3}
+    source: 'AMERICAN SOLDIER RIGGED (matheofrelin3, CC BY 4.0), arms lowered, baked
+      static mesh, 1.78 m: Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/town3/american_soldier_matheofrelin3.glb
+      sha256=8ea630d5f02a5e29b544f8549fe356849fec09c39a9b0f9024cd4e0ebba33c2a arms
+      lowered=2 parts=7 scale=0.65907 bounds=(0.59, 1.78, 0.31); flattened 0 texture
+      slots; kept textured: lambert1, lambert2, lambert3, lambert4, lambert5, lambert6,
+      lambert7'
+  - key: bld_urban_office_tower
+    prefab: {fileID: 6680750930008273033, guid: 66a7b28f2fe49b74fb571034528c72ee, type: 3}
+    source: 'Office Tower (tryfield, CC BY, Urban collection; clear-coat gloss folded
+      into roughness): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/urban/office_tower_tryfield_gloss.glb
+      sha256=fc332a3950fe9f75dbf1be4d7fefd54c92dcba90296b6f437e7eb1d113f6b6e2 scale=0.0029938
+      bounds=(32.61, 105.00, 23.17); flattened 0 texture slots; kept textured: none'
+  - key: bld_urban_midrise
+    prefab: {fileID: 6161776201508844059, guid: 6b91a3353babd93469051c87e72ad487, type: 3}
+    source: 'Mid rise wall to wall office building (aitortilla01, CC BY, Urban collection;
+      signs blanked): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/urban/midrise_w2w_office_aitortilla01_nobrand.glb
+      sha256=04e3b6cd37a8ba7e3ff89ac15a41d79f395ef24935438fc71fc6b966878900c3 scale=0.01001
+      bounds=(32.03, 49.50, 33.32); flattened 0 texture slots; kept textured: b_hotr04_W2W7_t2_l1'
+  - key: bld_urban_ny_hirise
+    prefab: {fileID: 5238982426770936144, guid: c0dba3d4c7597cf4da1abbfcf0f7ca29, type: 3}
+    source: 'New York styled hi rise apartment building (aitortilla01, CC BY, Urban
+      collection; signs blanked, BLEND->MASK): Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/urban/ny_hirise_apartment_aitortilla01_nobrand.glb
+      sha256=70f3f6c9f2bd9dc26cafa2c604ce5e5ac04507ea5aa93028e36bc2dadf4d7628 scale=0.0081569
+      bounds=(44.05, 120.00, 44.05); flattened 0 texture slots; kept textured: hirise1'

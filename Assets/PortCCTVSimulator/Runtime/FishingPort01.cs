@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PortCCTV.HarborGeneric02;
 using static PortCCTV.HarborParts;
@@ -15,19 +16,48 @@ namespace PortCCTV
     {
         public const string Id = "fishing_port_01";
 
-        public static readonly CameraPreset[] Cameras =
+        /// <summary>Camera poses of the 2026-11-16 set, kept as map-layout anchors only: the camera hill, the masts, the distant
+        /// towers and the tree-free view corridors were built around them, and keeping them keeps the map (and every capture of the
+        /// current cameras) unchanged. Not selectable; the poses that are still cameras are in OverviewCameras (2026-11-20).</summary>
+        internal static readonly CameraPreset[] SiteViews20261116 =
         {
-            new CameraPreset { id = "fp_A_market_roof", display_name = "A - fish market roof 11 m (harbour -> entrance)", position = new Vector3(-30f, 15f, 65f),
-                euler_deg = new Vector3(10f, 168f, 0f), vertical_fov_deg = 42f, mount_note = "mast on the fish market roof; across the inner harbour to the entrance between the lighthouses" },
-            new CameraPreset { id = "fp_B_hillside", display_name = "B - west headland 40 m (entrance watch)", position = new Vector3(-238f, 40f, -36f),
-                euler_deg = new Vector3(12f, 108f, 0f), vertical_fov_deg = 40f, mount_note = "mast on the headland beside the west breakwater root; looks down on the entrance and the harbour mouth" },
-            new CameraPreset { id = "fp_C_breakwater", display_name = "C - east breakwater 18 m (fishing quay and town)", position = new Vector3(178f, 18f, -40f),
-                euler_deg = new Vector3(9f, 295f, 0f), vertical_fov_deg = 50f, mount_note = "elevated harbour watch across the fishing berths, waterfront town and low hills; Wando CCTV reference" },
+            new CameraPreset { id = "fp_A_market_roof", display_name = "A (2026-11-16 framing) - fish market roof 11 m (harbour -> entrance)", position = new Vector3(-30f, 15f, 65f),
+                euler_deg = new Vector3(5f, 170f, 0f), vertical_fov_deg = 28f, mount_note = "mast on the fish market roof; across the inner harbour to the entrance between the lighthouses" },
+            new CameraPreset { id = "fp_B_hillside", display_name = "B (2026-11-16 framing) - west headland 40 m (entrance watch)", position = new Vector3(-238f, 40f, -36f),
+                euler_deg = new Vector3(10f, 108f, 0f), vertical_fov_deg = 28f, mount_note = "mast on the headland beside the west breakwater root; looks down on the entrance and the harbour mouth" },
+            new CameraPreset { id = "fp_C_breakwater", display_name = "C (2026-11-16 framing) - east breakwater 18 m (fishing quay and town)", position = new Vector3(178f, 18f, -40f),
+                euler_deg = new Vector3(6f, 295f, 0f), vertical_fov_deg = 34f, mount_note = "elevated harbour watch across the fishing berths, waterfront town and low hills; Wando CCTV reference" },
         };
+
+        /// <summary>Research presets of framing_v2_20261119 (see ContainerTerminal01.ResearchCameras).</summary>
+        public static readonly CameraPreset[] ResearchCameras =
+        {
+            new CameraPreset { id = "fp_D_market_entrance", display_name = "D - fish market roof edge 1 m (harbour to the entrance)", position = new Vector3(-30f, 13f, 64f),
+                euler_deg = new Vector3(2.5f, 170f, 0f), vertical_fov_deg = 30f, framing = CameraPresetLibrary.FramingSeaShips,
+                mount_note = "short pole on the seaward edge of the fish market roof; inner harbour traffic with the breakwaters and lighthouses behind" },
+            new CameraPreset { id = "fp_E_west_arm_sea", display_name = "E - west breakwater arm wall 1.5 m (open sea)", position = new Vector3(-60f, 7.5f, -134f),
+                euler_deg = new Vector3(-1.2f, 165f, 0f), vertical_fov_deg = 24f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the west breakwater arm; fishing grounds and approach south of the port" },
+            new CameraPreset { id = "fp_F_east_arm_sea", display_name = "F - east breakwater arm wall 1.5 m (approach)", position = new Vector3(150f, 7.5f, -74f),
+                euler_deg = new Vector3(0.6f, 140f, 0f), vertical_fov_deg = 18f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the east breakwater arm; boats approaching from the south-east" },
+        };
+
+        /// <summary>Elevated mast views kept from the 2026-11-16 set as current presets (2026-11-20, user decision); same poses.
+        /// Not part of the research framing groups (CameraPresetLibrary.ResearchForHarbor).</summary>
+        public static readonly CameraPreset[] OverviewCameras = CameraPresetLibrary.Overview(SiteViews20261116,
+            ("fp_A_market_roof", "A - fish market roof 11 m (harbour -> entrance)"));
+
+        /// <summary>Selectable presets of the map: research presets first, then the overview presets.</summary>
+        public static readonly CameraPreset[] Cameras = ResearchCameras.Concat(OverviewCameras).ToArray();
+
+        /// <summary>Every pose the map layout is built around, in the order used since 2026-11-19 (tree placement draws in this order).</summary>
+        internal static readonly CameraPreset[] LayoutViews = ResearchCameras.Concat(SiteViews20261116).ToArray();
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
         {
             { "fp_A_market_roof", Deck + 9.4f }, { "fp_B_hillside", 40f - CameraMastOnHill }, { "fp_C_breakwater", Crest },
+            { "fp_D_market_entrance", Deck + 9.4f }, { "fp_E_west_arm_sea", Crest + 2.5f }, { "fp_F_east_arm_sea", Crest + 2.5f },
         };
 
         public static HarborDefinition Build()
@@ -123,7 +153,7 @@ namespace PortCCTV
             CoastalVillage(-680f, -360f, 174f, -1f, 2, false);
             RoadZ(124f, 177.5f, -356.5f, 7f);                                    // village street down to the port road
             Farmland(540f, 700f, 172f, 215f);                                                                 // fields on the hill foot strip
-            CameraHill(Cameras[1], 240f, 240f, 0, new Vector2(-293f, -13f));
+            CameraHill(SiteViews20261116[1], 240f, 240f, 0, new Vector2(-293f, -13f));
             HillIdx(1, -250f, 330f, -4f, 520f, 100f, 420f); TreesOnHill(1, -250f, 330f, -4f, 520f, 100f, 420f, 30);   // backdrop hill behind the port
             HillIdx(2, 240f, 420f, -4f, 520f, 110f, 420f); TreesOnHill(2, 240f, 420f, -4f, 520f, 110f, 420f, 35);
             HillIdx(3, -520f, 460f, -4f, 480f, 95f, 400f); TreesOnHill(3, -520f, 460f, -4f, 480f, 95f, 400f, 30);
@@ -188,7 +218,21 @@ namespace PortCCTV
             Prefab("buoy", "lateral_marker", new Vector3(-10, -1.0f, -190), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(70, -1.0f, -150), 0, Vector3.one * 0.7f, id: "buoy_green_1", nonVessel: true);
 
-            CameraMasts(Cameras, MastBases);
+            // --- town batch 2026-11-10 (user photo: crude shop row and an empty grey strip in the backland). The two shop rows
+            // are now harbour shop streets (ShopRow); here: a direct-sale fish market hall in the 60 m gap between them, gear /
+            // ice sheds in the gaps at the ends, a front parking row along the shop streets, speed-limit and no-parking signs.
+            FishMarketHall(-17f, 37f, 137.4f, 20f, 26111001);
+            GearSheds(193f, 253f, 137.4f, 16f, 26111002);
+            GearSheds(-236f, -184f, 137.4f, 16f, 26111003);
+            ServiceRow(-178f, -22f, 136.4f, -1f, 0.55f, "car", "fp_shop_front_w");
+            ServiceRow(42f, 188f, 136.4f, -1f, 0.55f, "car", "fp_shop_front_e");
+            KrSign("kr_sign_sl30", new Vector3(-262f, Deck + 0.16f, 112.6f), new Vector2(-1f, 0f));        // eastbound (south side)
+            KrSign("kr_sign_sl30", new Vector3(262f, Deck + 0.16f, 123.4f), new Vector2(1f, 0f));          // westbound (north side)
+            KrSign("kr_sign_no_parking", new Vector3(-20f, Deck + 0.16f, 112.6f), new Vector2(-1f, 0f));   // in front of the market
+            KrSign("kr_sign_slow", new Vector3(40f, Deck + 0.16f, 123.4f), new Vector2(1f, 0f));
+            DistantTowers(-1400f, 1400f, 480f, 700f, 6, 26111005, new[] { SiteViews20261116[0].position, SiteViews20261116[1].position, SiteViews20261116[2].position }, 700f);
+
+            CameraMasts(LayoutViews, MastBases);
 
             h.water_regions.Add(Region("inner_harbor", -170, 58, 170, 58, 170, -60, 40, -60, -30, -120, -170, -120));
             h.water_regions.Add(Region("entrance", -30, -120, 40, -60, 60, -80, -30, -140));
@@ -198,6 +242,9 @@ namespace PortCCTV
             foreach (var a in new[] { "trawler", "fishing_vessel", "inshore_fishing_boat", "patrol_boat", "police_boat", "sar_boat", "speedboat" })
                 h.vessel_rules.Add(Rule(a, "fishing port traffic"));
             h.vessel_rules.Add(Rule("fishing_boat", "small fishing / leisure fishing boat"));
+            h.vessel_rules.Add(Rule("fishing_boat_iii", "coastal fishing boat (근해 어선)"));
+            h.vessel_rules.Add(Rule("small_motorboat", "small fishing / leisure motorboat"));
+            h.vessel_rules.Add(Rule("crrc", "rubber boat (조업 보조 / 구조 / 경비)"));
             h.vessel_rules.Add(Rule("cabin_cruiser", "leisure fishing boat (낚싯배)"));
             h.vessel_rules.Add(Rule("motorboat", "small craft"));
             h.vessel_rules.Add(Rule("rib", "patrol / rescue"));
@@ -209,11 +256,11 @@ namespace PortCCTV
 
         public static ScenarioConfig DefaultScenario()
         {
-            var s = new ScenarioConfig { scenario_id = "fishing_port_default", harbor_id = Id, camera_preset_id = "fp_C_breakwater" };
+            var s = new ScenarioConfig { scenario_id = "fishing_port_default", harbor_id = Id, camera_preset_id = "fp_D_market_entrance" };
             // fishing boats moored alongside the west pier and the mid pier, two under way, a leisure boat and a ferry
             float[] wz = { 47, 27, 7 };
             for (int i = 0; i < 3; i++) s.vessels.Add(new VesselPlacement { object_id = $"v{i:00}", asset_id = "korean_fishing_boat", x = -98.5f, z = wz[i], heading_deg = 270, immersion_m = 0.45f });
-            s.vessels.Add(new VesselPlacement { object_id = "v03", asset_id = "korean_fishing_boat", x = -73.5f, z = 40, heading_deg = 90, immersion_m = 0.45f });
+            s.vessels.Add(new VesselPlacement { object_id = "v03", asset_id = "korean_fishing_boat", x = -73.5f, z = 12, heading_deg = 90, immersion_m = 0.45f });   // z 40 -> 12 (2026-11-16): overlapped v00 in the fp_C view
             s.vessels.Add(new VesselPlacement { object_id = "v04", asset_id = "inshore_fishing_boat", x = 36, z = 45, heading_deg = 270, immersion_m = 0.5f });
             s.vessels.Add(new VesselPlacement { object_id = "v05", asset_id = "korean_fishing_boat", x = 10, z = -70, heading_deg = 300, immersion_m = 0.45f });
             s.vessels.Add(new VesselPlacement { object_id = "v06", asset_id = "cabin_cruiser", x = 95, z = 25, heading_deg = 0, immersion_m = 0.3f });
@@ -228,6 +275,11 @@ namespace PortCCTV
             s.vessels.Add(new VesselPlacement { object_id = "v14", asset_id = "fishing_boat", x = -7, z = 17, heading_deg = 72, immersion_m = 0.4f });
             s.vessels.Add(new VesselPlacement { object_id = "v15", asset_id = "korean_fishing_boat", x = 64, z = -15, heading_deg = 215, immersion_m = 0.45f });
             s.vessels.Add(new VesselPlacement { object_id = "v16", asset_id = "barge", x = 115, z = -25, heading_deg = 0, immersion_m = 1.1f }); // working aggregate barge, Wando reference
+            // 2026-11-19 (framing_v2): boats 140-270 m in front of the seaward cameras E and F
+            s.vessels.Add(new VesselPlacement { object_id = "v17", asset_id = "fishing_vessel", x = 284, z = -208, heading_deg = 250, immersion_m = 0.9f });
+            s.vessels.Add(new VesselPlacement { object_id = "v18", asset_id = "fishing_boat_iii", x = 293, z = -303, heading_deg = 40, immersion_m = 1.0f });
+            s.vessels.Add(new VesselPlacement { object_id = "v19", asset_id = "speedboat", x = 234, z = -186, heading_deg = 120, immersion_m = 0.35f });
+            s.vessels.Add(new VesselPlacement { object_id = "v20", asset_id = "inshore_fishing_boat", x = 22, z = -349, heading_deg = 190, immersion_m = 0.5f });
             return s;
         }
     }

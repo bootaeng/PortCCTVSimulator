@@ -91,7 +91,9 @@ namespace PortCCTV.EditorTools
             var corrG = GreyAlbedo("corrugated_iron_02", "T_corrugated_iron_grey");
             var plateN = Tex("metal_plate", "nor_gl", true); Tex("metal_plate", "diff", false);
             var plateG = GreyAlbedo("metal_plate", "T_metal_plate_grey");
-            var sandA = Tex("coast_sand_01", "diff", false); var sandN = Tex("coast_sand_01", "nor_gl", true);
+            // The coast_sand_01 scan is gravelly and has a recognisable dark patch every four metres.
+            // Use the finer procedural beach sand for the public swimming beach instead.
+            var sandA = TexAt($"{GenDir}/T_sand_albedo.png", false); var sandN = TexAt($"{GenDir}/T_sand_normal.png", true);
             var grassA = Tex("sparse_grass", "diff", false); var grassN = Tex("sparse_grass", "nor_gl", true);
 
             var mk = (Func<string, Color, float, float, Texture2D, Texture2D, float, Material>)((k, c, s, m, a, n, tile) => ProceduralAssets.MakeLit(k, c, s, m, a, n, tile));
@@ -100,7 +102,7 @@ namespace PortCCTV.EditorTools
             Set("quay_wet", mk("quay_wet", new Color(0.55f, 0.6f, 0.5f), 0.5f, 0, mossA, mossN, 3f));
             Set("breakwater", mk("breakwater", new Color(0.85f, 0.85f, 0.83f), 0.15f, 0, layA, layN, 4f));
             Set("asphalt", mk("asphalt", new Color(0.85f, 0.85f, 0.85f), 0.2f, 0, asphA, asphN, 5f));
-            Set("sand", mk("sand", new Color(1, 1, 1), 0.15f, 0, sandA, sandN, 4f));
+            Set("sand", mk("sand", new Color(0.88f, 0.81f, 0.70f), 0.15f, 0, sandA, sandN, 12f));
             // Paved surfaces, 2026-11-09: large aprons / yards / car parks use the Poly Haven aerial asphalt scan (one 2k tile
             // covers 30 x 30 m: cracks, patches and wear read at CCTV distance); streets use the asphalt of "Modular Road Pack
             // (FREE) + 4K Textures" (intfloat, CC BY; ambientCG-based) and sidewalks its paving

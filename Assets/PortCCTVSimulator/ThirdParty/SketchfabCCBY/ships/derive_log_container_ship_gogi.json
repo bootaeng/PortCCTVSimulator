@@ -1,0 +1,328 @@
+{
+ "source": "ThirdParty_raw/container_ships_20261116/container_ship_03_agt14032013_1k.glb",
+ "source_sha256": "29afd4c180052b5c027bcb01c84443995523c238e3c300946776d25f12f774ee",
+ "decimate_above": 4000,
+ "keep_fraction": 0.1,
+ "keep_min": 1500,
+ "primitives": [
+  {
+   "mesh": "cylinder_acmat_0_0",
+   "material": "acmat_0",
+   "triangles_before": 17100,
+   "triangles_after": 6192,
+   "area_m2": 35.8,
+   "action": "decimated"
+  },
+  {
+   "mesh": "cylinder_acmat_4_0",
+   "material": "acmat_4",
+   "triangles_before": 7680,
+   "triangles_after": 0,
+   "area_m2": 4.19,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_acmat_16_0",
+   "material": "acmat_16",
+   "triangles_before": 5120,
+   "triangles_after": 0,
+   "area_m2": 2.61,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_acmat_19_0",
+   "material": "acmat_19",
+   "triangles_before": 6096,
+   "triangles_after": 5640,
+   "area_m2": 36.4,
+   "action": "decimated"
+  },
+  {
+   "mesh": "cylinder_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 26442,
+   "triangles_after": 10100,
+   "area_m2": 34.8,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_4_0",
+   "material": "acmat_4",
+   "triangles_before": 35008,
+   "triangles_after": 3500,
+   "area_m2": 21.7,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_0_0",
+   "material": "acmat_0",
+   "triangles_before": 22672,
+   "triangles_after": 2266,
+   "area_m2": 109.6,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_7_0",
+   "material": "acmat_7",
+   "triangles_before": 28672,
+   "triangles_after": 2866,
+   "area_m2": 11.3,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_13_0",
+   "material": "acmat_13",
+   "triangles_before": 55320,
+   "triangles_after": 5532,
+   "area_m2": 51.9,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_50_0",
+   "material": "acmat_50",
+   "triangles_before": 13616,
+   "triangles_after": 1500,
+   "area_m2": 16.5,
+   "action": "decimated"
+  },
+  {
+   "mesh": "box_acmat_51_0",
+   "material": "acmat_51",
+   "triangles_before": 6144,
+   "triangles_after": 0,
+   "area_m2": 2.65,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_acmat_53_0",
+   "material": "acmat_53",
+   "triangles_before": 12560,
+   "triangles_after": 0,
+   "area_m2": 2.07,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_acmat_8_0",
+   "material": "acmat_8",
+   "triangles_before": 28860,
+   "triangles_after": 2886,
+   "area_m2": 28.4,
+   "action": "decimated"
+  },
+  {
+   "mesh": "block_acmat_7_0",
+   "material": "acmat_7",
+   "triangles_before": 41472,
+   "triangles_after": 4146,
+   "area_m2": 69.8,
+   "action": "decimated"
+  },
+  {
+   "mesh": "block_acmat_8_0",
+   "material": "acmat_8",
+   "triangles_before": 41472,
+   "triangles_after": 0,
+   "area_m2": 1.32,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "ID0inst_acmat_7_0",
+   "material": "acmat_7",
+   "triangles_before": 7680,
+   "triangles_after": 1500,
+   "area_m2": 19.0,
+   "action": "decimated"
+  },
+  {
+   "mesh": "ID1inst_acmat_10_0",
+   "material": "acmat_10",
+   "triangles_before": 51200,
+   "triangles_after": 5120,
+   "area_m2": 32.1,
+   "action": "decimated"
+  },
+  {
+   "mesh": "sphere_acmat_7_0",
+   "material": "acmat_7",
+   "triangles_before": 19200,
+   "triangles_after": 1920,
+   "area_m2": 55.1,
+   "action": "decimated"
+  },
+  {
+   "mesh": "sphere_acmat_8_0",
+   "material": "acmat_8",
+   "triangles_before": 19200,
+   "triangles_after": 0,
+   "area_m2": 1.04,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "ellipse_acmat_26_0",
+   "material": "acmat_26",
+   "triangles_before": 33696,
+   "triangles_after": 3370,
+   "area_m2": 5915.7,
+   "action": "decimated"
+  },
+  {
+   "mesh": "line_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 53248,
+   "triangles_after": 0,
+   "area_m2": 2.19,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "ellipse_01_acmat_32_0",
+   "material": "acmat_32",
+   "triangles_before": 122728,
+   "triangles_after": 12273,
+   "area_m2": 1735.9,
+   "action": "decimated"
+  },
+  {
+   "mesh": "ellipse_01_acmat_32_0",
+   "material": "acmat_32",
+   "triangles_before": 106285,
+   "triangles_after": 10627,
+   "area_m2": 1035.7,
+   "action": "decimated"
+  },
+  {
+   "mesh": "object_acmat_33_0",
+   "material": "acmat_33",
+   "triangles_before": 116830,
+   "triangles_after": 0,
+   "area_m2": 3.39,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "object_acmat_33_0",
+   "material": "acmat_33",
+   "triangles_before": 34722,
+   "triangles_after": 0,
+   "area_m2": 0.99,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "Cube_acmat_34_0",
+   "material": "acmat_34",
+   "triangles_before": 53465,
+   "triangles_after": 0,
+   "area_m2": 2.53,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "ellipse_002_acmat_16_0",
+   "material": "acmat_16",
+   "triangles_before": 33120,
+   "triangles_after": 4610,
+   "area_m2": 46.4,
+   "action": "decimated"
+  },
+  {
+   "mesh": "ellipse_002_acmat_8_0",
+   "material": "acmat_8",
+   "triangles_before": 104508,
+   "triangles_after": 16354,
+   "area_m2": 87.3,
+   "action": "decimated"
+  },
+  {
+   "mesh": "ellipse_001_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 9216,
+   "triangles_after": 0,
+   "area_m2": 2.07,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_002_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.43,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_003_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.46,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_004_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.38,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_005_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.46,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_006_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.5,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "box_007_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 12288,
+   "triangles_after": 0,
+   "area_m2": 0.46,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_004_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 7680,
+   "triangles_after": 0,
+   "area_m2": 0.09,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_009_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 7680,
+   "triangles_after": 0,
+   "area_m2": 0.09,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_010_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 7680,
+   "triangles_after": 0,
+   "area_m2": 0.09,
+   "action": "removed (micro-detail)"
+  },
+  {
+   "mesh": "cylinder_011_acmat_23_0",
+   "material": "acmat_23",
+   "triangles_before": 7680,
+   "triangles_after": 0,
+   "area_m2": 0.09,
+   "action": "removed (micro-detail)"
+  }
+ ],
+ "materials_before": 59,
+ "materials_after": 49,
+ "triangles_before": 1270589,
+ "triangles_after": 153211,
+ "output": "Assets/PortCCTVSimulator/ThirdParty/SketchfabCCBY/ships/container_ship_03_gogiart_opt.glb",
+ "output_sha256": "61e38fc8c7f9f0ad05d4eea9c84e5cf8b6881dd93f6af8c5edd512a3be0288c5",
+ "output_bytes": 57343680
+}

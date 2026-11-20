@@ -77,8 +77,6 @@ namespace PortCCTV.EditorTools
                 hullNode = ProceduralVessels.HullNodeName, immersion = 1.0f, license = "procedural (this project)" },
             new HullSpec { id = "barge", display = "Deck barge 50 m (procedural)", category = "barge", procedural = "barge",
                 hullNode = ProceduralVessels.HullNodeName, immersion = 0.15f, license = "procedural (this project)" },
-            new HullSpec { id = "container_ship", display = "Container feeder 172 m (procedural)", category = "container_ship", procedural = "container_ship",
-                hullNode = ProceduralVessels.HullNodeName, immersion = 4.2f, license = "procedural (this project)" },
             new HullSpec { id = "korean_fishing_boat", display = "Korean coastal fishing boat 19 m (procedural)", category = "fishing_boat_coastal", procedural = "kfish",
                 hullNode = ProceduralVessels.HullNodeName, immersion = 0.45f, license = "procedural (this project)" },
             new HullSpec { id = "tanker", display = "Tanker 322 m (CC BY)", category = "tanker", file = "sketchfab_tanker_suezmax_artblender.glb",
@@ -132,7 +130,7 @@ namespace PortCCTV.EditorTools
                 dir = "SketchfabCCBY/ships", sha = "70a90d2b219f502b37bcca9f19570d9b101952e2178d54d468529cbeb2e25d39",
                 url = "https://sketchfab.com/3d-models/6d53e735521f44af82142e6292b2f340", hullNode = RenderMinReference, immersion = 1.0f,
                 license = "CC BY 4.0 - \"20m search and rescue boat\" by Nutical3D (https://sketchfab.com/3d-models/6d53e735521f44af82142e6292b2f340); x1.87 (10.7 units -> 20 m), rotated (bow +X), recentred",
-                pitch = -90f, scale = 1.87f, yaw = 90f, recenter = true },
+                pitch = -90f, scale = 1.87f, yaw = -90f, recenter = true },   // 2026-11-16: was 90 (stern-first; bow = raked left end in the side view)
             new HullSpec { id = "pilot_boat", display = "Pilot boat 18 m (CC BY)", category = "pilot_boat", file = "pilot_boat_agt14032013.glb",
                 dir = "SketchfabCCBY/ships", sha = "16353395c3e11b153fb969c90e7fecea6359d550ca7902fb7fdcda68083f0d63",
                 url = "https://sketchfab.com/3d-models/6ea031237b6b4382ab362790f8af4e66", hullNode = RenderMinReference, immersion = 1.1f,
@@ -158,6 +156,45 @@ namespace PortCCTV.EditorTools
                 url = "https://sketchfab.com/3d-models/dadc775d1d044aee9f6744fa7b47648e", hullNode = RenderMinReference, immersion = 1.6f,
                 license = "CC BY 4.0 - \"Yacht II\" by agt14032013 (https://sketchfab.com/3d-models/dadc775d1d044aee9f6744fa7b47648e); x0.38 (105 units -> 40 m), rotated (bow +X), recentred",
                 pitch = -90f, scale = 0.38f, yaw = 90f, recenter = true },
+            // vessel batch 2026-11-10 (ThirdParty/SketchfabCCBY/ships/SOURCE_ships.md, section 2026-11-10): bow end found from the
+            // hull width near both ends of the length axis (narrow end = bow), checked on the preview renders
+            new HullSpec { id = "fishing_boat_iii", display = "Fishing boat 23 m (CC BY)", category = "fishing_boat_coastal", file = "fishing_boat_iii_agt14032013.glb",
+                dir = "SketchfabCCBY/ships", sha = "0f966995c983d32f81407308256195aaaa84b979214cb08132e9839e2d693cd1",
+                url = "https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63", hullNode = RenderMinReference, immersion = 1.0f,
+                license = "CC BY 4.0 - \"Fishing Boat III\" by gogiart (agt14032013) (https://sketchfab.com/3d-models/fishing-boat-iii-ade40638aaa14c708e6eac1e98022f63); textures 1k (glb_derive.py), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.0f, yaw = 90f, recenter = true },   // 2026-11-16: was -90 (stern-first; rudder and propeller were at the +X end)
+            new HullSpec { id = "small_motorboat", display = "Small motorboat 6 m (CC BY)", category = "motorboat", file = "small_motorboat_tijmenmatthys.glb",
+                dir = "SketchfabCCBY/ships", sha = "2ca7195cfac20c208cf88eb2589604a1622b1f5f1dfa9ea14c082698228b0abc",
+                url = "https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4", hullNode = RenderMinReference, immersion = 0.25f,
+                license = "CC BY 4.0 - \"Small Motorboat\" by tijmenmatthys (https://sketchfab.com/3d-models/small-motorboat-b488d632a4804cd783e9ef009976bcd4); outboard brand lettering inpainted (glb_derive.py), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.0f, yaw = 180f, recenter = true },
+            new HullSpec { id = "crrc", display = "Rubber raiding craft 4.7 m (CC BY)", category = "rib", file = "crrc_blarg1.glb",
+                dir = "SketchfabCCBY/ships", sha = "7ea87cab0fd7801e69a3ab296bdc8423880edd4a11db5f8ecd5e19c6f96c9182",
+                url = "https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85", hullNode = RenderMinReference, immersion = 0.15f,
+                license = "CC BY 4.0 - \"CRRC (Combat Rubber Raiding Craft)\" by blarg1 (https://sketchfab.com/3d-models/crrc-combat-rubber-raiding-craft-04f24d42e8ad4446aac46af980568e85); x1.05 (4.47 m -> 4.7 m), rotated (bow +X), recentred",
+                pitch = -90f, scale = 1.05f, yaw = -90f, recenter = true },
+            // loaded container ships 2026-11-16 (ThirdParty/SketchfabCCBY/ships/SOURCE_container_ships.md); they replace the procedural
+            // 172 m "container_ship", whose id is kept as an alias of container_ship_loaded (VesselCatalog.Retired)
+            new HullSpec { id = "container_ship_loaded", display = "Container ship 262 m, loaded (CC0)", category = "container_ship", file = "innerscene_container_ship_loaded.glb",
+                sha = "95b5020347eadb53d4e3cbdbe845b7fdde718435964384954c516db05a532680",
+                url = "https://www.innerscene.com/tools/library/3d-parts/container-ship-loaded-5ee3b06d",
+                hullNode = "Hull", immersion = 11.6f, yaw = 180f, recenter = true,
+                // the deck cargo dwarfs the topsides (navy hull 3 % of the area, under the 4 % hull share), and the hatch covers under
+                // the containers would be taken for the superstructure
+                paint = new[] { "hull:container_ship_loaded_Navy_blue_hull_paint", "keep:container_ship_loaded_Painted_hatch_covers" },
+                license = "CC0 (Innerscene, source-stated) - \"Container ship loaded\", 262.2 m, 820 x 40 ft containers; as authored (metres), rotated (bow +X), recentred" },
+            new HullSpec { id = "container_ship_rm02", display = "Container ship 241 m (CC BY)", category = "container_ship", file = "container_ship_rm02_nobrand.glb",
+                dir = "SketchfabCCBY/ships", sha = "a4b1cff1a36f4e94155ae40db88b93a062267c135fadd164116c7fc12f823bed",
+                url = "https://sketchfab.com/3d-models/container-ship-aaa41cca946b4a08bc08cf692b7757be", hullNode = RenderMinReference, immersion = 11.0f,
+                license = "CC BY 4.0 - \"Container Ship\" by RM02 (https://sketchfab.com/3d-models/container-ship-aaa41cca946b4a08bc08cf692b7757be); shipping-line logos removed, container metallic cleared (derive_container_ship_glb.py), x2.639 (40 ft container pitch -> 241 m), rotated (bow +X), recentred",
+                pitch = -90f, scale = 2.639f, yaw = 180f, recenter = true },
+            new HullSpec { id = "container_ship_gogi", display = "Container ship 146 m (CC BY)", category = "container_ship", file = "container_ship_03_gogiart_opt.glb",
+                dir = "SketchfabCCBY/ships", sha = "61e38fc8c7f9f0ad05d4eea9c84e5cf8b6881dd93f6af8c5edd512a3be0288c5",
+                url = "https://sketchfab.com/3d-models/container-ship-03-fbx-931fb30ec63a40c6a1ebfe51a454263c", hullNode = RenderMinReference, immersion = 9.4f,
+                license = "CC BY 4.0 - \"Container Ship 03 FBX\" by gogiart (agt14032013) (https://sketchfab.com/3d-models/container-ship-03-fbx-931fb30ec63a40c6a1ebfe51a454263c); detail decimated 1.27 M -> 153 k triangles, micro-detail removed (derive_container_ship_gogi_glb.py), x34 (container tier 2.59 m -> 146 m), rotated (bow +X), recentred",
+                // container stacks (acmat_40..49, textured) must keep their colours; without this some were taken for the superstructure
+                paint = new[] { "keep:acmat_40", "keep:container_ship_gogi_acmat_40", "keep:acmat_41", "keep:container_ship_gogi_acmat_41", "keep:acmat_42", "keep:container_ship_gogi_acmat_42", "keep:acmat_43", "keep:container_ship_gogi_acmat_43", "keep:acmat_44", "keep:container_ship_gogi_acmat_44", "keep:acmat_45", "keep:container_ship_gogi_acmat_45", "keep:acmat_46", "keep:container_ship_gogi_acmat_46", "keep:acmat_47", "keep:container_ship_gogi_acmat_47", "keep:acmat_48", "keep:container_ship_gogi_acmat_48", "keep:acmat_49", "keep:container_ship_gogi_acmat_49" },
+                pitch = -90f, scale = 34f, yaw = 90f, recenter = true },
         };
 
         static readonly (string key, Color color, float smooth, float metal)[] MaterialSpecs =
@@ -193,6 +230,7 @@ namespace PortCCTV.EditorTools
             EnsureVessels();
             EnsureScene();
             AssetDatabase.SaveAssets();
+            Log(TransparentGlassFix.Run(false));   // transparent glTF slots on background prefabs -> opaque (player fog defect, 2026-11-16)
             var cr = ColliderRepair.Run(false);   // split triangles PhysX refuses at build time (Logs/collider_repair_report.json)
             Log($"Collider repair: {cr.repaired} split, {cr.box_fallback} box fallback");
             Log("Bootstrap done. Theme materials=" + theme.materials.Count);
@@ -201,6 +239,23 @@ namespace PortCCTV.EditorTools
         public static void RunBatch()
         {
             try { Run(); EditorApplication.Exit(0); }
+            catch (Exception ex) { Debug.LogError("[Bootstrap] FAILED: " + ex); EditorApplication.Exit(1); }
+        }
+
+        /// <summary>Rebuilds only the vessel catalog / prefabs (dev loop after a HullSpec change), splits oversized collider
+        /// triangles, writes previews of the newest hulls: -executeMethod PortCCTV.EditorTools.ProjectBootstrap.RebuildVesselsBatch</summary>
+        public static void RebuildVesselsBatch()
+        {
+            try
+            {
+                TextureDiet.ResetCache();
+                EnsureVessels();
+                AssetDatabase.SaveAssets();
+                var cr = ColliderRepair.Run(false);
+                Log($"Vessels rebuilt; collider repair: {cr.repaired} split, {cr.box_fallback} box fallback");
+                TownAssets.Preview(new[] { "vessel_container_ship_loaded", "vessel_container_ship_rm02", "vessel_container_ship_gogi", "vessel_feeder_ship" });
+                EditorApplication.Exit(0);
+            }
             catch (Exception ex) { Debug.LogError("[Bootstrap] FAILED: " + ex); EditorApplication.Exit(1); }
         }
 
@@ -373,7 +428,6 @@ namespace PortCCTV.EditorTools
                     inst = h.procedural switch
                     {
                         "tug" => ProceduralVessels.BuildTug(),
-                        "container_ship" => ProceduralVessels.BuildContainerShip(theme),
                         "kfish" => ProceduralVessels.BuildKoreanFishingBoat(),
                         _ => ProceduralVessels.BuildBarge(theme != null ? theme.Get("sand") : null),
                     };

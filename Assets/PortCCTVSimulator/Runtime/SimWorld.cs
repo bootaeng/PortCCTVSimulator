@@ -63,6 +63,12 @@ namespace PortCCTV
         public float water_repetition_size_m;
         public float water_large_band0_multiplier;
         public float water_large_band1_multiplier;
+        public float water_swell_scale = 1f, water_ripple_scale = 1f;
+        public bool water_mask_on, water_foam;
+        public float water_foam_amount;
+        public string water_mask_note;
+        /// <summary>Custom render fade start of the large bands (m); 0 = HDRP automatic.</summary>
+        public float water_large_fade_start_m;
         public float water_time_requested_s;
         public float water_time_actual_s = float.NaN;
         public bool water_time_frozen;
@@ -104,6 +110,7 @@ namespace PortCCTV
         public GpuInstanceMask GpuMask { get; private set; }
         public LightRig Lights { get; private set; }
         public SensorProcessor Sensor { get; private set; }
+        public IrIlluminator Ir { get; private set; }
         public const string NightOvercastSky = "kloppenheim_07_puresky";
         public const string OvercastSky = "kloofendal_overcast_puresky";
 
@@ -130,6 +137,7 @@ namespace PortCCTV
             GpuMask = new GpuInstanceMask(_root.transform, Theme.Get("instance_id")?.shader ?? Shader.Find("Hidden/PortCCTV/InstanceId"));
             Lights = new LightRig(_root.transform, Theme);
             Sensor = new SensorProcessor(Theme.Get("cctv_degrade")?.shader ?? Shader.Find("Hidden/PortCCTV/CctvDegrade"));
+            Ir = new IrIlluminator(_root.transform);
             _vesselRoot = new GameObject("Vessels");
             _vesselRoot.transform.SetParent(_root.transform, false);
 
@@ -220,6 +228,7 @@ namespace PortCCTV
 
         public void Dispose()
         {
+            Ir?.Destroy();
             foreach (var m in _paintCache.Values) if (m != null) Util.SafeDestroy(m);
             _paintCache.Clear();
             if (_root != null) Util.SafeDestroy(_root);
@@ -245,6 +254,10 @@ namespace PortCCTV
             GroundWearDecals = GroundWear.Scatter(Harbor, Theme, HarborRoot.transform);
             Physics.SyncTransforms();
             VegetationResult = Vegetation.Scatter(Harbor, Theme, HarborRoot.transform, objs, cols);
+            // Scatter creates colliders and then moves them (shore line pieces, lighthouse landing). Until the next sync the physics
+            // scene still has them at their creation pose (piled at the map origin), so the first scenario applied after a harbour
+            // build stepped its vessels around an obstacle that later scenarios did not see (2026-11-20).
+            Physics.SyncTransforms();
             HarborColliders = cols;
             HarborObjects = objs;
             Water.transform.position = new Vector3(0, Harbor.water_reference_y, 0);
@@ -361,9 +374,11 @@ namespace PortCCTV
             // overcast / precipitation: grey overcast HDRI (Poly Haven CC0), dim diffuse sun, lower exposure (engine values)
             string overcastKey = e.night ? NightOvercastSky : OvercastSky;
             if (wx.Overcast && _skies != null && _skies.Find(overcastKey) != null) sky = _skies.Find(overcastKey);
-            float sunLux = e.sun_illuminance_lux * (wx.Overcast ? Mathf.Lerp(0.22f, 0.08f, wx.Precipitating ? wx.I : 0f) : 1f);
-            float skyLux = e.sky_lux * (wx.Overcast ? Mathf.Lerp(0.7f, 0.45f, wx.Precipitating ? wx.I : 0f) : 1f);
-            float ev = e.exposure_ev100 - (wx.Overcast ? 0.7f + (wx.Precipitating ? 0.4f * wx.I : 0f) : 0f);   // partial compensation: rain/snow scenes stay darker than clear ones
+            // AtmosphereI = intensity while precipitating (0 without precipitation or with the research switch no_precipitation_atmosphere)
+            float sunLux = e.sun_illuminance_lux * (wx.Overcast ? Mathf.Lerp(0.22f, 0.08f, wx.AtmosphereI) : 1f);
+            float skyLux = e.sky_lux * (wx.Overcast ? Mathf.Lerp(0.7f, 0.45f, wx.AtmosphereI) : 1f);
+            // partial compensation: rain/snow scenes stay darker than clear ones; an overcast day with haze gets none (grey, darker)
+            float ev = e.exposure_ev100 - (wx.Overcast ? wx.OvercastExposureCompensationEv + 0.4f * wx.AtmosphereI : 0f);
             float hdriRotation = 0f;
             if (sky != null && sky.cubemap != null)
             {
@@ -389,16 +404,41 @@ namespace PortCCTV
             _exposure.fixedExposure.Override(ev);
             float mfp = e.fog_enabled ? e.fog_mean_free_path_m : e.aerial_haze_mfp_m;
             if (mfp <= 0f && (wx.Precipitating || wx.visibility_scale < 1f)) mfp = 3000f;
-            mfp *= Mathf.Clamp(wx.visibility_scale, 0.05f, 4f) * wx.PrecipitationVisibilityFactor;
+            mfp *= Mathf.Clamp(wx.visibility_scale, 0.05f, 4f) * wx.PrecipitationVisibilityFactor * wx.OvercastVisibilityFactor;
             _fog.enabled.Override(mfp > 0f);
             _fog.meanFreePath.Override(Mathf.Max(1f, mfp > 0f ? mfp : 400f));
             _clouds.opacity.Override(wx.Overcast ? 0.95f : e.cloud_opacity);
 
+            float swell = Mathf.Clamp(cfg.environment.water_swell_scale, 0f, 3f), ripple = Mathf.Clamp(cfg.environment.water_ripple_scale, 0f, 3f);
             Water.largeWindSpeed = w.large_wind_speed_kmh;
-            Water.ripplesWindSpeed = w.ripples_wind_speed_kmh;
+            Water.ripplesWindSpeed = w.ripples_wind_speed_kmh * ripple;
             Water.repetitionSize = w.repetition_size_m;
-            Water.largeBand0Multiplier = w.large_band0_multiplier;
+            Water.largeBand0Multiplier = w.large_band0_multiplier * swell;
             Water.largeBand1Multiplier = w.large_band1_multiplier;
+            // harbour mask (also read back by HDRP for the CPU height query that moves the vessels) and whitecap foam
+            string wm = cfg.environment.water_mask ?? "auto";
+            bool maskOn = wm == "on" || (wm == "auto" && w.harbor_mask_default);
+            var maskTex = maskOn ? HarborWaterMask.Get(Harbor) : null;
+            Water.waterMask = maskTex;
+            Water.waterMaskExtent = new Vector2(HarborWaterMask.ExtentM, HarborWaterMask.ExtentM);
+            Water.waterMaskOffset = Vector2.zero;
+            Water.waterMaskRemap = new Vector2(0f, 1f);
+            if (w.large_fade_start_m > 0f)
+            {
+                Water.largeBand0FadeMode = Water.largeBand1FadeMode = WaterSurface.FadeMode.Custom;
+                Water.largeBand0FadeStart = Water.largeBand1FadeStart = w.large_fade_start_m;
+                Water.largeBand0FadeDistance = Water.largeBand1FadeDistance = 2000f;
+            }
+            else Water.largeBand0FadeMode = Water.largeBand1FadeMode = WaterSurface.FadeMode.Automatic;
+            Water.foam = w.foam;
+            if (w.foam)
+            {
+                Water.simulationFoam = true;
+                Water.simulationFoamAmount = w.foam_amount;
+                Water.simulationFoamMask = maskTex;
+                Water.simulationFoamMaskExtent = new Vector2(HarborWaterMask.ExtentM, HarborWaterMask.ExtentM);
+                Water.simulationFoamMaskOffset = Vector2.zero;
+            }
 
             Environment = new ResolvedEnvironment
             {
@@ -413,6 +453,8 @@ namespace PortCCTV
                 water_large_wind_speed_kmh = w.large_wind_speed_kmh, water_ripples_wind_speed_kmh = w.ripples_wind_speed_kmh,
                 water_repetition_size_m = w.repetition_size_m, water_large_band0_multiplier = w.large_band0_multiplier,
                 water_large_band1_multiplier = w.large_band1_multiplier, water_time_requested_s = cfg.environment.water_time_s,
+                water_swell_scale = swell, water_ripple_scale = ripple, water_mask_on = maskOn, water_foam = w.foam, water_foam_amount = w.foam ? w.foam_amount : 0f, water_large_fade_start_m = w.large_fade_start_m,
+                water_mask_note = maskOn ? $"HarborWaterMask {HarborWaterMask.N}^2 over {HarborWaterMask.ExtentM} m centred on the origin; inside the harbour swell x{HarborWaterMask.Inner.x}, agitation x{HarborWaterMask.Inner.y}, ripples x{HarborWaterMask.Inner.z}, ramp {HarborWaterMask.RampM} m (geodesic from the inner basin)" : "off",
             };
         }
 

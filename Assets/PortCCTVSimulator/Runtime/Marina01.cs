@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PortCCTV.HarborGeneric02;
 using static PortCCTV.HarborParts;
@@ -14,19 +15,48 @@ namespace PortCCTV
     {
         public const string Id = "marina_01";
 
-        public static readonly CameraPreset[] Cameras =
+        /// <summary>Camera poses of the 2026-11-16 set, kept as map-layout anchors only: the camera hill, the masts, the distant
+        /// towers and the tree-free view corridors were built around them, and keeping them keeps the map (and every capture of the
+        /// current cameras) unchanged. Not selectable; the poses that are still cameras are in OverviewCameras (2026-11-20).</summary>
+        internal static readonly CameraPreset[] SiteViews20261116 =
         {
-            new CameraPreset { id = "mr_A_promenade", display_name = "A - promenade lamp post 7 m (berths)", position = new Vector3(-20f, 9.5f, 66f),
-                euler_deg = new Vector3(11f, 185f, 0f), vertical_fov_deg = 45f, mount_note = "lamp post on the marina promenade; pontoon berths and the basin (berth watch)" },
-            new CameraPreset { id = "mr_B_tower", display_name = "B - east headland 60 m (beach and coastal city)", position = new Vector3(912f, 60f, -230f),
-                euler_deg = new Vector3(10f, 285f, 0f), vertical_fov_deg = 48f, mount_note = "mast on the headland at the east end of the beach; beachfront, high-rise shore, marina and distant bay bridge; Haeundae CCTV reference" },
-            new CameraPreset { id = "mr_C_breakwater", display_name = "C - breakwater head 12 m (entrance approach)", position = new Vector3(96f, 12.5f, -209f),
-                euler_deg = new Vector3(8f, 130f, 0f), vertical_fov_deg = 42f, mount_note = "mast on the south breakwater 18 m west of the red light; craft approaching the entrance from the bay" },
+            new CameraPreset { id = "mr_A_promenade", display_name = "A (2026-11-16 framing) - promenade lamp post 7 m (berths)", position = new Vector3(-20f, 9.5f, 66f),
+                euler_deg = new Vector3(4f, 185f, 0f), vertical_fov_deg = 34f, mount_note = "lamp post on the marina promenade; pontoon berths and the basin (berth watch)" },
+            new CameraPreset { id = "mr_B_tower", display_name = "B (2026-11-16 framing) - east headland 60 m (beach and coastal city)", position = new Vector3(912f, 60f, -230f),
+                euler_deg = new Vector3(9f, 285f, 0f), vertical_fov_deg = 26f, mount_note = "mast on the headland at the east end of the beach; beachfront, high-rise shore, marina and distant bay bridge; Haeundae CCTV reference" },
+            new CameraPreset { id = "mr_C_breakwater", display_name = "C (2026-11-16 framing) - breakwater head 12 m (entrance approach)", position = new Vector3(96f, 12.5f, -209f),
+                euler_deg = new Vector3(5f, 130f, 0f), vertical_fov_deg = 32f, mount_note = "mast on the south breakwater 18 m west of the red light; craft approaching the entrance from the bay" },
         };
+
+        /// <summary>Research presets of framing_v2_20261119 (see ContainerTerminal01.ResearchCameras).</summary>
+        public static readonly CameraPreset[] ResearchCameras =
+        {
+            new CameraPreset { id = "mr_D_west_bw_fairway", display_name = "D - west breakwater pole 3 m (fairway to the entrance)", position = new Vector3(-250f, 6.5f, -170f),
+                euler_deg = new Vector3(1.0f, 95f, 0f), vertical_fov_deg = 26f, framing = CameraPresetLibrary.FramingSeaShips,
+                mount_note = "pole on the harbour side of the west breakwater road; along the southern fairway to the entrance, breakwater and headland behind" },
+            new CameraPreset { id = "mr_E_beach_bw_bay", display_name = "E - beach breakwater head wall 1.5 m (bay)", position = new Vector3(268f, 7.5f, -154f),
+                euler_deg = new Vector3(-1.6f, 160f, 0f), vertical_fov_deg = 20f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall at the head of the beach breakwater; open bay to the south-south-east (aimed clear of the east headland, which renders white in the heavy-rain cell)" },
+            new CameraPreset { id = "mr_F_south_bw_sea", display_name = "F - south breakwater wall 1.5 m (open bay)", position = new Vector3(100f, 7.5f, -214f),
+                euler_deg = new Vector3(-0.3f, 188f, 0f), vertical_fov_deg = 24f, framing = CameraPresetLibrary.FramingSmd,
+                mount_note = "short pole on the seaward crown wall of the south breakwater; open bay to the south with a distant island" },
+        };
+
+        /// <summary>Elevated mast views kept from the 2026-11-16 set as current presets (2026-11-20, user decision); same poses.
+        /// Not part of the research framing groups (CameraPresetLibrary.ResearchForHarbor).</summary>
+        public static readonly CameraPreset[] OverviewCameras = CameraPresetLibrary.Overview(SiteViews20261116,
+            ("mr_C_breakwater", "C - breakwater head 12 m (entrance approach)"));
+
+        /// <summary>Selectable presets of the map: research presets first, then the overview presets.</summary>
+        public static readonly CameraPreset[] Cameras = ResearchCameras.Concat(OverviewCameras).ToArray();
+
+        /// <summary>Every pose the map layout is built around, in the order used since 2026-11-19 (tree placement draws in this order).</summary>
+        internal static readonly CameraPreset[] LayoutViews = ResearchCameras.Concat(SiteViews20261116).ToArray();
 
         static readonly Dictionary<string, float> MastBases = new Dictionary<string, float>
         {
             { "mr_A_promenade", Deck }, { "mr_B_tower", 60f - CameraMastOnHill }, { "mr_C_breakwater", Crest },
+            { "mr_D_west_bw_fairway", Crest }, { "mr_E_beach_bw_bay", Crest + 2.5f }, { "mr_F_south_bw_sea", Crest + 2.5f },
         };
 
         public static HarborDefinition Build()
@@ -125,13 +155,10 @@ namespace PortCCTV
             if (Buildings) for (float x = -110; x < 130; x += 20) Box("cafe", x, x + 16, Deck, Deck + R(5, 9), 85, 100, Rng.NextDouble() < 0.5 ? "wall_white" : "wall_cream");
 
             // --- beach east of the marina
-            for (int beachSegment = 0; beachSegment < 32; beachSegment++)
-            {
-                float x = 260f + beachSegment * 20f;
-                float curve = -10f - 34f * Mathf.Sin((beachSegment + 0.5f) / 32f * Mathf.PI);
-                Box("beach", x, x + 20.15f, Bottom, 0.7f, curve, 60f, "sand", id: "beach_" + beachSegment);
-                BoxC("beach", new Vector3(x + 10f, -0.3f, curve - 6f), new Vector3(20.15f, 0.6f, 14f), "sand", 0, new Vector3(-6, 0, 0));
-            }
+            // A single continuous sand surface replaces the overlapping 20 m boxes. Its shore profile
+            // crosses the water plane gradually; the submerged toe has no exposed rectangular end faces.
+            E.Add(new HarborElement { id = "beach_surface", kind = "beach", shape = "beach_surface",
+                center = new Vector3(580f, 0f, 0f), size = new Vector3(640f, 0f, 60f), material = "sand" });
             Box("land", 260, 900, Bottom, Deck, 60, 110, "concrete", id: "beach_promenade");
             BeachFurniture(300f, 880f, 5f, 40f, 0.7f);
             PromenadeFurniture(270f, 890f, 64f, -1f);
@@ -144,19 +171,27 @@ namespace PortCCTV
             Scrub(300f, 870f, 113f, 148f, 90, 2.5f, 5f);
 
             // --- dense high-rise apartments (Haeundae-like); camera B stands on the first one
-            CameraHill(Cameras[1], 240f, 240f, 3, new Vector2(972f, -237f));
-            // Detailed imported towers along the coastal road; no random box towers intersecting the city blocks.
+            CameraHill(SiteViews20261116[1], 240f, 240f, 3, new Vector2(972f, -237f));
+            // Distinct silhouettes along the coastal road. The narrow 29 m strip limits the
+            // footprint: 38 m apartment towers at 0.62-0.71, 26 m-deep officetels at 0.84-0.9.
             Boulevard(260f, 900f, 112f, true, 4, true);
-            // The towers stand in the 29 m band between the boulevard's north sidewalk (z 122) and the city street's south
-            // sidewalk (z 151). 2026-11-10 surface audit: at z 142 and scale 0.95-1.35 (36-51 m deep) they reached 9-19 m into
-            // that street. Now centred in the band with the 38 m footprint scaled to 24-27 m (69-78 m tall), and the beach scrub
-            // under each footprint removed (Tree calls kept so the random layout after this point does not shift).
-            foreach (var (tx, scale) in new[] { (320f, 0.95f), (450f, 1.2f), (580f, 1.05f), (710f, 1.35f), (840f, 1.15f) })
+            // The buildings stand in the 29 m band between the boulevard's north sidewalk (z 122)
+            // and the city street's south sidewalk (z 151), centred at z 136.5. The deepest tower
+            // footprint is 27 m. Remove beach scrub within each actual footprint.
+            foreach (var (tx, key, scale, yaw, footprintX, footprintZ) in new[]
             {
-                float s = Mathf.Min(scale * 0.66f, 0.71f);
-                Prefab("building", "bld_hirise", new Vector3(tx, Deck, 136.5f), 0f, Vector3.one * s);
-                float hw = 38f * s / 2f + 1.5f;
-                E.RemoveAll(t => t.kind == "tree" && Mathf.Abs(t.center.x - tx) < hw && Mathf.Abs(t.center.z - 136.5f) < hw);
+                // Sketchfab "Urban" collection (SOURCE_urban.md): mid-rise office blocks with a street-front podium at
+                // x 320 / 710 (37 m), the 105 m office tower at x 450; one apartment tower and one officetel stay for variety.
+                (320f, "bld_urban_midrise", 0.75f, 180f, 32.03f, 33.32f),
+                (450f, "bld_urban_office_tower", 1.0f, 0f, 32.61f, 23.17f),
+                (580f, "bld_hirise", 0.62f, 90f, 38f, 38f),
+                (710f, "bld_urban_midrise", 0.74f, 0f, 32.03f, 33.32f),
+                (840f, "bld_officetel", 0.84f, 180f, 33f, 26f),
+            })
+            {
+                Prefab("building", key, new Vector3(tx, Deck, 136.5f), yaw, Vector3.one * scale);
+                float halfX = footprintX * scale / 2f + 1.5f, halfZ = footprintZ * scale / 2f + 1.5f;
+                E.RemoveAll(t => t.kind == "tree" && Mathf.Abs(t.center.x - tx) < halfX && Mathf.Abs(t.center.z - 136.5f) < halfZ);
             }
 
             // --- west city shore: coastal road (joined by the bridge ramp at x = -330), beach car parks, shops, towers, a park
@@ -171,7 +206,10 @@ namespace PortCCTV
             CityBlocks(-1340f, -372f, -88f, 100f, 100f, 12f, "highrise");                             // promenade tower strip
             for (int i = 0; i < 45; i++) Tree(R(-1495f, -1350f), R(-170f, 100f), Deck, R(6f, 11f));          // park at the west end
             CityBlocks(-1500f, -720f, 100f, 450f, 112f);                                                      // city west of the hill
-            CityBlocks(290f, 910f, 158f, 360f, 103f, 12f, "highrise");                                                         // city behind the beach
+            UrbanCollectionMix = true;     // part of the beach-city tower cells use the Urban collection towers
+            UrbanOfficeTowers.Clear(); UrbanOfficeTowers.Add(new Vector2(450f, 136.5f));     // the front-row office tower
+            CityBlocks(290f, 910f, 158f, 360f, 103f, 12f, "highrise");                                      // city behind the beach
+            UrbanCollectionMix = false;
             CityBlocks(-100f, 290f, 232f, 560f, 110f, 12f, "residential");                                                        // central city between the hills
             CityBlocks(290f, 470f, 360f, 560f, 100f, 12f, "residential");                                                         // (was one grid overlapping the beach city's plots)
             CityBlocks(1050f, 1500f, 120f, 560f, 110f);                                                       // east city
@@ -240,13 +278,14 @@ namespace PortCCTV
             Prefab("buoy", "ocean_buoy", new Vector3(180, -0.6f, -300), 0, Vector3.one * 1.6f, id: "buoy_1", nonVessel: true);
             Prefab("buoy", "lateral_marker", new Vector3(160, -1.0f, -235), 0, Vector3.one * 0.7f, id: "buoy_red_1", nonVessel: true);
 
-            CameraMasts(Cameras, MastBases);
+            DistantTowers(-1500f, 1500f, 905f, 1450f, 10, 26111011, new[] { SiteViews20261116[0].position, SiteViews20261116[1].position, SiteViews20261116[2].position }, 900f);   // 2026-11-10
+            CameraMasts(LayoutViews, MastBases);
 
             h.water_regions.Add(Region("marina_basin", -250, 58, 250, 58, 250, -200, -250, -200));
             h.water_regions.Add(Region("bay", -2440, -215, 120, -215, 120, -200, 250, -200, 278, -200, 278, -22, 900, -22, 900, -400, 3000, -400, 3000, -4000, -2440, -4000));
             h.water_regions.Add(Region("beach_shallows", 250, 58, 254, 58, 254, -200, 250, -200));   // narrowed by the groyne (x 255..269 + tetrapods to 277)
 
-            foreach (var a in new[] { "sailing_yacht", "sailing_dinghy", "kayak", "canoe", "cabin_cruiser", "motorboat", "rib", "speedboat", "motor_yacht", "police_boat", "sar_boat", "patrol_boat" })
+            foreach (var a in new[] { "sailing_yacht", "sailing_dinghy", "kayak", "canoe", "cabin_cruiser", "motorboat", "rib", "speedboat", "motor_yacht", "police_boat", "sar_boat", "patrol_boat", "small_motorboat", "crrc", "fishing_boat_iii" })
                 h.vessel_rules.Add(Rule(a, "leisure craft"));
             // the beach boulevard continues to the east city grid (2026-11-09 surface audit: the east city was a road island 140 m
             // from the nearest street). Laid last so the earlier random layout is unchanged.
@@ -263,7 +302,7 @@ namespace PortCCTV
 
         public static ScenarioConfig DefaultScenario()
         {
-            var s = new ScenarioConfig { scenario_id = "marina_default", harbor_id = Id, camera_preset_id = "mr_B_tower" };
+            var s = new ScenarioConfig { scenario_id = "marina_default", harbor_id = Id, camera_preset_id = "mr_D_west_bw_fairway" };
             string[] berth = { "sailing_yacht", "cabin_cruiser", "sailing_yacht", "motorboat", "sailing_yacht", "cabin_cruiser", "rib", "sailing_yacht", "motorboat", "cabin_cruiser" };
             int n = 0;
             for (int i = 0; i < berth.Length; i++)
@@ -290,6 +329,13 @@ namespace PortCCTV
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "sailing_yacht", x = 650, z = -450, heading_deg = 250, immersion_m = 0.3f });
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "motor_yacht", x = 510, z = -610, heading_deg = 70, immersion_m = 1.6f });
             s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "police_boat", x = 420, z = -300, heading_deg = 200, immersion_m = 0.6f });
+            // 2026-11-19 (framing_v2): craft 180-480 m in front of the seaward camera F (south breakwater)
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "cabin_cruiser", x = 97, z = -394, heading_deg = 80, immersion_m = 0.3f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "fishing_boat_iii", x = 20, z = -461, heading_deg = 300, immersion_m = 1.0f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "patrol_boat", x = 17, z = -687, heading_deg = 100, immersion_m = 1.3f });
+            // and two craft in the southern fairway in front of camera D (west breakwater)
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "sar_boat", x = -90, z = -172, heading_deg = 20, immersion_m = 1.0f });
+            s.vessels.Add(new VesselPlacement { object_id = $"v{n++:00}", asset_id = "motor_yacht", x = 40, z = -160, heading_deg = 190, immersion_m = 1.6f });
             return s;
         }
     }

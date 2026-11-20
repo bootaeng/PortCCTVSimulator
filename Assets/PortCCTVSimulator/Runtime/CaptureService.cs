@@ -15,6 +15,10 @@ namespace PortCCTV
     public class CameraRecord
     {
         public string preset_id;
+        /// <summary>Framing group of the preset ("smd_onshore" | "seaships_side" | "legacy_20261116" | "") and the version of the
+        /// research preset set the build was made with (2026-11-19).</summary>
+        public string framing = "";
+        public string preset_set_version = "";
         public string mount_note;
         public Vector3 position_world;
         public Quaternion rotation_world;
@@ -150,6 +154,85 @@ namespace PortCCTV
         /// </summary>
         public static CaptureResult Capture(SimWorld world, string finalDir, string runMode) => Capture(world, finalDir, runMode, null, null);
 
+        /// <summary>Linear float readback of a render texture (bottom-left origin).</summary>
+        static Color[] ReadLinear(RenderTexture src, int W, int H)
+        {
+            var prev = RenderTexture.active; RenderTexture.active = src;
+            var t = new Texture2D(W, H, TextureFormat.RGBAHalf, false, true);
+            t.ReadPixels(new Rect(0, 0, W, H), 0, 0); t.Apply(false);
+            RenderTexture.active = prev;
+            var px = t.GetPixels(); Util.SafeDestroy(t);
+            return px;
+        }
+
+        static float Lum(Color c) => 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+
+        /// <summary>Diagnostic: the IR-only component as an 8-bit grey PNG (linear, clipped at 1).</summary>
+        static byte[] IrComponentPng(Color[] px, int W, int H)
+        {
+            var t = new Texture2D(W, H, TextureFormat.RGBA32, false, true);
+            var o = new Color32[px.Length];
+            for (int i = 0; i < px.Length; i++) { byte v = (byte)Mathf.Clamp(Mathf.RoundToInt(Lum(px[i]) * 255f), 0, 255); o[i] = new Color32(v, v, v, 255); }
+            t.SetPixels32(o); t.Apply(false);
+            var png = t.EncodeToPNG(); Util.SafeDestroy(t);
+            return png;
+        }
+
+        /// <summary>Checks of the IR component against ray-cast geometry (IrChecks.method).</summary>
+        static IrChecks IrChecksFor(SimWorld world, Camera cam, IrIlluminator.Beam beam, Color[] irPx, int W, int H)
+        {
+            var ck = new IrChecks();
+            var (L, fwd) = IrIlluminator.LightPose(cam, beam);
+            float waterY = world.Harbor.water_reference_y, half = 0.5f * beam.beamDeg;
+            double nl = 0, sh = 0, fs = 0, ob = 0; int nNl = 0, nSh = 0, nFs = 0, nOb = 0;
+            Physics.SyncTransforms();
+            for (int gy = 0; gy < 36; gy++)
+                for (int gx = 0; gx < 64; gx++)
+                {
+                    int x = (int)((gx + 0.5f) * W / 64f), y = (int)((gy + 0.5f) * H / 36f);     // bottom-left pixel coordinates
+                    var ray = cam.ScreenPointToRay(new Vector3(x + 0.5f, y + 0.5f, 0f));
+                    float irv = Lum(irPx[y * W + x]);
+                    ck.samples++;
+                    Vector3 P; bool water = false; Collider hitCol = null;
+                    if (Physics.Raycast(ray, out var hit, 6000f, ~0, QueryTriggerInteraction.Ignore)) { P = hit.point; hitCol = hit.collider; }
+                    else if (ray.direction.y < -1e-4f) { P = ray.origin + ray.direction * ((waterY - ray.origin.y) / ray.direction.y); water = true; }
+                    else continue;
+                    if (!water && P.y < waterY - 0.05f) continue;                          // below the water surface: hidden
+                    var toP = P - L; float dist = toP.magnitude; float ang = Vector3.Angle(fwd, toP);
+                    if (water)
+                    {
+                        if (dist > beam.rangeM * IrIlluminator.ReachFactor) { fs += irv; nFs++; }
+                        continue;
+                    }
+                    if (ang > half * 1.2f && dist < beam.rangeM) { ob += irv; nOb++; continue; }
+                    if (ang > half * 0.8f || dist > beam.rangeM * 0.8f) continue;
+                    // umbra only: the point counts as shadowed when the rays from the light centre and from four points 0.3 m around
+                    // it are all blocked (penumbra from the soft shadow filter and grazing edges is excluded)
+                    float clr = IrIlluminator.MountClearM;                                   // own mast / housing: no shadow (as in the render)
+                    if (dist <= clr + 0.5f) continue;
+                    bool shadowed = Physics.Raycast(L + toP / dist * clr, toP / dist, out var h2, dist - clr - 0.2f, ~0, QueryTriggerInteraction.Ignore) && h2.collider != hitCol;
+                    if (shadowed)
+                    {
+                        var up = Vector3.Cross(Vector3.Cross(fwd, Vector3.up), fwd).normalized; var rt = Vector3.Cross(Vector3.up, fwd).normalized;
+                        foreach (var o in new[] { up, -up, rt, -rt })
+                        {
+                            var L2 = L + 0.3f * o; var d2 = P - L2; var u2 = d2.normalized;
+                            if (!(Physics.Raycast(L2 + u2 * clr, u2, out var h3, d2.magnitude - clr - 0.2f, ~0, QueryTriggerInteraction.Ignore) && h3.collider != hitCol)) { shadowed = false; break; }
+                        }
+                        if (!shadowed) continue;   // penumbra: neither lit nor shadowed
+                    }
+                    if (shadowed) { sh += irv; nSh++; if (ck.shadow_samples.Count < 24) ck.shadow_samples.Add($"px({x},{y}) P=({P.x:F1},{P.y:F2},{P.z:F1}) on={hitCol.name} occ={h2.collider.name}@{h2.distance:F1}/{dist:F1} ir={irv:F4}"); }
+                    else if (dist < beam.rangeM * 0.5f) { nl += irv; nNl++; }
+                }
+            ck.near_lit = nNl; ck.shadowed = nSh; ck.far_sea = nFs;
+            ck.near_lit_mean = nNl > 0 ? (float)(nl / nNl) : -1f;
+            ck.shadowed_mean = nSh > 0 ? (float)(sh / nSh) : -1f;
+            ck.far_sea_mean = nFs > 0 ? (float)(fs / nFs) : -1f;
+            ck.outside_beam_mean = nOb > 0 ? (float)(ob / nOb) : -1f;
+            ck.shadow_leak_ratio = nNl > 0 && nSh > 0 && ck.near_lit_mean > 1e-4f ? ck.shadowed_mean / ck.near_lit_mean : -1f;
+            return ck;
+        }
+
         /// <summary>Instance ids are 8-bit (0 = background); more vessels are refused instead of wrapping ids.</summary>
         public const int MaxMaskInstances = 254;
 
@@ -210,16 +293,33 @@ namespace PortCCTV
                 bool degrade = sc.enabled && world.Sensor != null && world.Sensor.Available;
                 var sensorRec = new SensorRecord { enabled = degrade, config = sc.Clone() };
                 LensModel lens = null;
-                List<LensDrop> drops = null;
+                LensRainState rain = null;
                 if (degrade)
                 {
                     if (sc.save_clean) { tex.SetPixels32(rgbPixels); WriteFile(partial, "rgb_clean.png", tex.EncodeToPNG()); }
                     float gain = sc.gain >= 0f ? sc.gain : SensorProcessor.AutoGain(world.Environment.exposure_ev100);
                     float density = SensorProcessor.DropDensity(sc, world.Environment.weather, cfg.environment.weather);
-                    drops = SensorProcessor.MakeDrops(sc.seed, density, W, H);
+                    // water on the window at this scenario's simulation time (the preview shows the same state at the same time)
+                    rain = SensorProcessor.MakeRain(sc, density, cfg.navigation.sim_time_s, W, H, cfg.environment.weather);
+                    float glow = SensorProcessor.DropGlow(world.Environment.exposure_ev100);
                     lens = LensModel.Make(sc, W, H);
-                    rgbPixels = world.Sensor.Process(rt, sc, gain, drops);
-                    sensorRec.gain_applied = gain; sensorRec.lens_drop_density = density; sensorRec.lens_drops = drops;
+                    // IR illuminator: separate render of the same frozen frame (same water time, vessel poses, camera)
+                    Texture irTex = null; float irDome = 0f;
+                    if (sc.IrOn && world.Ir != null)
+                    {
+                        var beam = IrIlluminator.Resolve(world.ActiveCamera, sc);
+                        var irRec = new IrRecord();
+                        irTex = world.Ir.Render(world, cam, beam, W, H, irRec);
+                        irDome = IrIlluminator.DomeReflection(beam);
+                        var irPx = ReadLinear(irTex as RenderTexture, W, H);
+                        WriteFile(partial, "ir_component.png", IrComponentPng(irPx, W, H));
+                        irRec.checks = IrChecksFor(world, cam, beam, irPx, W, H);
+                        sensorRec.ir = irRec;
+                    }
+                    rgbPixels = world.Sensor.Process(rt, sc, gain, rain, glow, false, irTex, irDome);
+                    sensorRec.gain_applied = gain; sensorRec.lens_drop_density = density; sensorRec.lens_drops = rain.drops;
+                    sensorRec.lens_trails = rain.trails; sensorRec.lens_drop_time_s = rain.time_s; sensorRec.lens_drop_glow = glow;
+                    sensorRec.lens_drop_cover_fraction_image = rain.drops.Count + rain.trails.Count > 0 ? rain.ImageCoverFraction(W, H) : 0f;
                     sensorRec.distortion_scale = lens != null ? lens.scale : 1f; sensorRec.jpeg_quality = sc.jpeg_quality;
                 }
                 tex.SetPixels32(rgbPixels);
@@ -303,10 +403,11 @@ namespace PortCCTV
                             int x = i % W, yTop = i / W;
                             var c = rgbPixels[(H - 1 - yTop) * W + x];
                             lsum += 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b; ln++;
-                            if (drops != null && drops.Count > 0)
+                            if (rain != null && rain.drops.Count + rain.trails.Count > 0)
                             {
+                                // same combined alpha as the GPU water pass (>= 0.5 = covered); the mask itself is unchanged
                                 var src = lens != null ? lens.SourceOf(new Vector2(x + 0.5f, yTop + 0.5f)) : new Vector2(x + 0.5f, yTop + 0.5f);
-                                if (SensorProcessor.UnderDrop(drops, src)) under++;
+                                if (rain.Covered(src)) under++;
                             }
                         }
                         ol.visible_mean_luma = ln > 0 ? (float)(lsum / ln) : -1f;
@@ -465,7 +566,14 @@ namespace PortCCTV
                 WriteFile(partial, "metadata.json", new UTF8Encoding(false).GetBytes(JsonUtility.ToJson(meta, true)));
 
                 if (Directory.Exists(finalDir)) throw new IOException("Output appeared during capture: " + finalDir);
-                Directory.Move(partial, finalDir);
+                // Another process (virus scanner, indexer) can hold a handle on a file that was just written; the rename then fails
+                // with "Access to the path is denied" (5 of about 1,440 captures on 2026-11-19 / 20). Retry briefly before giving up.
+                for (int attempt = 0; ; attempt++)
+                {
+                    try { Directory.Move(partial, finalDir); break; }
+                    catch (Exception moveEx) when ((moveEx is IOException || moveEx is UnauthorizedAccessException) && attempt < 9 && !Directory.Exists(finalDir))
+                    { System.Threading.Thread.Sleep(300); }
+                }
                 res.success = true;
                 res.labels = labels;
                 res.metadata = meta;
@@ -509,7 +617,7 @@ namespace PortCCTV
             float fx = fy; // square pixels, aspect = W/H
             return new CameraRecord
             {
-                preset_id = p.id, mount_note = p.mount_note,
+                preset_id = p.id, mount_note = p.mount_note, framing = p.framing ?? "", preset_set_version = CameraPresetLibrary.PresetSetVersion,
                 position_world = cam.transform.position, rotation_world = cam.transform.rotation, euler_deg = p.euler_deg,
                 vertical_fov_deg = cam.fieldOfView,
                 horizontal_fov_deg = Camera.VerticalToHorizontalFieldOfView(cam.fieldOfView, (float)W / H),

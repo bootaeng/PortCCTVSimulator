@@ -66,7 +66,7 @@ namespace PortCCTV.EditorTools
                             var g = new Color(fl.r * lin.r, fl.g * lin.g, fl.b * lin.b, 1f).gamma; g.a = f.a;
                             copy.SetColor(BaseFac, g);
                             var safe = string.Concat((tag + "_" + m.name).Select(c => char.IsLetterOrDigit(c) ? c : '_'));
-                            AssetDatabase.CreateAsset(copy, AssetDatabase.GenerateUniqueAssetPath($"{Dir}/{safe}.mat"));
+                            copy = SaveDeterministic(copy, safe);
                         }
                         else copy = null;
                         Cache[m] = copy;
@@ -79,6 +79,25 @@ namespace PortCCTV.EditorTools
             return $"flattened {flat} texture slots; kept textured: {(kept.Count == 0 ? "none" : string.Join(", ", kept))}";
         }
 
-        public static void ResetCache() => Cache.Clear();
+        static readonly HashSet<string> Written = new HashSet<string>();
+
+        /// <summary>Saves at Dir/safe.mat, overwriting a copy left by an earlier run (RebuildVesselsBatch does not clear the folder,
+        /// and a fresh unique path every run piled up "name 1/2/3.mat" duplicates). A second material with the same name in this
+        /// run gets " 1", " 2"...</summary>
+        static Material SaveDeterministic(Material copy, string safe)
+        {
+            for (int k = 0; ; k++)
+            {
+                var path = $"{Dir}/{safe}{(k == 0 ? "" : " " + k)}.mat";
+                if (!Written.Add(path)) continue;
+                var old = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (old == null) { AssetDatabase.CreateAsset(copy, path); return copy; }
+                var n = old.name; EditorUtility.CopySerialized(copy, old); old.name = n; EditorUtility.SetDirty(old);
+                Object.DestroyImmediate(copy);
+                return old;
+            }
+        }
+
+        public static void ResetCache() { Cache.Clear(); Written.Clear(); }
     }
 }

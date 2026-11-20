@@ -99,7 +99,7 @@ namespace PortCCTV
                 _ => DefaultScenario(),
             };
             s.environment.vessel_wave_motion = true;   // new scenes follow the waves; files without the field keep the mean plane
-            return s;
+            return DefaultSceneLayout.Diversify(s, VesselCatalog.Load());   // 2026-11-16: no repeated hull among neighbours
         }
 
         /// <summary>Legacy mixed-harbor scene (generic_harbor_02) used by the tests.</summary>
@@ -195,7 +195,9 @@ namespace PortCCTV
             if (cap != null && !failed)
             {
                 for (int i = 0; i < 5; i++) yield return null;
-                var res = CaptureService.Capture(_world, AppPaths.ResolveUnderRoot(cap), "cli");
+                var diag = ArgValue("-diag-material");
+                if (diag != null) { Log("RENDER DIAGNOSTIC (not a research capture): " + RenderDiagnostics.Apply(_world.CctvCamera, diag, _world.Theme != null ? _world.Theme.Get("glass_dark") : null)); yield return null; }
+                var res = CaptureService.Capture(_world, AppPaths.ResolveUnderRoot(cap), diag != null ? "cli_diag_" + diag.Replace(':', '_').Replace(',', '+') : "cli");
                 Log(res.success ? "Captured -> " + res.output_dir : "Capture FAILED: " + res.error);
                 failed |= !res.success;
             }
@@ -570,7 +572,9 @@ namespace PortCCTV
         Texture2D _previewJpg, _jpgScratch;
         float _jpgAt = -1f;
         string _sensorKey = "";
-        List<LensDrop> _previewDrops = new List<LensDrop>();
+        LensRainState _previewRain;
+        Texture _irPreview; string _irKey; float _irAt;
+        string _rainKey;
         int _addIdx;
         GUIStyle _fold;
 
@@ -702,8 +706,15 @@ namespace PortCCTV
 
             if (Fold(ref _foldWx, "세부 설정"))
             {
-                bool oc = GUILayout.Toggle(wx.Overcast, wx.Precipitating ? " 흐림 (비·눈일 때 항상)" : " 흐림");
+                bool oc = GUILayout.Toggle(wx.Overcast, wx.Precipitating ? " 흐림 (비·눈일 때 항상)" : " 흐림 (시정 저하 포함)");
                 if (!wx.Precipitating && oc != wx.overcast) { wx.overcast = oc; _pendingApply = true; }
+                if (wx.Overcast && !wx.Precipitating)
+                {
+                    bool autoHaze = wx.overcast_haze < 0f;
+                    bool ah = GUILayout.Toggle(autoHaze, $" 흐림 연무 자동 ({wx.OvercastHaze:F1})");
+                    if (ah != autoHaze) { wx.overcast_haze = ah ? -1f : wx.OvercastHaze; _pendingApply = true; }
+                    if (!ah) wx.overcast_haze = NumberField("wx_ochaze", "흐림 연무 (0 = 하늘·조명만)", wx.overcast_haze, 0f, 1f, 0.1f);
+                }
                 wx.visibility_scale = NumberField("wx_v", "시정 배율", wx.visibility_scale, 0.1f, 3f, 0.1f);
                 bool autoWet = wx.wetness < 0f;
                 bool aw = GUILayout.Toggle(autoWet, $" 젖은 노면 자동 ({wx.Wetness:F1})");
@@ -718,6 +729,15 @@ namespace PortCCTV
                 int wi = Array.FindIndex(waters, w => w.id == _cfg.environment.water_preset_id);
                 int nw = GUILayout.Toolbar(wi, waters.Select(w => UiText.Water(w)).ToArray(), GUILayout.Width(ContentWidth));
                 if (nw != wi && nw >= 0) { _cfg.environment.water_preset_id = waters[nw].id; Log("UI: water -> " + waters[nw].id); ApplyScenario(); }
+                // swell / ripple strength (independent of rain), harbour mask
+                float sw0 = _cfg.environment.water_swell_scale, rp0 = _cfg.environment.water_ripple_scale;
+                _cfg.environment.water_swell_scale = NumberField("water_swell", "너울(긴 파도) 세기", sw0, 0f, 3f, 0.1f, applyOnChange: false);
+                _cfg.environment.water_ripple_scale = NumberField("water_ripple", "잔물결 세기", rp0, 0f, 3f, 0.1f, applyOnChange: false);
+                if (!Mathf.Approximately(sw0, _cfg.environment.water_swell_scale) || !Mathf.Approximately(rp0, _cfg.environment.water_ripple_scale)) _pendingApply = true;
+                string[] maskIds = { "auto", "on", "off" }, maskNames = { "방파제 감쇠: 자동", "켬", "끔" };
+                int mi = Mathf.Max(0, Array.IndexOf(maskIds, _cfg.environment.water_mask ?? "auto"));
+                int nmi = GUILayout.Toolbar(mi, maskNames, GUILayout.Width(ContentWidth));
+                if (nmi != mi) { _cfg.environment.water_mask = maskIds[nmi]; Log("UI: water mask -> " + maskIds[nmi]); ApplyScenario(); }
                 bool wm = GUILayout.Toggle(_cfg.environment.vessel_wave_motion, " 선박이 파도에 따라 흔들림");
                 if (wm != _cfg.environment.vessel_wave_motion) { _cfg.environment.vessel_wave_motion = wm; Log("UI: vessel wave motion -> " + wm); ApplyScenario(); }
                 _cfg.environment.water_time_s = NumberField("water_t", "수면 시각(s)", _cfg.environment.water_time_s, 0f, 600f, 0.5f, applyOnChange: false);
@@ -1013,15 +1033,38 @@ namespace PortCCTV
                 if (!adr) sc.lens_drops = SensorField("s_drop", "물방울 밀도", sc.lens_drops, 0f, 1f, 0.05f);
                 bool mono = GUILayout.Toggle(sc.monochrome, " 흑백 (적외선 야간 모드)");
                 if (mono != sc.monochrome) { sc.monochrome = mono; sc.preset = "custom"; SyncSensor(); }
+                // 850 nm IR illuminator of this camera (defaults per camera; 0 = camera default)
+                bool irOn = sc.ir_mode == "on";
+                var beam = IrIlluminator.Resolve(_world.ActiveCamera, sc);
+                bool ir = GUILayout.Toggle(irOn, $" 적외선(IR) 조명 — 이 카메라 기본: {(beam.profile == "long" ? "원거리 좁은 빔" : "광각 짧은 빔")}");
+                if (ir != irOn) { sc.ir_mode = ir ? "on" : "off"; if (ir) sc.monochrome = true; sc.preset = "custom"; SyncSensor(); }
+                if (ir)
+                {
+                    sc.ir_power = SensorField("s_irp", "IR 출력(배)", sc.ir_power > 0f ? sc.ir_power : beam.power, 0.1f, 10f, 0.1f);
+                    sc.ir_beam_deg = SensorField("s_irb", "빔 각도(°)", sc.ir_beam_deg > 0f ? sc.ir_beam_deg : beam.beamDeg, 5f, 160f, 1f);
+                    sc.ir_range_m = SensorField("s_irr", "정격 거리(m)", sc.ir_range_m > 0f ? sc.ir_range_m : beam.rangeM, 5f, 1000f, 5f);
+                    sc.ir_mount_drop_m = SensorField("s_ird", "조명 낮춤(m)", sc.ir_mount_drop_m, 0f, 20f, 0.1f);
+                    bool dome = sc.ir_dome >= 0 ? sc.ir_dome > 0 : beam.dome;
+                    bool nd = GUILayout.Toggle(dome, " 돔 하우징 (젖은 돔에서 자체 IR 반사)");
+                    if (nd != dome) { sc.ir_dome = nd ? 1 : 0; sc.preset = "custom"; SyncSensor(); }
+                }
                 bool clean = GUILayout.Toggle(sc.save_clean, " 원본(rgb_clean.png)도 저장");
                 if (clean != sc.save_clean) { sc.save_clean = clean; SyncSensor(); }
                 GUILayout.Label("왜곡은 마스크와 상자에도 같이 적용됩니다. 물방울·흐림·잡음은 라벨을 바꾸지 않고, 물방울에 가린 비율은 라벨에 기록합니다.", _small);
             }
 
-            Header("해상도");
+            Header("저장 이미지 해상도");
             int ri = Array.FindIndex(Resolutions, r => r.w == _cfg.capture.width && r.h == _cfg.capture.height);
             int nri = GUILayout.Toolbar(ri, Resolutions.Select(r => $"{r.w}×{r.h}").ToArray(), GUILayout.Width(ContentWidth));
-            if (nri != ri && nri >= 0) { _cfg.capture.width = Resolutions[nri].w; _cfg.capture.height = Resolutions[nri].h; ApplyScenario(); }
+            if (nri != ri && nri >= 0)
+            {
+                _cfg.capture.width = Resolutions[nri].w;
+                _cfg.capture.height = Resolutions[nri].h;
+                ApplyScenario();
+                _status = $"저장 이미지 {_cfg.capture.width}×{_cfg.capture.height} 적용됨. 화면 미리보기는 1280픽셀로 표시됩니다.";
+            }
+            GUILayout.Label($"현재 저장: {_cfg.capture.width}×{_cfg.capture.height} ({_cfg.capture.width * _cfg.capture.height / 1000000f:F1}MP)  |  화면 미리보기: {(_preview != null ? _preview.width : 1280)}×{(_preview != null ? _preview.height : 720)}", _small);
+            GUILayout.Label("구도는 같고 저장한 PNG의 픽셀 수가 달라집니다. 미리보기는 속도를 위해 가로 1280픽셀로 표시합니다.", _small);
 
             Header("연속 캡처");
             GUILayout.BeginHorizontal();
@@ -1130,13 +1173,30 @@ namespace PortCCTV
                 _previewFx.Create();
             }
             var key = JsonUtility.ToJson(sc) + "|" + _cfg.environment.weather?.precipitation + _cfg.environment.weather?.intensity;
-            if (key != _sensorKey)
+            if (key != _sensorKey) { _sensorKey = key; _jpgAt = -1f; }
+            // the water on the window is a function of the simulation time: the same state a capture at this time gets
+            // (frozen while paused, flowing during playback)
+            float simT = _cfg.navigation.sim_time_s;
+            if (_previewRain == null || !Mathf.Approximately(_previewRain.time_s, simT) || key != _rainKey)
             {
-                _sensorKey = key; _jpgAt = -1f;
-                _previewDrops = SensorProcessor.MakeDrops(sc.seed, SensorProcessor.DropDensity(sc, _world.Environment.weather, _cfg.environment.weather), _cfg.capture.width, _cfg.capture.height);
+                _rainKey = key;
+                _previewRain = SensorProcessor.MakeRain(sc, SensorProcessor.DropDensity(sc, _world.Environment.weather, _cfg.environment.weather), simT, _cfg.capture.width, _cfg.capture.height, _cfg.environment.weather);
             }
             float gain = sc.gain >= 0f ? sc.gain : SensorProcessor.AutoGain(_world.Environment.exposure_ev100);
-            _world.Sensor.Blit(_preview, _previewFx, sc, gain, _previewDrops, _cfg.capture.width, _cfg.capture.height, Time.frameCount);
+            // IR illuminator component of the same view (separate render at preview size, refreshed 4 times a second and on change)
+            Texture irTex = null; float irDome = 0f;
+            if (sc.IrOn && _world.Ir != null)
+            {
+                var beam = IrIlluminator.Resolve(_world.ActiveCamera, sc);
+                string irKey = key + "|" + simT.ToString("F2") + "|" + _preview.width;
+                if (_irPreview == null || irKey != _irKey || Time.unscaledTime - _irAt > 0.25f)
+                {
+                    _irKey = irKey; _irAt = Time.unscaledTime;
+                    _irPreview = _world.Ir.Render(_world, _world.CctvCamera, beam, _preview.width, _preview.height, null);
+                }
+                irTex = _irPreview; irDome = IrIlluminator.DomeReflection(beam);
+            }
+            _world.Sensor.Blit(_preview, _previewFx, sc, gain, _previewRain, _cfg.capture.width, _cfg.capture.height, Time.frameCount, SensorProcessor.DropGlow(_world.Environment.exposure_ev100), false, irTex, irDome);
             if (sc.jpeg_quality <= 0 || (_previewJpg != null && Time.unscaledTime - _jpgAt < 0.25f)) return;
             _jpgAt = Time.unscaledTime;
             int w = _previewFx.width, h = _previewFx.height;

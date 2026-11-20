@@ -77,7 +77,7 @@ namespace PortCCTV
         /// <summary>Ends a map build; with the definition, first joins dead-end roads / lanes / paths to the network.</summary>
         internal static void PromoteNearTrees(HarborDefinition h)
         {
-            var cams = CameraPresetLibrary.ForHarbor(h.harbor_id);
+            var cams = CameraPresetLibrary.LayoutViewsForHarbor(h.harbor_id);   // incl. the retired 2026-11-16 poses: the map stays as built
             if (cams == null || cams.Length == 0) return;
             float D(HarborElement e) { float best = float.MaxValue; foreach (var c in cams) best = Mathf.Min(best, (new Vector2(e.center.x - c.position.x, e.center.z - c.position.z)).sqrMagnitude); return best; }
             var bb = E.Where(e => e.shape == "billboard_tree").OrderBy(D).Take(MaxTrees).ToList();
@@ -107,6 +107,7 @@ namespace PortCCTV
                 RoadNetwork.OpenJunctionMouths(h);
                 RoadNetwork.ConnectDeadEnds(h);
                 RoadNetwork.TerminateStubs(h);
+                RoadNetwork.ClearStreetFurniture(h);                 // poles / lamps / signals off the carriageways and house plots
                 HarborParts.DetailNearContainers(h);
             }
             End();

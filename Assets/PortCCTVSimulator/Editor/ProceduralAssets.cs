@@ -779,6 +779,52 @@ namespace PortCCTV.EditorTools
             foreach (var (k, p, b) in WrapPack("van_a", $"{SV}/truck_van_pack_Batuhan13.glb", 0.075f, null, 0.02f, 2.5f, 14f, true, out var v3)) Add(k, p, "Truck/Van Pack (Batuhan13, CC BY): " + v3);
         }
 
+        /// <summary>Sketchfab "Urban" collection (pineapp1es) buildings for the marina beach city
+        /// (ThirdParty/SketchfabCCBY/urban/SOURCE_urban.md). The two aitortilla01 atlases are brand-free derived copies
+        /// (Tools/derive_urban_glb.py); the unmodified downloads are kept in ThirdParty_raw/sketchfab_urban_20261113 (not imported, git-ignored).</summary>
+        static void BuildUrbanCollection(HarborTheme theme)
+        {
+            const string SBU = Root + "/ThirdParty/SketchfabCCBY/urban";
+            void Add(string key, GameObject p, string src)
+            {
+                theme.prefabs.RemoveAll(e => e.key == key);
+                theme.prefabs.Add(new HarborTheme.PrefabEntry { key = key, prefab = p, source = src });
+            }
+            Add("bld_urban_office_tower", WrapImported("bld_urban_office_tower", $"{SBU}/office_tower_tryfield_gloss.glb", 105f, out var u1), "Office Tower (tryfield, CC BY, Urban collection; clear-coat gloss folded into roughness): " + u1);
+            Add("bld_urban_midrise", WrapImported("bld_urban_midrise", $"{SBU}/midrise_w2w_office_aitortilla01_nobrand.glb", 49.5f, out var u2), "Mid rise wall to wall office building (aitortilla01, CC BY, Urban collection; signs blanked): " + u2);
+            Add("bld_urban_ny_hirise", WrapImported("bld_urban_ny_hirise", $"{SBU}/ny_hirise_apartment_aitortilla01_nobrand.glb", 120f, out var u3), "New York styled hi rise apartment building (aitortilla01, CC BY, Urban collection; signs blanked, BLEND->MASK): " + u3);
+        }
+
+        /// <summary>Dev loop: -executeMethod PortCCTV.EditorTools.ProceduralAssets.RebuildUrbanCollectionBatch (writes
+        /// Logs/urban_asset_previews/*.png).</summary>
+        public static void RebuildUrbanCollectionBatch()
+        {
+            try
+            {
+                var theme = HarborTheme.Load(); BuildUrbanCollection(theme);
+                EditorUtility.SetDirty(theme); AssetDatabase.SaveAssets();
+                var outDir = Path.Combine(Directory.GetCurrentDirectory(), "Logs", "urban_asset_previews");
+                Directory.CreateDirectory(outDir);
+                foreach (var key in new[] { "bld_urban_office_tower", "bld_urban_midrise", "bld_urban_ny_hirise" })
+                {
+                    var p = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/{key}.prefab");
+                    var ed = UnityEditor.Editor.CreateEditor(p);
+                    var tex = ed.RenderStaticPreview(AssetDatabase.GetAssetPath(p), null, 512, 512);
+                    if (tex != null) File.WriteAllBytes(Path.Combine(outDir, key + ".png"), tex.EncodeToPNG());
+                    UnityEngine.Object.DestroyImmediate(ed);
+                    var rs = p.GetComponentsInChildren<Renderer>(true);
+                    var b = rs[0].bounds; foreach (var r in rs) b.Encapsulate(r.bounds);
+                    Debug.Log($"[Urban] {key}: bounds {b.size} centre {b.center} renderers {rs.Length} colliders {p.GetComponentsInChildren<MeshCollider>(true).Length}");
+                }
+                // the sources are authored in cm / unit-less: PhysX refuses their large local triangles, so give the
+                // colliders split copies as the full bootstrap does (Logs/collider_repair_report.json)
+                var cr = ColliderRepair.Run(false);
+                Debug.Log($"[Urban] collider repair: failing {cr.failing_meshes} repaired {cr.repaired} box_fallback {cr.box_fallback}");
+                EditorApplication.Exit(0);
+            }
+            catch (Exception ex) { Debug.LogException(ex); EditorApplication.Exit(1); }
+        }
+
         public static void RebuildVehiclePacksBatch()
         {
             try
@@ -877,6 +923,7 @@ namespace PortCCTV.EditorTools
             Add("bld_brick_factory", WrapImported("bld_brick_factory", $"{SB2}/industrial_building_spicybamer.glb", 12f, out var b8), "industrial building (spicybamer, CC BY): " + b8);
             Add("bld_city_towers", WrapImported("bld_city_towers", $"{SB2}/city_pack_7_Pasha.glb", 105f, out var b10), "City pack 7 (Pasha., CC BY): " + b10);
             Add("bld_apt_slab", WrapImported("bld_apt_slab", $"{SB2}/soviet_apartment_ColinGreenall.glb", 30f, out var b11), "LOW POLY - SOVIET APARTMENT BUILDING 8K (Colin.Greenall, CC BY): " + b11);
+            BuildUrbanCollection(theme);
             // Street assets (ThirdParty/SketchfabCCBY/street/SOURCE_street.md)
             const string SS = Root + "/ThirdParty/SketchfabCCBY/street";
             Add("road_tile_x", WrapKeep("road_tile_x", $"{SS}/modular_roads_pack_SquadCell.glb", 1f, new[] { "Road_X_Intersection" }, false, out var s1), "Modular Roads Pack (SquadCell, CC BY), X tile: " + s1);
@@ -904,6 +951,8 @@ namespace PortCCTV.EditorTools
             Add("mobile_crane", WrapImported("mobile_crane", $"{IS}/innerscene_mobile_crane.glb", out var n5), n5);
             // replacements of crude scenery (2026-11-09): breakwater lights, excavator, forklift, near containers, fish boxes
             ReplacementAssets.Build(theme, Add);
+            // town batch 2026-11-10: shopfronts, Japanese house, HK tower, Korean road signs, harbour guard, CC0 wall / iron materials
+            TownAssets.Build(theme, Add);
             EditorUtility.SetDirty(theme);
         }
 

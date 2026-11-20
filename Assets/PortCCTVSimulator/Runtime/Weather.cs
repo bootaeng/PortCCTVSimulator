@@ -23,11 +23,34 @@ namespace PortCCTV
         public float wetness = -1f;
         /// <summary>Snow lying on upward-facing surfaces 0..1. -1 = automatic (snow: 0.25 + 0.75 x intensity, otherwise 0).</summary>
         public float snow_cover = -1f;
+        /// <summary>Low-visibility part of an overcast day 0..1 (2026-11-20): at 1 the fog mean free path is halved and the exposure is
+        /// 0.1 EV darker than the clear preset (instead of 0.7 EV brighter): a grey, dull day on which distant objects fade but the
+        /// horizon stays visible (a stronger setting looked like mist on calm water). For less visibility lower visibility_scale. Before
+        /// this, overcast changed sky and light only and vessels stood out MORE than in clear weather (white sea, same visibility).
+        /// -1 = automatic: 1 when overcast without precipitation, 0 otherwise (rain and snow keep their own factors).
+        /// 0 = the overcast rendering of the 2026-11-16 research cells (sky and light only).</summary>
+        public float overcast_haze = -1f;
         /// <summary>Particle random seed (precipitation is reproducible for a given scenario + camera pose).</summary>
         public int seed = 0;
+        /// <summary>Research ablation (JMSE posthoc_c4c6_v1): hide the falling particles and the rain rings while it still
+        /// "precipitates" (atmosphere, wetness and automatic lens drops unchanged). Default false = normal behaviour.</summary>
+        public bool no_precipitation_particles = false;
+        /// <summary>Research ablation: precipitation does not dim sun / sky, lower the exposure or shorten the fog (they stay at the
+        /// overcast-without-precipitation values). Default false = normal behaviour.</summary>
+        public bool no_precipitation_atmosphere = false;
 
         public bool Precipitating => (precipitation == "rain" || precipitation == "snow") && intensity > 0.001f;
+        public bool ShowParticles => Precipitating && !no_precipitation_particles;
+        /// <summary>Intensity used by the precipitation-driven atmosphere (sun / sky dimming, exposure); 0 when not precipitating
+        /// or when <see cref="no_precipitation_atmosphere"/> is set.</summary>
+        public float AtmosphereI => Precipitating && !no_precipitation_atmosphere ? I : 0f;
         public bool Overcast => overcast || Precipitating;
+        public float OvercastHaze => !Overcast ? 0f : overcast_haze >= 0f ? Mathf.Clamp01(overcast_haze) : Precipitating ? 0f : 1f;
+        /// <summary>Fog mean free path factor of the overcast haze (1 .. 0.5).</summary>
+        public float OvercastVisibilityFactor => Mathf.Lerp(1f, 0.5f, OvercastHaze);
+        /// <summary>Exposure compensation (EV) given for the dim overcast sky: +0.7 without the haze (brighter image), -0.1 with the
+        /// full haze (a dull day stays a little darker than a clear one).</summary>
+        public float OvercastExposureCompensationEv => Overcast ? Mathf.Lerp(0.7f, -0.1f, OvercastHaze) : 0f;
         public float I => Mathf.Clamp01(intensity);
         public float Wetness => wetness >= 0f ? Mathf.Clamp01(wetness) : precipitation == "rain" && Precipitating ? 0.5f + 0.5f * I : 0f;
         public float SnowCover => snow_cover >= 0f ? Mathf.Clamp01(snow_cover) : precipitation == "snow" && Precipitating ? 0.25f + 0.75f * I : 0f;
@@ -35,6 +58,7 @@ namespace PortCCTV
         /// <summary>Fog mean free path factor from precipitation (rain: 0.65 .. 0.2, snow: 0.5 .. 0.12 of the preset). The falling
         /// particles in every distance band carry the rest of the effect.</summary>
         public float PrecipitationVisibilityFactor =>
+            no_precipitation_atmosphere ? 1f :
             precipitation == "rain" && Precipitating ? Mathf.Lerp(0.65f, 0.2f, I) :
             precipitation == "snow" && Precipitating ? Mathf.Lerp(0.5f, 0.12f, I) : 1f;
     }
@@ -48,6 +72,8 @@ namespace PortCCTV
         public bool overcast;
         public float visibility_scale = 1f;
         public float precipitation_visibility_factor = 1f;
+        public float overcast_haze;
+        public float overcast_visibility_factor = 1f;
         public float wetness;
         public float snow_cover;
         public int max_particles;
@@ -57,6 +83,8 @@ namespace PortCCTV
         public float fall_speed_m_s;
         public Vector2 wind_drift_xz_m_s;
         public int seed;
+        public bool no_precipitation_particles;
+        public bool no_precipitation_atmosphere;
         public string note = "Rain/snow particles in three distance bands up to layer_far_m in front of the camera, rain rings on the water, " +
                              "wet / snow decals on upward surfaces (visual). The CPU visible mask and the boxes ignore precipitation occlusion and " +
                              "the decals.";
@@ -150,8 +178,8 @@ namespace PortCCTV
         {
             _cfg = cfg ?? new WeatherConfig();
             _wind = windXZ; _harbor = harbor; _waterY = harbor != null ? harbor.water_reference_y : 0f;
-            bool rain = _cfg.Precipitating && _cfg.precipitation == "rain";
-            bool snow = _cfg.Precipitating && _cfg.precipitation == "snow";
+            bool rain = _cfg.ShowParticles && _cfg.precipitation == "rain";
+            bool snow = _cfg.ShowParticles && _cfg.precipitation == "snow";
             foreach (var p in _rain) p.gameObject.SetActive(rain);
             foreach (var p in _snow) p.gameObject.SetActive(snow);
             _rings.gameObject.SetActive(rain);
@@ -160,7 +188,9 @@ namespace PortCCTV
                 precipitation = _cfg.Precipitating ? _cfg.precipitation : "none", intensity = _cfg.Precipitating ? _cfg.I : 0f,
                 overcast = _cfg.Overcast, visibility_scale = _cfg.visibility_scale,
                 precipitation_visibility_factor = _cfg.PrecipitationVisibilityFactor, seed = _cfg.seed,
+                overcast_haze = _cfg.OvercastHaze, overcast_visibility_factor = _cfg.OvercastVisibilityFactor,
                 wetness = _cfg.Wetness, snow_cover = _cfg.SnowCover,
+                no_precipitation_particles = _cfg.no_precipitation_particles, no_precipitation_atmosphere = _cfg.no_precipitation_atmosphere,
             };
             PlaceDecal(_wet, land, _cfg.Wetness);
             PlaceDecal(_snowCover, land, _cfg.SnowCover);
@@ -182,7 +212,7 @@ namespace PortCCTV
         /// <summary>Re-anchor in front of <paramref name="cam"/> and restart the prewarmed particles from the fixed seeds.</summary>
         public void ResetDeterministic(Camera cam)
         {
-            if (!_cfg.Precipitating || cam == null) return;
+            if (!_cfg.ShowParticles || cam == null) return;
             bool rain = _cfg.precipitation == "rain";
             var bands = rain ? RainBands : SnowBands;
             var systems = rain ? _rain : _snow;
@@ -271,7 +301,7 @@ namespace PortCCTV
         /// <summary>Interactive playback: advance the paused systems; re-anchor when the viewing camera moved far.</summary>
         public void Tick(Camera cam, float dt)
         {
-            if (!_cfg.Precipitating || cam == null) return;
+            if (!_cfg.ShowParticles || cam == null) return;
             if (Vector3.Distance(cam.transform.position, _anchorPos) > 25f || Mathf.Abs(Mathf.DeltaAngle(cam.transform.eulerAngles.y, _anchorYaw)) > 35f)
             { ResetDeterministic(cam); return; }
             float step = Mathf.Clamp(dt, 0f, 0.1f);
